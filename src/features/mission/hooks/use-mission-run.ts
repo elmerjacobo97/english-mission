@@ -32,6 +32,7 @@ export function useMissionRun(mission: Mission) {
   const [index, setIndex] = useState(0)
   const [earned, setEarned] = useState(0)
   const [stats, setStats] = useState<MissionRunStats>(EMPTY_STATS)
+  const [outcomes, setOutcomes] = useState<Record<number, ChallengeOutcome>>({})
   const [phase, setPhase] = useState<MissionPhase>("playing")
   const savedRef = useRef(false)
 
@@ -68,7 +69,15 @@ export function useMissionRun(mission: Mission) {
     setIndex(index + 1)
   }
 
+  function goBack() {
+    setIndex((current) => Math.max(0, current - 1))
+  }
+
   function reportSolved(result: ChallengeOutcome) {
+    if (outcomes[index]) {
+      return
+    }
+    setOutcomes((current) => ({ ...current, [index]: result }))
     setEarned((current) =>
       rewardsEnabled ? current + result.reward : current,
     )
@@ -87,6 +96,7 @@ export function useMissionRun(mission: Mission) {
     setIndex(0)
     setEarned(0)
     setStats(EMPTY_STATS)
+    setOutcomes({})
     setPhase("playing")
     setRewardsEnabled(!getMissionProgress(mission.slug).completed)
     setPreviousStars(getMissionProgress(mission.slug).stars)
@@ -105,8 +115,10 @@ export function useMissionRun(mission: Mission) {
     totalPaid: earned + payout.payout,
     isReplay: !rewardsEnabled,
     rewardsEnabled,
+    outcomes,
     coins: progress.coins,
     goNext,
+    goBack,
     reportSolved,
     spendCoins,
     restart,

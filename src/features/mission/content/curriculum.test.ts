@@ -1,9 +1,15 @@
+import { readdirSync, readFileSync, statSync } from "node:fs"
+import { join } from "node:path"
 import { describe, expect, test } from "vitest"
 import { missionPlan } from "./plan"
 import { missions, findPlanEntry } from "./mission-catalog"
 import {
+  findSpainisms,
   introducedVocab,
+  missionCharacters,
   missionContentWords,
+  missionNotes,
+  missionSpanishText,
   orphanVocab,
   recycledWords,
 } from "../utils/curriculum"
@@ -138,3 +144,75 @@ describe("written missions", () => {
     }
   })
 })
+
+describe("cast and notes", () => {
+  test("uses only cast characters and at least two per written mission", () => {
+    for (const mission of missions) {
+      const used = missionCharacters(mission)
+      expect(used.length, mission.slug).toBeGreaterThanOrEqual(2)
+      for (const character of used) {
+        expect(mission.cast, `${mission.slug}:${character}`).toContain(character)
+      }
+    }
+  })
+
+  test("declares at least two grammar notes per written mission", () => {
+    for (const mission of missions) {
+      const notes = missionNotes(mission)
+      expect(notes.length, mission.slug).toBeGreaterThanOrEqual(2)
+      for (const note of notes) {
+        expect(note.title.length, mission.slug).toBeGreaterThan(0)
+        expect(note.body.length, mission.slug).toBeGreaterThan(20)
+        expect(note.body.length, mission.slug).toBeLessThanOrEqual(280)
+      }
+    }
+  })
+})
+
+describe("spanish detector", () => {
+  test("flags regionalisms and ignores lookalike words", () => {
+    expect(findSpainisms("Entras al mercado y el dependiente te saluda")).toEqual(
+      ["dependiente"],
+    )
+    expect(findSpainisms("La nevera está vacía")).toEqual(["nevera"])
+    expect(findSpainisms("Voy a escoger el boleto")).toEqual([])
+    expect(findSpainisms("El refrigerador y el vendedor")).toEqual([])
+  })
+})
+
+describe("neutral Spanish", () => {
+  test("keeps regionalisms out of the content", () => {
+    for (const mission of missions) {
+      const found = findSpainisms(missionSpanishText(mission))
+      expect(found, `${mission.slug}: ${found.join(", ")}`).toEqual([])
+    }
+    for (const entry of missionPlan) {
+      const found = findSpainisms(`${entry.title} ${entry.subtitle}`)
+      expect(found, `${entry.slug}: ${found.join(", ")}`).toEqual([])
+    }
+  })
+
+  test("keeps regionalisms out of the source text", () => {
+    const root = join(process.cwd(), "src")
+    const files = sourceFiles(root).filter(
+      (file) =>
+        !file.endsWith("curriculum.ts") &&
+        !file.endsWith(".test.ts") &&
+        !file.endsWith(".test.tsx"),
+    )
+    for (const file of files) {
+      const found = findSpainisms(readFileSync(file, "utf8"))
+      expect(found, `${file}: ${found.join(", ")}`).toEqual([])
+    }
+  })
+})
+
+function sourceFiles(dir: string): string[] {
+  return readdirSync(dir).flatMap((entry) => {
+    const full = join(dir, entry)
+    if (statSync(full).isDirectory()) {
+      return sourceFiles(full)
+    }
+    return full.endsWith(".ts") || full.endsWith(".tsx") ? [full] : []
+  })
+}

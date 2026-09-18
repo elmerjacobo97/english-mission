@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, test, vi } from "vitest"
+import { submitChallengeForm } from "@/test/submit-challenge"
 import { testProfile } from "@/test/fixtures"
 import type { OrderChallenge as OrderChallengeData } from "../types/beat"
 import { OrderChallenge } from "./order-challenge"
@@ -41,7 +42,7 @@ describe("OrderChallenge", () => {
     for (const token of beat.solution) {
       await place(user, token)
     }
-    await user.click(screen.getByRole("button", { name: "Comprobar" }))
+    submitChallengeForm()
     expect(onSolved).toHaveBeenCalledWith({
       reward: 10,
       wrongAttempts: 0,
@@ -56,7 +57,7 @@ describe("OrderChallenge", () => {
     for (const token of ["to", "I", "bananas", "want", "buy"]) {
       await place(user, token)
     }
-    await user.click(screen.getByRole("button", { name: "Comprobar" }))
+    submitChallengeForm()
     expect(
       await screen.findByText("El orden no es correcto. Inténtalo otra vez."),
     ).toBeInTheDocument()
@@ -68,7 +69,11 @@ describe("OrderChallenge", () => {
     setup()
     await place(user, "I")
     await user.click(screen.getByRole("button", { name: "I" }))
-    expect(screen.getByRole("button", { name: "Comprobar" })).toBeDisabled()
+    expect(screen.getByText("Toca las palabras en orden")).toBeInTheDocument()
+    submitChallengeForm()
+    expect(
+      await screen.findByText("Coloca todas las palabras antes de comprobar."),
+    ).toBeInTheDocument()
   })
 
   test("hint places the first word so the answer becomes correct", async () => {
@@ -80,7 +85,7 @@ describe("OrderChallenge", () => {
     for (const token of ["want", "to", "buy", "bananas"]) {
       await place(user, token)
     }
-    await user.click(screen.getByRole("button", { name: "Comprobar" }))
+    submitChallengeForm()
     expect(onSolved).toHaveBeenCalledWith({
       reward: 10,
       wrongAttempts: 0,
@@ -96,7 +101,7 @@ describe("OrderChallenge", () => {
       await place(user, token)
     }
     for (let attempt = 0; attempt < 3; attempt++) {
-      await user.click(screen.getByRole("button", { name: "Comprobar" }))
+      submitChallengeForm()
     }
     expect(onSolved).toHaveBeenCalledWith({
       reward: 0,

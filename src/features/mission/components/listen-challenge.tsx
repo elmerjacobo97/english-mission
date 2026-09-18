@@ -8,6 +8,7 @@ import type { ListenChallenge as ListenChallengeType } from "../types/beat"
 import { hintForOption } from "../utils/rewards"
 import type { ChallengeProps } from "./challenge-props"
 import { ChallengeFrame } from "./challenge-frame"
+import { CharacterAvatar } from "./character-avatar"
 
 type ListenChallengeProps = ChallengeProps & {
   beat: ListenChallengeType
@@ -18,6 +19,7 @@ export function ListenChallenge({
   coins,
   rewardsEnabled,
   profile,
+  solvedOutcome,
   speechAvailable = false,
   onSpendCoins,
   onSolved,
@@ -26,6 +28,7 @@ export function ListenChallenge({
   const run = useChallengeRun({
     profile,
     rewardsEnabled,
+    solvedOutcome,
     correctAnswer: beat.phrase,
     onSolved,
   })
@@ -70,12 +73,21 @@ export function ListenChallenge({
       hint={run.hint}
       hintCost={profile.hintCost}
       coins={coins}
+      note={beat.note}
       onRequestHint={handleRequestHint}
       onContinue={run.solved ? onContinue : undefined}
     >
       <div className="flex flex-col gap-3">
         {speechAvailable ? (
           <div className="flex items-center gap-3 rounded-2xl border-2 border-teal/25 bg-teal-soft p-4">
+            {beat.character && (
+              <CharacterAvatar
+                character={beat.character}
+                mood={beat.mood}
+                size={42}
+                className="shrink-0"
+              />
+            )}
             <button
               type="button"
               onClick={handlePlay}

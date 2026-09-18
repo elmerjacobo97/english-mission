@@ -17,6 +17,7 @@ export function TypeChallenge({
   coins,
   rewardsEnabled,
   profile,
+  solvedOutcome,
   onSpendCoins,
   onSolved,
   onContinue,
@@ -24,6 +25,7 @@ export function TypeChallenge({
   const run = useChallengeRun({
     profile,
     rewardsEnabled,
+    solvedOutcome,
     correctAnswer: beat.accepted[0],
     onSolved,
   })
@@ -66,10 +68,15 @@ export function TypeChallenge({
       hint={run.hint}
       hintCost={profile.hintCost}
       coins={coins}
+      note={beat.note}
       onRequestHint={handleRequestHint}
       onContinue={run.solved ? onContinue : undefined}
     >
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <form
+        id="challenge-form"
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-3"
+      >
         <label htmlFor="typed-answer" className="sr-only">
           Tu respuesta en inglés
         </label>
@@ -82,18 +89,10 @@ export function TypeChallenge({
           autoComplete="off"
           autoCapitalize="off"
           spellCheck={false}
+          required
           placeholder="Escribe en inglés..."
           className="min-h-14 rounded-2xl border-2 border-ink/10 bg-surface px-4 py-3.5 font-display text-lg font-semibold transition focus:border-teal focus:outline-none disabled:bg-ink/5"
         />
-        {!run.solved && (
-          <button
-            type="submit"
-            disabled={value.trim().length === 0}
-            className="min-h-12 self-start rounded-2xl bg-accent-strong px-5 font-display font-semibold text-white shadow-pop transition active:translate-y-0.5 disabled:opacity-40 disabled:shadow-none"
-          >
-            Comprobar
-          </button>
-        )}
       </form>
     </ChallengeFrame>
   )

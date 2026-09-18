@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --paper: #fdf3e3;
@@ -42,16 +42,13 @@
 
 body {
   background:
-    radial-gradient(
-        circle at 1px 1px,
-        rgba(42, 29, 20, 0.055) 1px,
-        transparent 0
-      )
-      0 0 / 24px 24px,
+    radial-gradient(circle at 1px 1px, rgba(42, 29, 20, 0.055) 1px, transparent 0) 0 0 / 24px 24px,
     linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
   background-attachment: fixed;
   color: var(--ink);
   font-family: var(--font-nunito), system-ui, sans-serif;
+  overflow: visible !important;
+  margin-right: 0 !important;
 }
 
 :focus-visible {

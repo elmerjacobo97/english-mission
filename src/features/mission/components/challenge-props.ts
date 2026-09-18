@@ -5,6 +5,7 @@ export type ChallengeProps = {
   coins: number
   rewardsEnabled: boolean
   profile: DifficultyProfile
+  solvedOutcome?: ChallengeOutcome
   speechAvailable?: boolean
   onSpendCoins: (amount: number) => boolean
   onSolved: (outcome: ChallengeOutcome) => void

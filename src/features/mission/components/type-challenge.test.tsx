@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, test, vi } from "vitest"
+import { submitChallengeForm } from "@/test/submit-challenge"
 import { testProfile } from "@/test/fixtures"
 import type { TypeChallenge as TypeChallengeData } from "../types/beat"
 import { TypeChallenge } from "./type-challenge"
@@ -36,7 +37,7 @@ async function submit(
 ) {
   await user.clear(screen.getByLabelText("Tu respuesta en inglés"))
   await user.type(screen.getByLabelText("Tu respuesta en inglés"), text)
-  await user.click(screen.getByRole("button", { name: "Comprobar" }))
+  submitChallengeForm()
 }
 
 describe("TypeChallenge", () => {

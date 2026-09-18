@@ -1,6 +1,23 @@
 import type { Beat, Vocabulary } from "../types/beat"
 import type { Mission } from "../types/mission"
 
+export const SPAINISMS = [
+  "dependiente",
+  "nevera",
+  "ordenador",
+  "movil",
+  "piso",
+  "coche",
+  "vosotros",
+  "zumo",
+  "patata",
+  "coger",
+  "camarero",
+  "conducir",
+  "aparcar",
+  "tarta",
+]
+
 const STOPWORDS = new Set([
   "i",
   "you",
@@ -145,4 +162,57 @@ export function orphanVocab(mission: Mission): string[] {
     .filter(({ tokens }) => tokens.length > 0)
     .filter(({ tokens }) => !tokens.some((token) => text.has(token)))
     .map(({ en }) => en)
+}
+
+function normalizeForSearch(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+}
+
+export function findSpainisms(text: string): string[] {
+  const normalized = normalizeForSearch(text)
+  return SPAINISMS.filter((word) =>
+    new RegExp(`\\b${word}\\b`).test(normalized),
+  )
+}
+
+export function beatSpanishTexts(beat: Beat): string[] {
+  switch (beat.kind) {
+    case "story":
+      return [beat.es]
+    case "choice":
+      return [beat.prompt, ...beat.options]
+    case "order":
+      return [beat.prompt]
+    case "type":
+      return [beat.prompt, beat.hint]
+    case "fill":
+      return [beat.prompt]
+    case "listen":
+    case "dialogue":
+      return [beat.prompt]
+  }
+}
+
+export function missionSpanishText(mission: Mission): string {
+  return [
+    mission.title,
+    mission.subtitle,
+    ...mission.vocab.map(([, es]) => es),
+    ...mission.beats.flatMap(beatSpanishTexts),
+  ].join(" ")
+}
+
+export function missionNotes(mission: Mission) {
+  return mission.beats.flatMap((beat) => (beat.note ? [beat.note] : []))
+}
+
+export function missionCharacters(mission: Mission): string[] {
+  return [
+    ...new Set(
+      mission.beats.flatMap((beat) => (beat.character ? [beat.character] : [])),
+    ),
+  ]
 }

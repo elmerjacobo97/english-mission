@@ -88,6 +88,48 @@ describe("MissionPlayer", () => {
     })
   })
 
+  test("back button is disabled on the first step", async () => {
+    render(<MissionPlayer mission={mission} />)
+    await screen.findByText(
+      "Llegas a la ciudad en autobús. Es tu primer día: llevas una maleta y un papel con una dirección.",
+    )
+    expect(screen.getByRole("button", { name: "Anterior" })).toBeDisabled()
+    expect(screen.getByText("Paso 1 de 9")).toBeInTheDocument()
+  })
+
+  test("reviewing a solved step pays nothing twice", async () => {
+    const user = userEvent.setup()
+    render(<MissionPlayer mission={mission} />)
+    await screen.findByText(
+      "Llegas a la ciudad en autobús. Es tu primer día: llevas una maleta y un papel con una dirección.",
+    )
+
+    await next(user)
+    await next(user)
+    await solve(user, "Hola")
+    expect(screen.getByText("10")).toBeInTheDocument()
+
+    await user.click(screen.getByRole("button", { name: "Anterior" }))
+    expect(
+      await screen.findByText("Ya superaste esta prueba."),
+    ).toBeInTheDocument()
+    expect(screen.getByText("10")).toBeInTheDocument()
+
+    await user.click(screen.getByRole("button", { name: /Continuar/ }))
+    await user.click(screen.getByRole("button", { name: "Anterior" }))
+    await user.click(screen.getByRole("button", { name: "Anterior" }))
+    await user.click(screen.getByRole("button", { name: "Anterior" }))
+    expect(screen.getByText("Paso 1 de 9")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Anterior" })).toBeDisabled()
+
+    await next(user)
+    await next(user)
+    expect(
+      await screen.findByText("Ya superaste esta prueba."),
+    ).toBeInTheDocument()
+    expect(screen.getByText("10")).toBeInTheDocument()
+  })
+
   test("replay awards no coins and keeps the best stars", async () => {
     const user = userEvent.setup()
     render(<MissionPlayer mission={mission} />)

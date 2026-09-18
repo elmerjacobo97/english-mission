@@ -29,6 +29,7 @@ export function OrderChallenge({
   coins,
   rewardsEnabled,
   profile,
+  solvedOutcome,
   onSpendCoins,
   onSolved,
   onContinue,
@@ -36,10 +37,14 @@ export function OrderChallenge({
   const run = useChallengeRun({
     profile,
     rewardsEnabled,
+    solvedOutcome,
     correctAnswer: beat.solution.join(" "),
     onSolved,
   })
-  const [placed, setPlaced] = useState<string[]>([])
+  const [placed, setPlaced] = useState<string[]>(
+    solvedOutcome ? beat.solution : [],
+  )
+  const [incompleteSubmit, setIncompleteSubmit] = useState(false)
 
   const available = rebuildAvailable(beat.tokens, placed)
   const complete = placed.length === beat.solution.length
@@ -80,9 +85,14 @@ export function OrderChallenge({
   }
 
   function handleCheck() {
-    if (run.solved || !complete) {
+    if (run.solved) {
       return
     }
+    if (!complete) {
+      setIncompleteSubmit(true)
+      return
+    }
+    setIncompleteSubmit(false)
     if (checkOrderedAnswer(placed, beat.solution)) {
       run.registerSuccess()
       return
@@ -104,10 +114,18 @@ export function OrderChallenge({
       hint={run.hint}
       hintCost={profile.hintCost}
       coins={coins}
+      note={beat.note}
       onRequestHint={handleRequestHint}
       onContinue={run.solved ? onContinue : undefined}
     >
-      <div className="flex flex-col gap-4">
+      <form
+        id="challenge-form"
+        onSubmit={(event) => {
+          event.preventDefault()
+          handleCheck()
+        }}
+        className="flex flex-col gap-4"
+      >
         <div className="flex min-h-16 flex-wrap items-center gap-2 rounded-2xl border-2 border-dashed border-ink/15 bg-paper p-3">
           {placed.length === 0 && (
             <span className="text-sm font-semibold text-muted">
@@ -141,17 +159,12 @@ export function OrderChallenge({
           ))}
         </div>
 
-        {!run.solved && (
-          <button
-            type="button"
-            onClick={handleCheck}
-            disabled={!complete}
-            className="min-h-12 self-start rounded-2xl bg-accent-strong px-5 font-display font-semibold text-white shadow-pop transition active:translate-y-0.5 disabled:opacity-40 disabled:shadow-none"
-          >
-            Comprobar
-          </button>
+        {incompleteSubmit && (
+          <p className="text-sm font-semibold text-muted">
+            Coloca todas las palabras antes de comprobar.
+          </p>
         )}
-      </div>
+      </form>
     </ChallengeFrame>
   )
 }

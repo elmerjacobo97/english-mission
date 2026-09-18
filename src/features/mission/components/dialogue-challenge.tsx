@@ -8,6 +8,7 @@ import type { DialogueChallenge as DialogueChallengeType } from "../types/beat"
 import { hintForOption } from "../utils/rewards"
 import type { ChallengeProps } from "./challenge-props"
 import { ChallengeFrame } from "./challenge-frame"
+import { CharacterAvatar } from "./character-avatar"
 
 type DialogueChallengeProps = ChallengeProps & {
   beat: DialogueChallengeType
@@ -18,6 +19,7 @@ export function DialogueChallenge({
   coins,
   rewardsEnabled,
   profile,
+  solvedOutcome,
   speechAvailable = false,
   onSpendCoins,
   onSolved,
@@ -26,6 +28,7 @@ export function DialogueChallenge({
   const run = useChallengeRun({
     profile,
     rewardsEnabled,
+    solvedOutcome,
     correctAnswer: beat.options[beat.correct],
     onSolved,
   })
@@ -62,11 +65,21 @@ export function DialogueChallenge({
       hint={run.hint}
       hintCost={profile.hintCost}
       coins={coins}
+      note={beat.note}
       onRequestHint={handleRequestHint}
       onContinue={run.solved ? onContinue : undefined}
     >
       <div className="flex flex-col gap-4">
-        <div className="relative rounded-3xl rounded-bl-md border-2 border-teal/25 bg-teal-soft p-4 pb-5">
+        <div className="flex items-end gap-2.5">
+          {beat.character && (
+            <CharacterAvatar
+              character={beat.character}
+              mood={beat.mood}
+              size={46}
+              className="shrink-0"
+            />
+          )}
+        <div className="relative flex-1 rounded-3xl rounded-bl-md border-2 border-teal/25 bg-teal-soft p-4 pb-5">
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -85,6 +98,7 @@ export function DialogueChallenge({
             aria-hidden
             className="absolute -bottom-[9px] left-10 h-4 w-4 rotate-45 border-b-2 border-l-2 border-teal/25 bg-teal-soft"
           />
+        </div>
         </div>
 
         <div className="flex flex-col gap-2.5">

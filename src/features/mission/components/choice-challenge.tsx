@@ -16,6 +16,7 @@ export function ChoiceChallenge({
   coins,
   rewardsEnabled,
   profile,
+  solvedOutcome,
   onSpendCoins,
   onSolved,
   onContinue,
@@ -23,6 +24,7 @@ export function ChoiceChallenge({
   const run = useChallengeRun({
     profile,
     rewardsEnabled,
+    solvedOutcome,
     correctAnswer: beat.options[beat.correct],
     onSolved,
   })
@@ -59,6 +61,7 @@ export function ChoiceChallenge({
       hint={run.hint}
       hintCost={profile.hintCost}
       coins={coins}
+      note={beat.note}
       onRequestHint={handleRequestHint}
       onContinue={run.solved ? onContinue : undefined}
     >

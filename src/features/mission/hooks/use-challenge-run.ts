@@ -15,6 +15,7 @@ type ChallengeRunOptions = {
   rewardsEnabled: boolean
   correctAnswer: string
   onSolved: (outcome: ChallengeOutcome) => void
+  solvedOutcome?: ChallengeOutcome
 }
 
 export function useChallengeRun({
@@ -22,12 +23,23 @@ export function useChallengeRun({
   rewardsEnabled,
   correctAnswer,
   onSolved,
+  solvedOutcome,
 }: ChallengeRunOptions) {
-  const [wrongAttempts, setWrongAttempts] = useState(0)
+  const [wrongAttempts, setWrongAttempts] = useState(
+    solvedOutcome?.wrongAttempts ?? 0,
+  )
   const [hint, setHint] = useState<string | null>(null)
-  const [hintUsed, setHintUsed] = useState(false)
-  const [solved, setSolved] = useState(false)
-  const [feedback, setFeedback] = useState<ChallengeFeedback | null>(null)
+  const [hintUsed, setHintUsed] = useState(solvedOutcome?.hintUsed ?? false)
+  const [solved, setSolved] = useState(Boolean(solvedOutcome))
+  const [feedback, setFeedback] = useState<ChallengeFeedback | null>(
+    solvedOutcome
+      ? {
+          tone: "info",
+          message: "Ya superaste esta prueba.",
+          detail: correctAnswer,
+        }
+      : null,
+  )
 
   function registerSuccess() {
     setSolved(true)

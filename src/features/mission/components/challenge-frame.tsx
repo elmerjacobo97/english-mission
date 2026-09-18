@@ -1,15 +1,13 @@
 "use client"
 
-import {
-  ArrowRight,
-  CheckCircle,
-  Lightbulb,
-  XCircle,
-} from "@phosphor-icons/react"
+import { CheckCircle, Lightbulb, XCircle } from "@phosphor-icons/react"
 import type { ReactNode } from "react"
+import type { GrammarNote as GrammarNoteData } from "../types/beat"
+import { CharacterAvatar } from "./character-avatar"
+import { GrammarNote } from "./grammar-note"
 
 export type ChallengeFeedback = {
-  tone: "error" | "success"
+  tone: "error" | "success" | "info"
   message: string
   detail?: string
 }
@@ -22,6 +20,7 @@ type ChallengeFrameProps = {
   hint: string | null
   hintCost: number
   coins: number
+  note?: GrammarNoteData
   onRequestHint: () => void
   onContinue?: () => void
   children: ReactNode
@@ -35,6 +34,7 @@ export function ChallengeFrame({
   hint,
   hintCost,
   coins,
+  note,
   onRequestHint,
   onContinue,
   children,
@@ -46,9 +46,12 @@ export function ChallengeFrame({
   return (
     <section className="flex flex-col gap-5 rounded-3xl border-2 border-ink/10 bg-surface p-6 shadow-card">
       <header className="flex flex-col gap-3">
-        <span className="self-start rounded-full bg-teal-soft px-3 py-1 font-display text-xs font-semibold uppercase tracking-widest text-teal-strong">
-          Prueba
-        </span>
+        <div className="flex items-center gap-2.5">
+          <CharacterAvatar character="coco" size={34} />
+          <span className="rounded-full bg-teal-soft px-3 py-1 font-display text-xs font-semibold uppercase tracking-widest text-teal-strong">
+            Prueba
+          </span>
+        </div>
         <h2 className="font-display text-xl font-bold leading-snug">
           {prompt}
         </h2>
@@ -69,6 +72,8 @@ export function ChallengeFrame({
       </header>
 
       {children}
+
+      {note && <GrammarNote note={note} />}
 
       {hint ? (
         <p className="animate-slide-in flex items-start gap-2 rounded-2xl border-2 border-accent/25 bg-paper px-4 py-3 text-sm font-semibold text-accent-deep">
@@ -108,12 +113,21 @@ export function ChallengeFrame({
             className={`animate-slide-in flex flex-col gap-3 rounded-2xl border-2 px-4 py-3 ${
               feedback.tone === "success"
                 ? "border-success/20 bg-success-soft text-success"
-                : "border-error/20 bg-error-soft text-error"
+                : feedback.tone === "info"
+                  ? "border-teal/25 bg-teal-soft text-teal-strong"
+                  : "border-error/20 bg-error-soft text-error"
             }`}
           >
             <p className="flex items-start gap-2 font-display font-semibold">
               {feedback.tone === "success" ? (
                 <CheckCircle
+                  weight="fill"
+                  size={22}
+                  className="mt-0.5 shrink-0"
+                  aria-hidden
+                />
+              ) : feedback.tone === "info" ? (
+                <Lightbulb
                   weight="fill"
                   size={22}
                   className="mt-0.5 shrink-0"
@@ -131,16 +145,6 @@ export function ChallengeFrame({
             </p>
             {feedback.detail && (
               <p className="text-sm font-semibold">{feedback.detail}</p>
-            )}
-            {onContinue && (
-              <button
-                type="button"
-                onClick={onContinue}
-                className="flex min-h-12 items-center gap-2 self-start rounded-2xl bg-accent-strong px-5 font-display font-semibold text-white shadow-pop transition active:translate-y-0.5"
-              >
-                Continuar
-                <ArrowRight weight="bold" size={18} aria-hidden />
-              </button>
             )}
           </div>
         )}

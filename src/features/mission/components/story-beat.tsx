@@ -1,22 +1,23 @@
 "use client"
 
-import { ArrowRight, Eye, SpeakerHigh } from "@phosphor-icons/react"
+import { Eye, SpeakerHigh } from "@phosphor-icons/react"
 import { useEffect, useState } from "react"
 import { speak, stopSpeaking } from "@/lib/speech"
+import { CHARACTERS } from "../content/characters"
 import type { StoryBeat as StoryBeatData } from "../types/beat"
+import { CharacterAvatar } from "./character-avatar"
+import { GrammarNote } from "./grammar-note"
 
 type StoryBeatProps = {
   beat: StoryBeatData
   speechAvailable: boolean
   englishVisible: boolean
-  onContinue: () => void
 }
 
 export function StoryBeat({
   beat,
   speechAvailable,
   englishVisible,
-  onContinue,
 }: StoryBeatProps) {
   const [revealed, setRevealed] = useState(englishVisible)
   useEffect(() => stopSpeaking, [])
@@ -25,6 +26,19 @@ export function StoryBeat({
 
   return (
     <section className="flex flex-col gap-5 rounded-3xl border-2 border-ink/10 bg-surface p-6 shadow-card">
+      {beat.character && (
+        <div className="flex items-center gap-2.5">
+          <CharacterAvatar
+            character={beat.character}
+            mood={beat.mood}
+            size={46}
+          />
+          <span className="font-display text-sm font-semibold text-muted">
+            {CHARACTERS[beat.character].name}
+          </span>
+        </div>
+      )}
+
       <p className="text-lg font-semibold leading-relaxed">{beat.es}</p>
 
       {beat.en && (
@@ -88,14 +102,7 @@ export function StoryBeat({
         </ul>
       )}
 
-      <button
-        type="button"
-        onClick={onContinue}
-        className="flex min-h-12 items-center gap-2 self-start rounded-2xl bg-accent-strong px-5 font-display font-semibold text-white shadow-pop transition active:translate-y-0.5"
-      >
-        Continuar
-        <ArrowRight weight="bold" size={18} aria-hidden />
-      </button>
+      {beat.note && <GrammarNote note={beat.note} />}
     </section>
   )
 }

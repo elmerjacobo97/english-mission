@@ -1,34 +1,47 @@
+import type { CharacterId, Mood } from "./character"
+
 export type Vocabulary = [en: string, es: string]
 
-export type StoryBeat = {
+export type GrammarNote = {
+  title: string
+  body: string
+}
+
+type BeatMeta = {
+  character?: CharacterId
+  mood?: Mood
+  note?: GrammarNote
+}
+
+export type StoryBeat = BeatMeta & {
   kind: "story"
   es: string
   en?: string
   vocab?: Vocabulary[]
 }
 
-export type ChoiceChallenge = {
+export type ChoiceChallenge = BeatMeta & {
   kind: "choice"
   prompt: string
   options: string[]
   correct: number
 }
 
-export type OrderChallenge = {
+export type OrderChallenge = BeatMeta & {
   kind: "order"
   prompt: string
   tokens: string[]
   solution: string[]
 }
 
-export type TypeChallenge = {
+export type TypeChallenge = BeatMeta & {
   kind: "type"
   prompt: string
   accepted: string[]
   hint: string
 }
 
-export type FillChallenge = {
+export type FillChallenge = BeatMeta & {
   kind: "fill"
   prompt: string
   sentence: string
@@ -36,7 +49,7 @@ export type FillChallenge = {
   alternatives?: string[]
 }
 
-export type ListenChallenge = {
+export type ListenChallenge = BeatMeta & {
   kind: "listen"
   prompt: string
   phrase: string
@@ -44,7 +57,7 @@ export type ListenChallenge = {
   correct: number
 }
 
-export type DialogueChallenge = {
+export type DialogueChallenge = BeatMeta & {
   kind: "dialogue"
   prompt: string
   line: string

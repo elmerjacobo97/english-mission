@@ -3,33 +3,43 @@ import type { Beat } from "../../types/beat"
 export const mission03Beats: Beat[] = [
   {
     kind: "story",
-    es: "Al día siguiente sales a buscar trabajo: necesitas encontrar la parada del bus.",
+    es: "Marta te dijo que hay trabajo al otro lado del barrio. Sales temprano a buscar la parada del bus.",
     en: "Hello! Where is the bus stop?",
     vocab: [
       ["where", "dónde"],
       ["bus stop", "parada del bus"],
     ],
+    character: "marta",
   },
   {
     kind: "choice",
     prompt: "Estás perdido y quieres preguntar por un lugar. ¿Qué palabra usas?",
     options: ["Where", "Thanks", "Money"],
     correct: 0,
+    character: "coco",
+    mood: "curious",
   },
   {
     kind: "story",
-    es: "Un señor te responde y señala la calle.",
+    es: "Un señor mayor te responde y señala la calle.",
     en: "Go straight and turn left.",
     vocab: [
-      ["straight", "recto"],
+      ["straight", "derecho"],
       ["left", "izquierda"],
     ],
+    character: "beto",
+    mood: "happy",
   },
   {
     kind: "order",
     prompt: "Ordena la pregunta: «¿Dónde está la parada del bus?»",
     tokens: ["is", "Where", "bus", "the", "stop"],
     solution: ["Where", "is", "the", "bus", "stop"],
+    character: "beto",
+    note: {
+      title: "Where is…?",
+      body: "Para preguntar por un lugar usas Where is + lugar. En plural sería «Where are the keys?».",
+    },
   },
   {
     kind: "story",
@@ -40,28 +50,39 @@ export const mission03Beats: Beat[] = [
   {
     kind: "type",
     prompt:
-      "El señor no te entendió. Escribe en inglés: «¿Dónde está la parada del bus?»",
+      "Don Beto no te entendió. Escribe en inglés: «¿Dónde está la parada del bus?»",
     accepted: ["where is the bus stop"],
     hint: "Where is the b__ s___",
+    character: "beto",
+    mood: "curious",
+    note: {
+      title: "El orden de la pregunta",
+      body: "En inglés la pregunta empieza con la palabra interrogativa: Where + is + bus stop. No sigas el orden del español.",
+    },
   },
   {
     kind: "story",
-    es: "El señor añade que no está lejos y señala a la derecha.",
+    es: "Don Beto añade que no está lejos y señala a la derecha.",
     en: "It's not far. The bus stop is on the right.",
     vocab: [
       ["right", "derecha"],
       ["far", "lejos"],
     ],
+    character: "beto",
+    mood: "happy",
   },
   {
     kind: "fill",
-    prompt: "Completa lo que te dijo el señor.",
+    prompt: "Completa lo que te dijo Don Beto.",
     sentence: "Go ___ and turn left.",
     answer: "straight",
+    character: "beto",
   },
   {
     kind: "story",
-    es: "Ya sabes moverte por el barrio. Mañana empiezas a buscar trabajo.",
+    es: "Un loro se posa en la banca y repite el nombre de la parada. Ya sabes moverte por el barrio.",
     en: "Thanks! See you tomorrow.",
+    character: "coco",
+    mood: "happy",
   },
 ]

@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, test, vi } from "vitest"
+import { submitChallengeForm } from "@/test/submit-challenge"
 import { testProfile } from "@/test/fixtures"
 import type { FillChallenge as FillChallengeData } from "../types/beat"
 import { FillChallenge } from "./fill-challenge"
@@ -35,7 +36,7 @@ async function type(
 ) {
   await user.clear(screen.getByLabelText("Palabra que falta"))
   await user.type(screen.getByLabelText("Palabra que falta"), text)
-  await user.click(screen.getByRole("button", { name: "Comprobar" }))
+  submitChallengeForm()
 }
 
 describe("FillChallenge", () => {

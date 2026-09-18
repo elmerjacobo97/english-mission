@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, Coins } from "@phosphor-icons/react"
+import { ArrowLeft, ArrowRight, Coins } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useEffect, useSyncExternalStore } from "react"
 import {
@@ -36,11 +36,17 @@ export function MissionPlayer({ mission }: MissionPlayerProps) {
 
   const beat = run.beat
   const progressPercent = Math.round(((run.index + 1) / run.total) * 100)
+  const solvedOutcome = run.outcomes[run.index]
+  const canContinue = !beat || beat.kind === "story" || Boolean(solvedOutcome)
+  const canSubmit =
+    !solvedOutcome &&
+    (beat?.kind === "order" || beat?.kind === "type" || beat?.kind === "fill")
 
   const shared = {
     coins: run.coins,
     rewardsEnabled: run.rewardsEnabled,
     profile: run.profile,
+    solvedOutcome,
     onSpendCoins: run.spendCoins,
     onSolved: run.reportSolved,
     onContinue: run.goNext,
@@ -100,34 +106,74 @@ export function MissionPlayer({ mission }: MissionPlayerProps) {
           onRestart={run.restart}
         />
       ) : beat ? (
-        <div key={run.index} className="animate-rise">
-          {beat.kind === "story" && (
-            <StoryBeat
-              beat={beat}
-              speechAvailable={speechAvailable}
-              englishVisible={run.profile.englishVisible}
-              onContinue={run.goNext}
-            />
-          )}
-          {beat.kind === "choice" && <ChoiceChallenge beat={beat} {...shared} />}
-          {beat.kind === "order" && <OrderChallenge beat={beat} {...shared} />}
-          {beat.kind === "type" && <TypeChallenge beat={beat} {...shared} />}
-          {beat.kind === "fill" && <FillChallenge beat={beat} {...shared} />}
-          {beat.kind === "listen" && (
-            <ListenChallenge
-              beat={beat}
-              speechAvailable={speechAvailable}
-              {...shared}
-            />
-          )}
-          {beat.kind === "dialogue" && (
-            <DialogueChallenge
-              beat={beat}
-              speechAvailable={speechAvailable}
-              {...shared}
-            />
-          )}
-        </div>
+        <>
+          <div key={run.index} className="animate-rise">
+            {beat.kind === "story" && (
+              <StoryBeat
+                beat={beat}
+                speechAvailable={speechAvailable}
+                englishVisible={run.profile.englishVisible}
+              />
+            )}
+            {beat.kind === "choice" && (
+              <ChoiceChallenge beat={beat} {...shared} />
+            )}
+            {beat.kind === "order" && (
+              <OrderChallenge beat={beat} {...shared} />
+            )}
+            {beat.kind === "type" && <TypeChallenge beat={beat} {...shared} />}
+            {beat.kind === "fill" && <FillChallenge beat={beat} {...shared} />}
+            {beat.kind === "listen" && (
+              <ListenChallenge
+                beat={beat}
+                speechAvailable={speechAvailable}
+                {...shared}
+              />
+            )}
+            {beat.kind === "dialogue" && (
+              <DialogueChallenge
+                beat={beat}
+                speechAvailable={speechAvailable}
+                {...shared}
+              />
+            )}
+          </div>
+
+          <div className="grid grid-cols-3 items-center gap-2">
+            <button
+              type="button"
+              onClick={run.goBack}
+              disabled={run.index === 0}
+              className="flex min-h-11 items-center gap-1.5 justify-self-start rounded-2xl border-2 border-ink/10 bg-surface px-3.5 font-display text-sm font-semibold text-muted shadow-card transition hover:text-ink disabled:opacity-40"
+            >
+              <ArrowLeft weight="bold" size={16} aria-hidden />
+              Anterior
+            </button>
+            <span className="justify-self-center font-display text-xs font-semibold text-muted">
+              Paso {run.index + 1} de {run.total}
+            </span>
+            {canContinue ? (
+              <button
+                type="button"
+                onClick={run.goNext}
+                className="animate-pop flex min-h-11 items-center gap-1.5 justify-self-end rounded-2xl bg-accent-strong px-4 font-display text-sm font-semibold text-white shadow-pop transition active:translate-y-0.5"
+              >
+                Continuar
+                <ArrowRight weight="bold" size={16} aria-hidden />
+              </button>
+            ) : canSubmit ? (
+              <button
+                type="submit"
+                form="challenge-form"
+                className="flex min-h-11 items-center gap-1.5 justify-self-end rounded-2xl bg-accent-strong px-4 font-display text-sm font-semibold text-white shadow-pop transition active:translate-y-0.5"
+              >
+                Comprobar
+              </button>
+            ) : (
+              <span />
+            )}
+          </div>
+        </>
       ) : null}
     </main>
   )
