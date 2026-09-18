@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import {
   getMissionProgress,
   recordMissionResult,
+  registerDailyActivity,
 } from "@/lib/progress/progress-store"
 import { useProgress } from "@/lib/progress/use-progress"
 import type { Beat } from "../types/beat"
@@ -59,6 +60,7 @@ export function useMissionRun(mission: Mission) {
       payout: payout.payout,
       bestCoins: payout.bestCoins,
     })
+    registerDailyActivity()
   }, [phase, stars, payout.payout, payout.bestCoins, mission.slug])
 
   function goNext() {

@@ -10,6 +10,7 @@ import {
 import {
   getProgressSnapshot,
   recordReviewResult,
+  registerDailyActivity,
 } from "@/lib/progress/progress-store"
 import { buildReviewChallenge } from "../utils/review-exercise"
 import {
@@ -96,6 +97,7 @@ export function useReviewRun(speechAvailable: boolean) {
     }
     const passed = !outcome.hintUsed && !outcome.revealed
     recordReviewResult(item.key, passed)
+    registerDailyActivity()
     setStats((current) => ({
       reviewed: current.reviewed + 1,
       promoted: current.promoted + (passed ? 1 : 0),

@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, test } from "vitest"
-import { getMissionProgress } from "@/lib/progress/progress-store"
+import { getMissionProgress, getProgressSnapshot } from "@/lib/progress/progress-store"
 import { findMission } from "../content/mission-catalog"
 import { MissionPlayer } from "./mission-player"
 
@@ -150,5 +150,33 @@ describe("MissionPlayer", () => {
       expect(progress.stars).toBe(3)
       expect(progress.bestCoins).toBe(45)
     })
+  })
+
+  test("completing a mission raises the streak once per day and persists it", async () => {
+    const user = userEvent.setup()
+    render(<MissionPlayer mission={mission} />)
+    await screen.findByText(
+      "Llegas a la ciudad en autobús. Es tu primer día: llevas una maleta y un papel con una dirección.",
+    )
+    await playPerfect(user)
+
+    await waitFor(() => {
+      expect(getProgressSnapshot().streak.current).toBe(1)
+      expect(getProgressSnapshot().streak.best).toBe(1)
+    })
+
+    await user.click(
+      await screen.findByRole("button", { name: "Jugar otra vez" }),
+    )
+    await playPerfect(user)
+    expect(
+      await screen.findByText(/Ya conocías esta misión/),
+    ).toBeInTheDocument()
+    expect(getProgressSnapshot().streak.current).toBe(1)
+
+    const stored = JSON.parse(
+      window.localStorage.getItem("english-mission:progress:v4") ?? "{}",
+    ) as { streak?: { current?: number } }
+    expect(stored.streak?.current).toBe(1)
   })
 })

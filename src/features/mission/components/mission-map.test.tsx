@@ -1,8 +1,34 @@
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, test } from "vitest"
-import { addCoins, recordMissionResult } from "@/lib/progress/progress-store"
+import {
+  addCoins,
+  getProgressSnapshot,
+  recordMissionResult,
+  reloadProgress,
+} from "@/lib/progress/progress-store"
+import type { StreakState } from "@/lib/progress/types"
 import { MissionMap } from "./mission-map"
+
+function seedStreak(streak: Partial<StreakState>) {
+  window.localStorage.setItem(
+    "english-mission:progress:v4",
+    JSON.stringify({
+      version: 4,
+      coins: 0,
+      missions: {},
+      reviews: {},
+      streak: {
+        current: 0,
+        best: 0,
+        lastDay: null,
+        pendingMilestone: null,
+        ...streak,
+      },
+    }),
+  )
+  reloadProgress()
+}
 
 describe("MissionMap", () => {
   test("groups missions by chapter and points to the next one", () => {
@@ -83,6 +109,56 @@ describe("MissionMap", () => {
     ).not.toBeInTheDocument()
   })
 
+  test("shows the streak chip with Empieza hoy at zero", () => {
+    render(<MissionMap />)
+
+    expect(screen.getByText("Empieza hoy")).toBeInTheDocument()
+    expect(screen.getByLabelText(/Récord: 0 días/)).toBeInTheDocument()
+  })
+
+  test("shows the current streak with the record in the accessible text", () => {
+    seedStreak({ current: 5, best: 9, lastDay: "2026-09-10" })
+
+    render(<MissionMap />)
+
+    expect(screen.getByText("5")).toBeInTheDocument()
+    expect(screen.getByLabelText(/Récord: 9 días/)).toBeInTheDocument()
+  })
+
+  test("shows the milestone notice, closes it and does not bring it back", async () => {
+    const user = userEvent.setup()
+    seedStreak({
+      current: 7,
+      best: 7,
+      lastDay: "2026-09-10",
+      pendingMilestone: 7,
+    })
+    const { unmount } = render(<MissionMap />)
+
+    expect(
+      screen.getByText(/¡Racha de 7 días! \+25 monedas/),
+    ).toBeInTheDocument()
+
+    await user.click(screen.getByRole("button", { name: "Cerrar aviso" }))
+
+    expect(screen.queryByText(/¡Racha de 7 días!/)).not.toBeInTheDocument()
+    expect(getProgressSnapshot().streak.pendingMilestone).toBeNull()
+    const stored = JSON.parse(
+      window.localStorage.getItem("english-mission:progress:v4") ?? "{}",
+    ) as { streak?: { pendingMilestone?: unknown } }
+    expect(stored.streak?.pendingMilestone).toBeNull()
+
+    unmount()
+    render(<MissionMap />)
+    expect(screen.queryByText(/¡Racha de 7 días!/)).not.toBeInTheDocument()
+  })
+
+  test("does not show the notice without a pending milestone", () => {
+    render(<MissionMap />)
+
+    expect(screen.queryByText(/¡Racha de/)).not.toBeInTheDocument()
+  })
+
   test("reset asks for confirmation and clears stored progress", async () => {
     const user = userEvent.setup()
     addCoins(20)
@@ -99,7 +175,7 @@ describe("MissionMap", () => {
 
     expect(screen.queryByText(/¿Seguro\?/)).not.toBeInTheDocument()
     expect(
-      window.localStorage.getItem("english-mission:progress:v3"),
+      window.localStorage.getItem("english-mission:progress:v4"),
     ).toBeNull()
   })
 
@@ -114,7 +190,7 @@ describe("MissionMap", () => {
     await user.click(screen.getByRole("button", { name: "Cancelar" }))
 
     expect(
-      window.localStorage.getItem("english-mission:progress:v3"),
+      window.localStorage.getItem("english-mission:progress:v4"),
     ).not.toBeNull()
     expect(screen.getByText("20")).toBeInTheDocument()
   })

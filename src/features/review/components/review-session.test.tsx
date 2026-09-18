@@ -79,6 +79,20 @@ describe("ReviewSession", () => {
     expect(getProgressSnapshot().reviews.hello).toMatchObject({ box: 1 })
   })
 
+  test("answering raises the streak once per day", async () => {
+    const user = userEvent.setup()
+    seedTwoDueWords()
+    render(<ReviewSession />)
+
+    await user.click(screen.getByRole("button", { name: "hello" }))
+    await user.click(screen.getByRole("button", { name: "Continuar" }))
+    await user.click(screen.getByRole("button", { name: "goodbye" }))
+
+    expect(getProgressSnapshot().streak.current).toBe(1)
+    expect(getProgressSnapshot().streak.best).toBe(1)
+    expect(getProgressSnapshot().streak.lastDay).not.toBeNull()
+  })
+
   test("hydrates without a mismatch when there are due words", async () => {
     const serverHtml = renderToString(<ReviewSession />)
     expect(serverHtml).toContain("Todo al día")

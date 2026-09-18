@@ -7,7 +7,14 @@ import { buildReviewPool, buildReviewQueue, reviewKey } from "./review-queue"
 const NOW = 1_700_000_000_000
 
 function progress(overrides: Partial<Progress> = {}): Progress {
-  return { version: 3, coins: 0, missions: {}, reviews: {}, ...overrides }
+  return {
+    version: 4,
+    coins: 0,
+    missions: {},
+    reviews: {},
+    streak: { current: 0, best: 0, lastDay: null, pendingMilestone: null },
+    ...overrides,
+  }
 }
 
 function entry(

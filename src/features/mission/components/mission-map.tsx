@@ -5,14 +5,17 @@ import {
   BookOpenText,
   CheckCircle,
   Coins,
+  Fire,
   Lock,
   MapTrifold,
   Play,
   Star,
+  X,
 } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useState } from "react"
 import { useDueReviews } from "@/features/review/hooks/use-due-reviews"
+import { STREAK_MILESTONES } from "@/lib/progress/streak"
 import { useProgress } from "@/lib/progress/use-progress"
 import {
   CHAPTER_TITLES,
@@ -26,9 +29,12 @@ import { MissionStamp } from "./mission-stamp"
 const CHAPTERS: Chapter[] = [1, 2, 3]
 
 export function MissionMap() {
-  const { progress, reset } = useProgress()
+  const { progress, clearPendingMilestone, reset } = useProgress()
   const dueCount = useDueReviews()
   const [confirmingReset, setConfirmingReset] = useState(false)
+
+  const { streak } = progress
+  const { pendingMilestone } = streak
 
   const continueSlug = nextMissionSlug(progress)
   const continueEntry = chapterEntries(1)
@@ -175,23 +181,64 @@ export function MissionMap() {
             />
             English Mission
           </h1>
-          <span
-            key={progress.coins}
-            className="animate-pop flex items-center gap-1.5 rounded-full border-2 border-ink/10 bg-surface px-3 py-2 font-display text-sm font-semibold shadow-card"
-          >
-            <Coins
-              weight="duotone"
-              size={18}
-              className="text-accent-strong"
-              aria-hidden
-            />
-            {progress.coins}
-          </span>
+          <div className="flex items-center gap-2">
+            <span
+              key={`coins-${progress.coins}`}
+              className="animate-pop flex items-center gap-1.5 rounded-full border-2 border-ink/10 bg-surface px-3 py-2 font-display text-sm font-semibold shadow-card"
+            >
+              <Coins
+                weight="duotone"
+                size={18}
+                className="text-accent-strong"
+                aria-hidden
+              />
+              {progress.coins}
+            </span>
+            <span
+              key={`streak-${streak.current}`}
+              className="animate-pop flex items-center gap-1.5 rounded-full border-2 border-ink/10 bg-surface px-3 py-2 font-display text-sm font-semibold shadow-card"
+              aria-label={`Racha de ${streak.current} días. Récord: ${streak.best} días`}
+              title={`Récord: ${streak.best} días`}
+            >
+              <Fire
+                weight="duotone"
+                size={18}
+                className={
+                  streak.current > 0 ? "text-error" : "text-ink/30"
+                }
+                aria-hidden
+              />
+              {streak.current === 0 ? "Empieza hoy" : streak.current}
+            </span>
+          </div>
         </div>
         <p className="font-semibold text-muted">
           Una historia en 12 misiones: de tu primer día a sentirte en casa.
         </p>
       </header>
+
+      {pendingMilestone !== null && (
+        <div className="animate-slide-in flex items-center gap-3 rounded-3xl border-2 border-accent-deep/20 bg-accent px-5 py-4 shadow-card">
+          <Fire
+            weight="fill"
+            size={22}
+            className="shrink-0 text-error"
+            aria-hidden
+          />
+          <p className="flex-1 font-display font-semibold text-ink">
+            ¡Racha de {pendingMilestone} días! +{STREAK_MILESTONES[pendingMilestone]}{" "}
+            monedas
+          </p>
+          <button
+            type="button"
+            onClick={clearPendingMilestone}
+            aria-label="Cerrar aviso"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-ink/10 bg-surface text-ink shadow-card transition hover:-translate-y-0.5"
+          >
+            <X weight="bold" size={16} aria-hidden />
+          </button>
+        </div>
+      )}
 
       {continueEntry && (
         <Link

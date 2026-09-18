@@ -14,9 +14,19 @@ export type ReviewCard = {
   lastReviewedAt: number | null
 }
 
+export type StreakMilestone = 3 | 7 | 30
+
+export type StreakState = {
+  current: number
+  best: number
+  lastDay: string | null
+  pendingMilestone: StreakMilestone | null
+}
+
 export type Progress = {
-  version: 3
+  version: 4
   coins: number
   missions: Record<string, MissionProgress>
   reviews: Record<string, ReviewCard>
+  streak: StreakState
 }
