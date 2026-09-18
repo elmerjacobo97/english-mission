@@ -22,6 +22,10 @@ Package manager is pnpm; the README's npm/yarn/bun instructions are stale boiler
 - Verify before finishing: `rtk pnpm lint && rtk tsc --noEmit && rtk pnpm test`.
 - `rtk vitest run <file>` also works but hides stdout; read results from the JSON report it writes to `.vitest/json/output.json`.
 
+## Specs
+
+Feature work is planned in `specs/NN-slug.md` (spec-driven flow, config in `specs/.spec-config.yml`). `/spec-impl` creates the branch `spec-NN-slug` automatically. `specs/01-spaced-repetition.md` is implemented — read it before changing review behavior.
+
 ## Content invariants
 
 Curriculum lives in `src/features/mission/content/`: `plan.ts` holds 12 mission entries (only 4 are `written: true`); beats live in `missions/mission-XX-*.ts`; `mission-catalog.ts` joins them by slug (`beatsBySlug`). Adding a mission means: plan entry, beats file, `beatsBySlug` entry, `written: true`.
@@ -35,6 +39,7 @@ The same test suite scans all of `src/` for Spain regionalisms (`SPAINISMS` in `
 - `src/app` — thin routes only: `/` map, `/mision/[slug]` player, `/cuaderno` notebook, `/review` spaced-repetition session. Route pages use Next 16 global types (`PageProps<'/mision/[slug]'>`, `LayoutProps<'/'>`), not imported prop types.
 - `src/features/mission` — all game code: `types/`, `content/`, `utils/`, `hooks/`, `components/`. `mission-player.tsx` builds the shared challenge props and renders one component per `beat.kind`; the submit button lives outside the form and targets `form="challenge-form"` (tests submit via `src/test/submit-challenge.ts`).
 - `src/lib/progress` — module-level store persisted to `english-mission:progress:v3` (migrates v2 and v1). Consumed through `useSyncExternalStore` (`use-progress.ts`), never effect+setState: eslint-config-next 16 enables `react-hooks/set-state-in-effect`. Server snapshot is `emptyProgress` for hydration safety. Reuse the same pattern for any other client-only snapshot (e.g. `src/features/review/hooks/use-review-run.ts`).
+- `src/features/review` — Leitner spaced repetition behind `/review`. `utils/` is pure logic (queue, generated exercises, 1/3/7-day schedule, cards keyed by lowercase English word); components reuse `ChoiceChallenge`/`TypeChallenge`/`ListenChallenge` with `rewardsEnabled: false` and free hints that still count as failures.
 - `src/lib/speech.ts` — browser SpeechSynthesis only; playback is user-triggered (🔊 buttons), no autoplay and no audio files.
 - Styling: Tailwind v4 tokens declared in `src/app/globals.css` `@theme` (`bg-surface`, `text-ink`, `shadow-card`, `font-display`). Fonts via `next/font` (Fredoka display, Nunito body). Phosphor icons for chrome; emoji stay in narrative content.
 
