@@ -10,6 +10,7 @@ import {
   MapTrifold,
   Play,
   Star,
+  Storefront,
   X,
 } from "@phosphor-icons/react"
 import Link from "next/link"
@@ -254,6 +255,14 @@ export function MissionMap() {
           </span>
         </Link>
       )}
+
+      <Link
+        href="/shop"
+        className="flex min-h-12 items-center gap-2.5 rounded-3xl border-2 border-accent/30 bg-paper px-5 font-display font-semibold text-accent-deep shadow-card transition hover:-translate-y-0.5"
+      >
+        <Storefront weight="fill" size={20} aria-hidden />
+        Tienda de monedas
+      </Link>
 
       {hasNotebook && (
         <Link

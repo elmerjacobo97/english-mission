@@ -1,14 +1,17 @@
 import { nextCard } from "@/features/review/utils/schedule"
+import { canRecharge, nextShop } from "./shop"
 import { localDayKey, nextStreak } from "./streak"
 import type {
   MissionProgress,
   Progress,
   ReviewCard,
+  ShopState,
   Stars,
   StreakState,
 } from "./types"
 
-const STORAGE_KEY = "english-mission:progress:v4"
+const STORAGE_KEY = "english-mission:progress:v5"
+const LEGACY_V4_KEY = "english-mission:progress:v4"
 const LEGACY_V3_KEY = "english-mission:progress:v3"
 const LEGACY_V2_KEY = "english-mission:progress:v2"
 const LEGACY_V1_KEY = "english-mission:progress:v1"
@@ -20,12 +23,15 @@ const emptyStreak: StreakState = {
   pendingMilestone: null,
 }
 
+const emptyShop: ShopState = { day: null, count: 0 }
+
 export const emptyProgress: Progress = {
-  version: 4,
+  version: 5,
   coins: 0,
   missions: {},
   reviews: {},
   streak: emptyStreak,
+  shop: emptyShop,
 }
 
 let current: Progress | null = null
@@ -99,19 +105,35 @@ function isStreakState(value: unknown): value is StreakState {
   )
 }
 
+function isShopState(value: unknown): value is ShopState {
+  if (typeof value !== "object" || value === null) {
+    return false
+  }
+  const candidate = value as Partial<ShopState>
+  return (
+    typeof candidate.count === "number" &&
+    Number.isInteger(candidate.count) &&
+    candidate.count >= 0 &&
+    (candidate.day === null ||
+      (typeof candidate.day === "string" &&
+        /^\d{4}-\d{2}-\d{2}$/.test(candidate.day)))
+  )
+}
+
 function isProgress(value: unknown): value is Progress {
   if (typeof value !== "object" || value === null) {
     return false
   }
   const candidate = value as Partial<Progress>
   return (
-    candidate.version === 4 &&
+    candidate.version === 5 &&
     typeof candidate.coins === "number" &&
     Number.isFinite(candidate.coins) &&
     candidate.coins >= 0 &&
     isMissionMap(candidate.missions) &&
     isReviewMap(candidate.reviews) &&
-    isStreakState(candidate.streak)
+    isStreakState(candidate.streak) &&
+    isShopState(candidate.shop)
   )
 }
 
@@ -124,6 +146,39 @@ function parseStorage(key: string): unknown {
     return JSON.parse(raw)
   } catch {
     return null
+  }
+}
+
+function migrateV4(parsed: unknown): Progress | null {
+  if (typeof parsed !== "object" || parsed === null) {
+    return null
+  }
+  const legacy = parsed as {
+    version?: number
+    coins?: number
+    missions?: unknown
+    reviews?: unknown
+    streak?: unknown
+  }
+  if (
+    legacy.version !== 4 ||
+    typeof legacy.coins !== "number" ||
+    !Number.isFinite(legacy.coins) ||
+    legacy.coins < 0 ||
+    !isMissionMap(legacy.missions) ||
+    !isReviewMap(legacy.reviews)
+  ) {
+    return null
+  }
+  return {
+    version: 5,
+    coins: legacy.coins,
+    missions: legacy.missions,
+    reviews: legacy.reviews,
+    streak: isStreakState(legacy.streak)
+      ? legacy.streak
+      : { ...emptyStreak },
+    shop: { ...emptyShop },
   }
 }
 
@@ -148,11 +203,12 @@ function migrateV3(parsed: unknown): Progress | null {
     return null
   }
   return {
-    version: 4,
+    version: 5,
     coins: legacy.coins,
     missions: legacy.missions,
     reviews: legacy.reviews,
     streak: { ...emptyStreak },
+    shop: { ...emptyShop },
   }
 }
 
@@ -171,11 +227,12 @@ function migrateV2(parsed: unknown): Progress | null {
     return null
   }
   return {
-    version: 4,
+    version: 5,
     coins: legacy.coins,
     missions: legacy.missions,
     reviews: {},
     streak: { ...emptyStreak },
+    shop: { ...emptyShop },
   }
 }
 
@@ -198,11 +255,12 @@ function migrateV1(parsed: unknown): Progress | null {
     }
   }
   return {
-    version: 4,
+    version: 5,
     coins: legacy.coins,
     missions,
     reviews: {},
     streak: { ...emptyStreak },
+    shop: { ...emptyShop },
   }
 }
 
@@ -216,11 +274,13 @@ function read(): Progress {
       return stored
     }
     const migrated =
+      migrateV4(parseStorage(LEGACY_V4_KEY)) ??
       migrateV3(parseStorage(LEGACY_V3_KEY)) ??
       migrateV2(parseStorage(LEGACY_V2_KEY)) ??
       migrateV1(parseStorage(LEGACY_V1_KEY))
     if (migrated) {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated))
+      window.localStorage.removeItem(LEGACY_V4_KEY)
       window.localStorage.removeItem(LEGACY_V3_KEY)
       window.localStorage.removeItem(LEGACY_V2_KEY)
       window.localStorage.removeItem(LEGACY_V1_KEY)
@@ -296,6 +356,23 @@ export function spendCoins(amount: number): boolean {
   return true
 }
 
+export function recordRecharge(
+  payout: number,
+  now: number = Date.now(),
+): boolean {
+  const progress = getProgressSnapshot()
+  const day = localDayKey(new Date(now))
+  if (!canRecharge(progress.shop, day)) {
+    return false
+  }
+  mutation({
+    ...progress,
+    coins: progress.coins + payout,
+    shop: nextShop(progress.shop, day),
+  })
+  return true
+}
+
 export function recordMissionResult(
   slug: string,
   result: { stars: Stars; payout: number; bestCoins: number },
@@ -361,6 +438,7 @@ export function resetProgress(): void {
   current = emptyProgress
   if (typeof window !== "undefined") {
     window.localStorage.removeItem(STORAGE_KEY)
+    window.localStorage.removeItem(LEGACY_V4_KEY)
     window.localStorage.removeItem(LEGACY_V3_KEY)
     window.localStorage.removeItem(LEGACY_V2_KEY)
     window.localStorage.removeItem(LEGACY_V1_KEY)

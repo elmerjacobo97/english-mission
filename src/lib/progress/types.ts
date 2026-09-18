@@ -23,10 +23,16 @@ export type StreakState = {
   pendingMilestone: StreakMilestone | null
 }
 
+export type ShopState = {
+  day: string | null
+  count: number
+}
+
 export type Progress = {
-  version: 4
+  version: 5
   coins: number
   missions: Record<string, MissionProgress>
   reviews: Record<string, ReviewCard>
   streak: StreakState
+  shop: ShopState
 }

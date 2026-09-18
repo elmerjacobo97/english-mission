@@ -6,13 +6,14 @@ import {
   getMissionProgress,
   getProgressSnapshot,
   recordMissionResult,
+  recordRecharge,
   recordReviewResult,
   registerDailyActivity,
   reloadProgress,
   resetProgress,
   spendCoins,
 } from "./progress-store"
-import type { StreakState } from "./types"
+import type { ShopState, StreakState } from "./types"
 
 const NOW = 1_000_000_000_000
 
@@ -22,6 +23,8 @@ const emptyStreak: StreakState = {
   lastDay: null,
   pendingMilestone: null,
 }
+
+const emptyShop: ShopState = { day: null, count: 0 }
 
 function day(year: number, month: number, dayOfMonth: number): number {
   return new Date(year, month - 1, dayOfMonth, 12).getTime()
@@ -104,6 +107,66 @@ describe("recordReviewResult", () => {
   })
 })
 
+describe("migration from v4", () => {
+  test("keeps coins, missions, reviews and streak and adds an empty shop", () => {
+    window.localStorage.setItem(
+      "english-mission:progress:v4",
+      JSON.stringify({
+        version: 4,
+        coins: 30,
+        missions: {
+          supermercado: { completed: true, stars: 2, bestCoins: 20 },
+        },
+        reviews: {
+          apple: { box: 2, dueAt: NOW, lastReviewedAt: NOW },
+        },
+        streak: {
+          current: 4,
+          best: 6,
+          lastDay: "2026-09-17",
+          pendingMilestone: 3,
+        },
+      }),
+    )
+    reloadProgress()
+
+    expect(getProgressSnapshot()).toEqual({
+      version: 5,
+      coins: 30,
+      missions: {
+        supermercado: { completed: true, stars: 2, bestCoins: 20 },
+      },
+      reviews: {
+        apple: { box: 2, dueAt: NOW, lastReviewedAt: NOW },
+      },
+      streak: {
+        current: 4,
+        best: 6,
+        lastDay: "2026-09-17",
+        pendingMilestone: 3,
+      },
+      shop: emptyShop,
+    })
+    expect(
+      window.localStorage.getItem("english-mission:progress:v5"),
+    ).toContain("supermercado")
+    expect(
+      window.localStorage.getItem("english-mission:progress:v4"),
+    ).toBeNull()
+  })
+
+  test("falls back to an empty streak when it is missing", () => {
+    window.localStorage.setItem(
+      "english-mission:progress:v4",
+      JSON.stringify({ version: 4, coins: 5, missions: {}, reviews: {} }),
+    )
+    reloadProgress()
+
+    expect(getProgressSnapshot().streak).toEqual(emptyStreak)
+    expect(getProgressSnapshot().coins).toBe(5)
+  })
+})
+
 describe("migration from v3", () => {
   test("keeps coins, missions and reviews and adds an empty streak", () => {
     window.localStorage.setItem(
@@ -122,7 +185,7 @@ describe("migration from v3", () => {
     reloadProgress()
 
     expect(getProgressSnapshot()).toEqual({
-      version: 4,
+      version: 5,
       coins: 30,
       missions: {
         supermercado: { completed: true, stars: 2, bestCoins: 20 },
@@ -131,9 +194,10 @@ describe("migration from v3", () => {
         apple: { box: 2, dueAt: NOW, lastReviewedAt: NOW },
       },
       streak: emptyStreak,
+      shop: emptyShop,
     })
     expect(
-      window.localStorage.getItem("english-mission:progress:v4"),
+      window.localStorage.getItem("english-mission:progress:v5"),
     ).toContain("supermercado")
     expect(
       window.localStorage.getItem("english-mission:progress:v3"),
@@ -156,16 +220,17 @@ describe("migration from v2", () => {
     reloadProgress()
 
     expect(getProgressSnapshot()).toEqual({
-      version: 4,
+      version: 5,
       coins: 30,
       missions: {
         supermercado: { completed: true, stars: 2, bestCoins: 20 },
       },
       reviews: {},
       streak: emptyStreak,
+      shop: emptyShop,
     })
     expect(
-      window.localStorage.getItem("english-mission:progress:v4"),
+      window.localStorage.getItem("english-mission:progress:v5"),
     ).toContain("supermercado")
     expect(
       window.localStorage.getItem("english-mission:progress:v2"),
@@ -186,16 +251,17 @@ describe("migration from v1", () => {
     reloadProgress()
 
     expect(getProgressSnapshot()).toEqual({
-      version: 4,
+      version: 5,
       coins: 45,
       missions: {
         supermercado: { completed: true, stars: 1, bestCoins: 0 },
       },
       reviews: {},
       streak: emptyStreak,
+      shop: emptyShop,
     })
     expect(
-      window.localStorage.getItem("english-mission:progress:v4"),
+      window.localStorage.getItem("english-mission:progress:v5"),
     ).toContain("supermercado")
     expect(
       window.localStorage.getItem("english-mission:progress:v1"),
@@ -210,6 +276,42 @@ describe("migration from v1", () => {
     reloadProgress()
     expect(getProgressSnapshot().coins).toBe(0)
     expect(getProgressSnapshot().missions).toEqual({})
+  })
+})
+
+describe("recordRecharge", () => {
+  test("adds the payout and counts the recharge for the day", () => {
+    expect(recordRecharge(10, day(2026, 9, 18))).toBe(true)
+
+    expect(getProgressSnapshot().coins).toBe(10)
+    expect(getProgressSnapshot().shop).toEqual({ day: "2026-09-18", count: 1 })
+
+    expect(recordRecharge(5, day(2026, 9, 18))).toBe(true)
+    expect(getProgressSnapshot().coins).toBe(15)
+    expect(getProgressSnapshot().shop).toEqual({ day: "2026-09-18", count: 2 })
+  })
+
+  test("a fourth recharge returns false without mutating", () => {
+    recordRecharge(10, day(2026, 9, 18))
+    recordRecharge(10, day(2026, 9, 18))
+    recordRecharge(10, day(2026, 9, 18))
+    const before = getProgressSnapshot()
+
+    expect(recordRecharge(10, day(2026, 9, 18))).toBe(false)
+
+    expect(getProgressSnapshot()).toBe(before)
+    expect(getProgressSnapshot().coins).toBe(30)
+    expect(getProgressSnapshot().shop.count).toBe(3)
+  })
+
+  test("a new day restores the quota", () => {
+    recordRecharge(10, day(2026, 9, 18))
+    recordRecharge(10, day(2026, 9, 18))
+    recordRecharge(10, day(2026, 9, 18))
+
+    expect(recordRecharge(10, day(2026, 9, 19))).toBe(true)
+    expect(getProgressSnapshot().shop).toEqual({ day: "2026-09-19", count: 1 })
+    expect(getProgressSnapshot().coins).toBe(40)
   })
 })
 
@@ -272,15 +374,17 @@ describe("clearPendingMilestone", () => {
 })
 
 describe("resetProgress", () => {
-  test("clears the review schedule and the streak", () => {
+  test("clears the review schedule, the streak and the shop", () => {
     recordReviewResult("apple", true, NOW)
     registerDailyActivity(day(2026, 9, 10))
+    recordRecharge(10, day(2026, 9, 10))
     resetProgress()
 
     expect(getProgressSnapshot().reviews).toEqual({})
     expect(getProgressSnapshot().streak).toEqual(emptyStreak)
+    expect(getProgressSnapshot().shop).toEqual(emptyShop)
     expect(
-      window.localStorage.getItem("english-mission:progress:v4"),
+      window.localStorage.getItem("english-mission:progress:v5"),
     ).toBeNull()
   })
 })

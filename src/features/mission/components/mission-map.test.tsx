@@ -12,9 +12,9 @@ import { MissionMap } from "./mission-map"
 
 function seedStreak(streak: Partial<StreakState>) {
   window.localStorage.setItem(
-    "english-mission:progress:v4",
+    "english-mission:progress:v5",
     JSON.stringify({
-      version: 4,
+      version: 5,
       coins: 0,
       missions: {},
       reviews: {},
@@ -25,6 +25,7 @@ function seedStreak(streak: Partial<StreakState>) {
         pendingMilestone: null,
         ...streak,
       },
+      shop: { day: null, count: 0 },
     }),
   )
   reloadProgress()
@@ -109,6 +110,25 @@ describe("MissionMap", () => {
     ).not.toBeInTheDocument()
   })
 
+  test("shows the coin shop card without progress", () => {
+    render(<MissionMap />)
+
+    expect(
+      screen.getByRole("link", { name: /Tienda de monedas/ }),
+    ).toHaveAttribute("href", "/shop")
+  })
+
+  test("keeps the coin shop card visible with progress", () => {
+    addCoins(40)
+    recordMissionResult("la-llegada", { stars: 2, payout: 0, bestCoins: 40 })
+
+    render(<MissionMap />)
+
+    expect(
+      screen.getByRole("link", { name: /Tienda de monedas/ }),
+    ).toHaveAttribute("href", "/shop")
+  })
+
   test("shows the streak chip with Empieza hoy at zero", () => {
     render(<MissionMap />)
 
@@ -144,7 +164,7 @@ describe("MissionMap", () => {
     expect(screen.queryByText(/¡Racha de 7 días!/)).not.toBeInTheDocument()
     expect(getProgressSnapshot().streak.pendingMilestone).toBeNull()
     const stored = JSON.parse(
-      window.localStorage.getItem("english-mission:progress:v4") ?? "{}",
+      window.localStorage.getItem("english-mission:progress:v5") ?? "{}",
     ) as { streak?: { pendingMilestone?: unknown } }
     expect(stored.streak?.pendingMilestone).toBeNull()
 
@@ -175,7 +195,7 @@ describe("MissionMap", () => {
 
     expect(screen.queryByText(/¿Seguro\?/)).not.toBeInTheDocument()
     expect(
-      window.localStorage.getItem("english-mission:progress:v4"),
+      window.localStorage.getItem("english-mission:progress:v5"),
     ).toBeNull()
   })
 
@@ -190,7 +210,7 @@ describe("MissionMap", () => {
     await user.click(screen.getByRole("button", { name: "Cancelar" }))
 
     expect(
-      window.localStorage.getItem("english-mission:progress:v4"),
+      window.localStorage.getItem("english-mission:progress:v5"),
     ).not.toBeNull()
     expect(screen.getByText("20")).toBeInTheDocument()
   })
