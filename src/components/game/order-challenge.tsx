@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { useChallengeRun } from "../hooks/use-challenge-run"
-import type { OrderChallenge as OrderChallengeType } from "../types/beat"
-import { checkOrderedAnswer } from "../utils/answer-check"
-import { hintForOrder } from "../utils/rewards"
+import { useChallengeRun } from "@/lib/game/hooks/use-challenge-run"
+import type { OrderChallenge as OrderChallengeType } from "@/lib/game/types/beat"
+import { checkOrderedAnswer } from "@/lib/game/utils/answer-check"
+import { hintForOrder } from "@/lib/game/utils/rewards"
 import type { ChallengeProps } from "./challenge-props"
 import { ChallengeFrame } from "./challenge-frame"
 

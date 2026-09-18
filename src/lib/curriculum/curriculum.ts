@@ -1,5 +1,5 @@
-import type { Beat, Vocabulary } from "../types/beat"
-import type { Mission } from "../types/mission"
+import type { Beat, Vocabulary } from "@/lib/game/types/beat"
+import type { Mission } from "@/lib/game/types/mission"
 
 export const SPAINISMS = [
   "dependiente",

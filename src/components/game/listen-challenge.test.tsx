@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, test, vi } from "vitest"
 import { testProfile } from "@/test/fixtures"
-import type { ListenChallenge as ListenChallengeData } from "../types/beat"
+import type { ListenChallenge as ListenChallengeData } from "@/lib/game/types/beat"
 import { ListenChallenge } from "./listen-challenge"
 
 const beat: ListenChallengeData = {

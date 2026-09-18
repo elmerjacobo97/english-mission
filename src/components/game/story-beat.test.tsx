@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react"
 import { describe, expect, test } from "vitest"
-import type { StoryBeat as StoryBeatData } from "../types/beat"
+import type { StoryBeat as StoryBeatData } from "@/lib/game/types/beat"
 import { StoryBeat } from "./story-beat"
 
 const youBeat: StoryBeatData = {

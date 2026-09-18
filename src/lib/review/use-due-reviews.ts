@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react"
 import { useProgress } from "@/lib/progress/use-progress"
-import { buildReviewQueue } from "../utils/review-queue"
+import { buildReviewQueue } from "@/lib/review/review-queue"
 
 export function useDueReviews(): number {
   const { progress } = useProgress()

@@ -1,6 +1,6 @@
 import type { Progress } from "@/lib/progress/types"
-import type { Beat } from "../types/beat"
-import type { Chapter, Mission, MissionPlanEntry } from "../types/mission"
+import type { Beat } from "@/lib/game/types/beat"
+import type { Chapter, Mission, MissionPlanEntry } from "@/lib/game/types/mission"
 import { mission01Beats } from "./missions/mission-01-la-llegada"
 import { mission02Beats } from "./missions/mission-02-supermercado"
 import { mission03Beats } from "./missions/mission-03-direcciones"

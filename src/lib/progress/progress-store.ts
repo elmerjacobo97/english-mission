@@ -1,4 +1,4 @@
-import { nextCard } from "@/features/review/utils/schedule"
+import { nextCard } from "@/lib/review/schedule"
 import { canBuy, isOwned, LOOK_PRICES, nextLooks, PAID_LOOK_IDS } from "./looks"
 import { canRecharge, nextShop } from "./shop"
 import { localDayKey, nextStreak } from "./streak"

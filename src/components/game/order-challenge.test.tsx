@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event"
 import { describe, expect, test, vi } from "vitest"
 import { submitChallengeForm } from "@/test/submit-challenge"
 import { testProfile } from "@/test/fixtures"
-import type { OrderChallenge as OrderChallengeData } from "../types/beat"
+import type { OrderChallenge as OrderChallengeData } from "@/lib/game/types/beat"
 import { OrderChallenge } from "./order-challenge"
 
 const beat: OrderChallengeData = {

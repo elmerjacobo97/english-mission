@@ -1,24 +1,24 @@
 "use client"
 
 import { useState, useSyncExternalStore } from "react"
-import type { Challenge } from "@/features/mission/types/beat"
-import type { ChallengeOutcome } from "@/features/mission/types/run"
+import type { Challenge } from "@/lib/game/types/beat"
+import type { ChallengeOutcome } from "@/lib/game/types/run"
 import {
   profileFor,
   type DifficultyProfile,
-} from "@/features/mission/utils/difficulty"
+} from "@/lib/game/utils/difficulty"
 import {
   getProgressSnapshot,
   recordReviewResult,
   registerDailyActivity,
 } from "@/lib/progress/progress-store"
-import { buildReviewChallenge } from "../utils/review-exercise"
+import { buildReviewChallenge } from "@/lib/review/review-exercise"
 import {
   buildReviewPool,
   buildReviewQueue,
   type ReviewQueueItem,
   type ReviewWord,
-} from "../utils/review-queue"
+} from "@/lib/review/review-queue"
 
 export type ReviewStats = {
   reviewed: number

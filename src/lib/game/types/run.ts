@@ -1,3 +1,9 @@
+export type ChallengeFeedback = {
+  tone: "error" | "success" | "info"
+  message: string
+  detail?: string
+}
+
 export type ChallengeOutcome = {
   reward: number
   wrongAttempts: number

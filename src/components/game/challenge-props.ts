@@ -1,5 +1,5 @@
-import type { ChallengeOutcome } from "../types/run"
-import type { DifficultyProfile } from "../utils/difficulty"
+import type { ChallengeOutcome } from "@/lib/game/types/run"
+import type { DifficultyProfile } from "@/lib/game/utils/difficulty"
 
 export type ChallengeProps = {
   coins: number

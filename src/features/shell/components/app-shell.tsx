@@ -12,7 +12,7 @@ import {
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import type { ReactNode } from "react"
-import { useDueReviews } from "@/features/review/hooks/use-due-reviews"
+import { useDueReviews } from "@/lib/review/use-due-reviews"
 import { APP_VERSION } from "@/lib/app-version"
 import { useProgress } from "@/lib/progress/use-progress"
 

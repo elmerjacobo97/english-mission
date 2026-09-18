@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "vitest"
-import { DAY_MS } from "@/features/review/utils/schedule"
+import { DAY_MS } from "@/lib/review/schedule"
 import {
   addCoins,
   clearPendingMilestone,

@@ -3,8 +3,8 @@
 import { Eye, SpeakerHigh } from "@phosphor-icons/react"
 import { useEffect, useState } from "react"
 import { speak, stopSpeaking } from "@/lib/speech"
-import { CHARACTERS } from "../content/characters"
-import type { StoryBeat as StoryBeatData } from "../types/beat"
+import { CHARACTERS } from "@/lib/game/content/characters"
+import type { StoryBeat as StoryBeatData } from "@/lib/game/types/beat"
 import { CharacterAvatar } from "./character-avatar"
 import { GrammarNote } from "./grammar-note"
 

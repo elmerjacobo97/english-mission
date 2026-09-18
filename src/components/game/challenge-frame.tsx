@@ -2,15 +2,10 @@
 
 import { CheckCircle, Lightbulb, XCircle } from "@phosphor-icons/react"
 import type { ReactNode } from "react"
-import type { GrammarNote as GrammarNoteData } from "../types/beat"
+import type { GrammarNote as GrammarNoteData } from "@/lib/game/types/beat"
+import type { ChallengeFeedback } from "@/lib/game/types/run"
 import { CharacterAvatar } from "./character-avatar"
 import { GrammarNote } from "./grammar-note"
-
-export type ChallengeFeedback = {
-  tone: "error" | "success" | "info"
-  message: string
-  detail?: string
-}
 
 type ChallengeFrameProps = {
   prompt: string

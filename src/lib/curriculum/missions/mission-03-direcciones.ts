@@ -1,4 +1,4 @@
-import type { Beat } from "../../types/beat"
+import type { Beat } from "@/lib/game/types/beat"
 
 export const mission03Beats: Beat[] = [
   {

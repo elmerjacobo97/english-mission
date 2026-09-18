@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest"
 import { DAY_MS } from "./schedule"
-import type { MissionPlanEntry } from "@/features/mission/types/mission"
+import type { MissionPlanEntry } from "@/lib/game/types/mission"
 import type { Progress } from "@/lib/progress/types"
 import { buildReviewPool, buildReviewQueue, reviewKey } from "./review-queue"
 

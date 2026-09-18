@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { useChallengeRun } from "../hooks/use-challenge-run"
-import type { ChoiceChallenge as ChoiceChallengeType } from "../types/beat"
-import { hintForOption } from "../utils/rewards"
+import { useChallengeRun } from "@/lib/game/hooks/use-challenge-run"
+import type { ChoiceChallenge as ChoiceChallengeType } from "@/lib/game/types/beat"
+import { hintForOption } from "@/lib/game/utils/rewards"
 import type { ChallengeProps } from "./challenge-props"
 import { ChallengeFrame } from "./challenge-frame"
 

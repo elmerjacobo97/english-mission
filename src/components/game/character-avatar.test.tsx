@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import { describe, expect, test } from "vitest"
 import { addCoins, selectLook } from "@/lib/progress/progress-store"
-import { CHARACTERS } from "../content/characters"
+import { CHARACTERS } from "@/lib/game/content/characters"
 import { CharacterAvatar } from "./character-avatar"
 
 function painted(

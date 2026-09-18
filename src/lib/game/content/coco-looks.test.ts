@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest"
-import { CHARACTERS } from "@/features/mission/content/characters"
+import { CHARACTERS } from "./characters"
 import { LOOK_PRICES } from "@/lib/progress/looks"
 import { COCO_LOOKS } from "./coco-looks"
 

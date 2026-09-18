@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, test, vi } from "vitest"
 import { testProfile } from "@/test/fixtures"
-import type { ChoiceChallenge as ChoiceChallengeData } from "../types/beat"
+import type { ChoiceChallenge as ChoiceChallengeData } from "@/lib/game/types/beat"
 import { ChoiceChallenge } from "./choice-challenge"
 
 const beat: ChoiceChallengeData = {

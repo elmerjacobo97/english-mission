@@ -1,7 +1,7 @@
 "use client"
 
 import { BookOpenText } from "@phosphor-icons/react"
-import type { GrammarNote as GrammarNoteData } from "../types/beat"
+import type { GrammarNote as GrammarNoteData } from "@/lib/game/types/beat"
 import { CharacterAvatar } from "./character-avatar"
 
 type GrammarNoteProps = {

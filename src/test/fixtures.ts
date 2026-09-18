@@ -1,4 +1,4 @@
-import type { DifficultyProfile } from "@/features/mission/utils/difficulty"
+import type { DifficultyProfile } from "@/lib/game/utils/difficulty"
 
 export const testProfile: DifficultyProfile = {
   level: 3,

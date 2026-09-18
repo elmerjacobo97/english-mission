@@ -1,5 +1,5 @@
-import type { MissionPlanEntry } from "@/features/mission/types/mission"
-import { missionPlan } from "@/features/mission/content/plan"
+import type { MissionPlanEntry } from "@/lib/game/types/mission"
+import { missionPlan } from "@/lib/curriculum/plan"
 import type { Progress, ReviewBox } from "@/lib/progress/types"
 
 export type ReviewWord = {

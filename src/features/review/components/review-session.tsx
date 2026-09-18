@@ -3,10 +3,10 @@
 import { ArrowCounterClockwise, ArrowRight } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useSyncExternalStore } from "react"
-import { ChoiceChallenge } from "@/features/mission/components/choice-challenge"
-import { ListenChallenge } from "@/features/mission/components/listen-challenge"
-import { TypeChallenge } from "@/features/mission/components/type-challenge"
-import { PageHeader } from "@/features/shell/components/page-header"
+import { ChoiceChallenge } from "@/components/game/choice-challenge"
+import { ListenChallenge } from "@/components/game/listen-challenge"
+import { TypeChallenge } from "@/components/game/type-challenge"
+import { PageHeader } from "@/components/page-header"
 import {
   getSpeechSupportServerSnapshot,
   getSpeechSupportSnapshot,

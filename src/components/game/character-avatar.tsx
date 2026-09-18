@@ -1,11 +1,11 @@
 "use client"
 
 import { useId } from "react"
-import { COCO_LOOKS } from "@/features/shop/content/coco-looks"
+import { COCO_LOOKS } from "@/lib/game/content/coco-looks"
 import { useProgress } from "@/lib/progress/use-progress"
 import type { CocoLookId } from "@/lib/progress/types"
-import { CHARACTERS } from "../content/characters"
-import type { CharacterConfig, CharacterId, Mood } from "../types/character"
+import { CHARACTERS } from "@/lib/game/content/characters"
+import type { CharacterConfig, CharacterId, Mood } from "@/lib/game/types/character"
 
 const INK = "#2a1d14"
 

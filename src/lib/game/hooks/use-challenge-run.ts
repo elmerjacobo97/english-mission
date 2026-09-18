@@ -1,8 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import type { ChallengeFeedback } from "../components/challenge-frame"
-import type { ChallengeOutcome } from "../types/run"
+import type { ChallengeFeedback, ChallengeOutcome } from "../types/run"
 import type { DifficultyProfile } from "../utils/difficulty"
 import {
   coinsForAttempt,

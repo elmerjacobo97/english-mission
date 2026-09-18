@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import type { ChoiceChallenge } from "@/features/mission/types/beat"
-import type { ChallengeOutcome } from "@/features/mission/types/run"
-import { buildReviewPool } from "@/features/review/utils/review-queue"
+import type { ChoiceChallenge } from "@/lib/game/types/beat"
+import type { ChallengeOutcome } from "@/lib/game/types/run"
+import { buildReviewPool } from "@/lib/review/review-queue"
 import { recordRecharge } from "@/lib/progress/progress-store"
 import { canRecharge, rechargesUsed } from "@/lib/progress/shop"
 import { localDayKey } from "@/lib/progress/streak"

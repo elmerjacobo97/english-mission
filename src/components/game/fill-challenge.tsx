@@ -1,10 +1,10 @@
 "use client"
 
 import { useRef, useState } from "react"
-import { useChallengeRun } from "../hooks/use-challenge-run"
-import type { FillChallenge as FillChallengeType } from "../types/beat"
-import { checkTypedAnswer } from "../utils/answer-check"
-import { hintForFill } from "../utils/rewards"
+import { useChallengeRun } from "@/lib/game/hooks/use-challenge-run"
+import type { FillChallenge as FillChallengeType } from "@/lib/game/types/beat"
+import { checkTypedAnswer } from "@/lib/game/utils/answer-check"
+import { hintForFill } from "@/lib/game/utils/rewards"
 import type { ChallengeProps } from "./challenge-props"
 import { ChallengeFrame } from "./challenge-frame"
 

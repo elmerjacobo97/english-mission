@@ -10,15 +10,15 @@ import {
   subscribeSpeechSupport,
 } from "@/lib/speech"
 import { useMissionRun } from "../hooks/use-mission-run"
-import type { Mission } from "../types/mission"
-import { ChoiceChallenge } from "./choice-challenge"
-import { DialogueChallenge } from "./dialogue-challenge"
-import { FillChallenge } from "./fill-challenge"
-import { ListenChallenge } from "./listen-challenge"
+import type { Mission } from "@/lib/game/types/mission"
+import { ChoiceChallenge } from "@/components/game/choice-challenge"
+import { DialogueChallenge } from "@/components/game/dialogue-challenge"
+import { FillChallenge } from "@/components/game/fill-challenge"
+import { ListenChallenge } from "@/components/game/listen-challenge"
 import { MissionComplete } from "./mission-complete"
-import { OrderChallenge } from "./order-challenge"
-import { StoryBeat } from "./story-beat"
-import { TypeChallenge } from "./type-challenge"
+import { OrderChallenge } from "@/components/game/order-challenge"
+import { StoryBeat } from "@/components/game/story-beat"
+import { TypeChallenge } from "@/components/game/type-challenge"
 
 type MissionPlayerProps = {
   mission: Mission

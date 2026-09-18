@@ -2,12 +2,12 @@
 
 import { Coins, Storefront } from "@phosphor-icons/react"
 import Link from "next/link"
-import { CharacterAvatar } from "@/features/mission/components/character-avatar"
-import { ChoiceChallenge } from "@/features/mission/components/choice-challenge"
-import { PageHeader } from "@/features/shell/components/page-header"
+import { CharacterAvatar } from "@/components/game/character-avatar"
+import { ChoiceChallenge } from "@/components/game/choice-challenge"
+import { PageHeader } from "@/components/page-header"
 import { MAX_DAILY_RECHARGES } from "@/lib/progress/shop"
 import { useProgress } from "@/lib/progress/use-progress"
-import { COCO_LOOKS } from "../content/coco-looks"
+import { COCO_LOOKS } from "@/lib/game/content/coco-looks"
 import { useShopRun } from "../hooks/use-shop-run"
 import { SHOP_PROFILE } from "../utils/shop-exercise"
 

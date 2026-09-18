@@ -7,11 +7,11 @@ import {
   registerDailyActivity,
 } from "@/lib/progress/progress-store"
 import { useProgress } from "@/lib/progress/use-progress"
-import type { Beat } from "../types/beat"
-import type { Mission } from "../types/mission"
-import type { ChallengeOutcome, MissionRunStats } from "../types/run"
-import { profileFor } from "../utils/difficulty"
-import { missionPayout, starsForRun } from "../utils/rewards"
+import type { Beat } from "@/lib/game/types/beat"
+import type { Mission } from "@/lib/game/types/mission"
+import type { ChallengeOutcome, MissionRunStats } from "@/lib/game/types/run"
+import { profileFor } from "@/lib/game/utils/difficulty"
+import { missionPayout, starsForRun } from "@/lib/game/utils/rewards"
 
 export type MissionPhase = "playing" | "complete"
 

@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, test, vi } from "vitest"
 import { testProfile } from "@/test/fixtures"
-import type { DialogueChallenge as DialogueChallengeData } from "../types/beat"
+import type { DialogueChallenge as DialogueChallengeData } from "@/lib/game/types/beat"
 import { DialogueChallenge } from "./dialogue-challenge"
 
 const beat: DialogueChallengeData = {

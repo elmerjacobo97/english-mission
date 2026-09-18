@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest"
-import { profileFor } from "@/features/mission/utils/difficulty"
-import type { ReviewWord } from "@/features/review/utils/review-queue"
+import { profileFor } from "@/lib/game/utils/difficulty"
+import type { ReviewWord } from "@/lib/review/review-queue"
 import {
   SHOP_PROFILE,
   buildShopChallenge,

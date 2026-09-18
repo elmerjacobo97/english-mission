@@ -2,7 +2,7 @@ import type {
   Challenge,
   ListenChallenge,
   TypeChallenge,
-} from "@/features/mission/types/beat"
+} from "@/lib/game/types/beat"
 import type { ReviewQueueItem, ReviewWord } from "./review-queue"
 
 function optionWords(word: ReviewWord, pool: ReviewWord[]): string[] {

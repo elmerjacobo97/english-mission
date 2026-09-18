@@ -12,8 +12,8 @@ import {
   missionSpanishText,
   orphanVocab,
   recycledWords,
-} from "../utils/curriculum"
-import { profileFor } from "../utils/difficulty"
+} from "./curriculum"
+import { profileFor } from "@/lib/game/utils/difficulty"
 
 const MIN_RECYCLED_WORDS = 3
 

@@ -1,4 +1,4 @@
-import type { MissionPlanEntry } from "../types/mission"
+import type { MissionPlanEntry } from "@/lib/game/types/mission"
 
 export const missionPlan: MissionPlanEntry[] = [
   {
