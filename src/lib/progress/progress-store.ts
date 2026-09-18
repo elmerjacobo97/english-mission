@@ -1,7 +1,10 @@
 import { nextCard } from "@/features/review/utils/schedule"
+import { canBuy, isOwned, LOOK_PRICES, nextLooks, PAID_LOOK_IDS } from "./looks"
 import { canRecharge, nextShop } from "./shop"
 import { localDayKey, nextStreak } from "./streak"
 import type {
+  CocoLookId,
+  LooksState,
   MissionProgress,
   Progress,
   ReviewCard,
@@ -10,7 +13,8 @@ import type {
   StreakState,
 } from "./types"
 
-const STORAGE_KEY = "english-mission:progress:v5"
+const STORAGE_KEY = "english-mission:progress:v6"
+const LEGACY_V5_KEY = "english-mission:progress:v5"
 const LEGACY_V4_KEY = "english-mission:progress:v4"
 const LEGACY_V3_KEY = "english-mission:progress:v3"
 const LEGACY_V2_KEY = "english-mission:progress:v2"
@@ -25,13 +29,16 @@ const emptyStreak: StreakState = {
 
 const emptyShop: ShopState = { day: null, count: 0 }
 
+const emptyLooks: LooksState = { owned: [], equipped: "classic" }
+
 export const emptyProgress: Progress = {
-  version: 5,
+  version: 6,
   coins: 0,
   missions: {},
   reviews: {},
   streak: emptyStreak,
   shop: emptyShop,
+  looks: emptyLooks,
 }
 
 let current: Progress | null = null
@@ -120,20 +127,51 @@ function isShopState(value: unknown): value is ShopState {
   )
 }
 
+function isPaidLookId(value: unknown): value is (typeof PAID_LOOK_IDS)[number] {
+  return (
+    typeof value === "string" &&
+    (PAID_LOOK_IDS as readonly string[]).includes(value)
+  )
+}
+
+function isLookId(value: unknown): value is CocoLookId {
+  return value === "classic" || isPaidLookId(value)
+}
+
+function isLooksState(value: unknown): value is LooksState {
+  if (typeof value !== "object" || value === null) {
+    return false
+  }
+  const candidate = value as { owned?: unknown; equipped?: unknown }
+  if (!Array.isArray(candidate.owned)) {
+    return false
+  }
+  const owned = candidate.owned
+  if (!owned.every(isPaidLookId) || new Set(owned).size !== owned.length) {
+    return false
+  }
+  const equipped = candidate.equipped
+  if (!isLookId(equipped)) {
+    return false
+  }
+  return equipped === "classic" || owned.includes(equipped)
+}
+
 function isProgress(value: unknown): value is Progress {
   if (typeof value !== "object" || value === null) {
     return false
   }
   const candidate = value as Partial<Progress>
   return (
-    candidate.version === 5 &&
+    candidate.version === 6 &&
     typeof candidate.coins === "number" &&
     Number.isFinite(candidate.coins) &&
     candidate.coins >= 0 &&
     isMissionMap(candidate.missions) &&
     isReviewMap(candidate.reviews) &&
     isStreakState(candidate.streak) &&
-    isShopState(candidate.shop)
+    isShopState(candidate.shop) &&
+    isLooksState(candidate.looks)
   )
 }
 
@@ -146,6 +184,41 @@ function parseStorage(key: string): unknown {
     return JSON.parse(raw)
   } catch {
     return null
+  }
+}
+
+function migrateV5(parsed: unknown): Progress | null {
+  if (typeof parsed !== "object" || parsed === null) {
+    return null
+  }
+  const legacy = parsed as {
+    version?: number
+    coins?: number
+    missions?: unknown
+    reviews?: unknown
+    streak?: unknown
+    shop?: unknown
+  }
+  if (
+    legacy.version !== 5 ||
+    typeof legacy.coins !== "number" ||
+    !Number.isFinite(legacy.coins) ||
+    legacy.coins < 0 ||
+    !isMissionMap(legacy.missions) ||
+    !isReviewMap(legacy.reviews) ||
+    !isStreakState(legacy.streak) ||
+    !isShopState(legacy.shop)
+  ) {
+    return null
+  }
+  return {
+    version: 6,
+    coins: legacy.coins,
+    missions: legacy.missions,
+    reviews: legacy.reviews,
+    streak: legacy.streak,
+    shop: legacy.shop,
+    looks: { ...emptyLooks },
   }
 }
 
@@ -171,7 +244,7 @@ function migrateV4(parsed: unknown): Progress | null {
     return null
   }
   return {
-    version: 5,
+    version: 6,
     coins: legacy.coins,
     missions: legacy.missions,
     reviews: legacy.reviews,
@@ -179,6 +252,7 @@ function migrateV4(parsed: unknown): Progress | null {
       ? legacy.streak
       : { ...emptyStreak },
     shop: { ...emptyShop },
+    looks: { ...emptyLooks },
   }
 }
 
@@ -203,12 +277,13 @@ function migrateV3(parsed: unknown): Progress | null {
     return null
   }
   return {
-    version: 5,
+    version: 6,
     coins: legacy.coins,
     missions: legacy.missions,
     reviews: legacy.reviews,
     streak: { ...emptyStreak },
     shop: { ...emptyShop },
+    looks: { ...emptyLooks },
   }
 }
 
@@ -227,12 +302,13 @@ function migrateV2(parsed: unknown): Progress | null {
     return null
   }
   return {
-    version: 5,
+    version: 6,
     coins: legacy.coins,
     missions: legacy.missions,
     reviews: {},
     streak: { ...emptyStreak },
     shop: { ...emptyShop },
+    looks: { ...emptyLooks },
   }
 }
 
@@ -255,12 +331,13 @@ function migrateV1(parsed: unknown): Progress | null {
     }
   }
   return {
-    version: 5,
+    version: 6,
     coins: legacy.coins,
     missions,
     reviews: {},
     streak: { ...emptyStreak },
     shop: { ...emptyShop },
+    looks: { ...emptyLooks },
   }
 }
 
@@ -274,12 +351,14 @@ function read(): Progress {
       return stored
     }
     const migrated =
+      migrateV5(parseStorage(LEGACY_V5_KEY)) ??
       migrateV4(parseStorage(LEGACY_V4_KEY)) ??
       migrateV3(parseStorage(LEGACY_V3_KEY)) ??
       migrateV2(parseStorage(LEGACY_V2_KEY)) ??
       migrateV1(parseStorage(LEGACY_V1_KEY))
     if (migrated) {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated))
+      window.localStorage.removeItem(LEGACY_V5_KEY)
       window.localStorage.removeItem(LEGACY_V4_KEY)
       window.localStorage.removeItem(LEGACY_V3_KEY)
       window.localStorage.removeItem(LEGACY_V2_KEY)
@@ -353,6 +432,26 @@ export function spendCoins(amount: number): boolean {
     return false
   }
   mutation({ ...progress, coins: progress.coins - amount })
+  return true
+}
+
+export function selectLook(id: CocoLookId): boolean {
+  const progress = getProgressSnapshot()
+  if (isOwned(progress.looks, id)) {
+    if (progress.looks.equipped === id) {
+      return true
+    }
+    mutation({ ...progress, looks: { ...progress.looks, equipped: id } })
+    return true
+  }
+  if (!canBuy(progress.looks, progress.coins, id)) {
+    return false
+  }
+  mutation({
+    ...progress,
+    coins: progress.coins - LOOK_PRICES[id],
+    looks: nextLooks(progress.looks, id),
+  })
   return true
 }
 
@@ -438,6 +537,7 @@ export function resetProgress(): void {
   current = emptyProgress
   if (typeof window !== "undefined") {
     window.localStorage.removeItem(STORAGE_KEY)
+    window.localStorage.removeItem(LEGACY_V5_KEY)
     window.localStorage.removeItem(LEGACY_V4_KEY)
     window.localStorage.removeItem(LEGACY_V3_KEY)
     window.localStorage.removeItem(LEGACY_V2_KEY)

@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { afterEach, describe, expect, test, vi } from "vitest"
 import {
+  addCoins,
   getProgressSnapshot,
   recordMissionResult,
 } from "@/lib/progress/progress-store"
@@ -25,15 +26,22 @@ afterEach(() => {
 })
 
 describe("ShopSession", () => {
-  test("shows the empty state without completed missions", () => {
+  test("shows the empty recharge state and the catalog without completed missions", () => {
     render(<ShopSession />)
 
     expect(
-      screen.getByText("Completa una misión para desbloquear la tienda"),
+      screen.getByRole("heading", { name: "Tienda" }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText("Completa una misión para desbloquear la recarga"),
     ).toBeInTheDocument()
     expect(
       screen.queryByRole("button", { name: "Ganar monedas" }),
     ).not.toBeInTheDocument()
+    expect(screen.getByText("Looks de Coco")).toBeInTheDocument()
+    expect(
+      screen.getByRole("button", { name: "Comprar Océano · 25" }),
+    ).toBeInTheDocument()
   })
 
   test("shows the balance and today's quota with a completed mission", () => {
@@ -136,5 +144,100 @@ describe("ShopSession", () => {
       lastDay: null,
       pendingMilestone: null,
     })
+  })
+
+  test("buying Océano with 25 coins leaves the balance at 0 and the card equipped", async () => {
+    const user = userEvent.setup()
+    completeMissionOne()
+    addCoins(25)
+    render(<ShopSession />)
+
+    await user.click(
+      screen.getByRole("button", { name: "Comprar Océano · 25" }),
+    )
+
+    expect(screen.getByText("Tu saldo: 0 monedas")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Equipado" })).toBeInTheDocument()
+    expect(getProgressSnapshot().looks).toEqual({
+      owned: ["ocean"],
+      equipped: "ocean",
+    })
+    const stored = JSON.parse(
+      window.localStorage.getItem("english-mission:progress:v6") ?? "{}",
+    ) as { looks?: unknown }
+    expect(stored.looks).toEqual({ owned: ["ocean"], equipped: "ocean" })
+  })
+
+  test("Usar in Coco clásico re-equips without changing the balance", async () => {
+    const user = userEvent.setup()
+    completeMissionOne()
+    addCoins(25)
+    render(<ShopSession />)
+
+    await user.click(
+      screen.getByRole("button", { name: "Comprar Océano · 25" }),
+    )
+    await user.click(
+      screen.getByRole("button", { name: "Usar Coco clásico" }),
+    )
+
+    expect(getProgressSnapshot().coins).toBe(0)
+    expect(getProgressSnapshot().looks).toEqual({
+      owned: ["ocean"],
+      equipped: "classic",
+    })
+    expect(screen.getByRole("button", { name: "Equipado" })).toBeInTheDocument()
+  })
+
+  test("buying Fiesta with 25 coins is disabled", () => {
+    completeMissionOne()
+    addCoins(25)
+    render(<ShopSession />)
+
+    expect(
+      screen.getByRole("button", { name: "Comprar Fiesta · 80" }),
+    ).toBeDisabled()
+    expect(
+      screen.getByRole("button", { name: "Comprar Océano · 25" }),
+    ).toBeEnabled()
+  })
+
+  test("the catalog hides during the recharge exercise and comes back after", async () => {
+    const user = userEvent.setup()
+    completeMissionOne()
+    pickFirstWord()
+    render(<ShopSession />)
+
+    await user.click(screen.getByRole("button", { name: "Ganar monedas" }))
+
+    expect(screen.queryByText("Looks de Coco")).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole("button", { name: "Comprar Océano · 25" }),
+    ).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole("button", { name: "hello" }))
+
+    expect(screen.getByText("Looks de Coco")).toBeInTheDocument()
+  })
+
+  test("buying a look does not touch reviews, the streak or the recharge quota", async () => {
+    const user = userEvent.setup()
+    completeMissionOne()
+    addCoins(25)
+    render(<ShopSession />)
+
+    await user.click(
+      screen.getByRole("button", { name: "Comprar Océano · 25" }),
+    )
+
+    expect(getProgressSnapshot().reviews).toEqual({})
+    expect(getProgressSnapshot().streak).toEqual({
+      current: 0,
+      best: 0,
+      lastDay: null,
+      pendingMilestone: null,
+    })
+    expect(getProgressSnapshot().shop).toEqual({ day: null, count: 0 })
+    expect(screen.getByText("Recargas hoy: 0/3")).toBeInTheDocument()
   })
 })

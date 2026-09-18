@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { ShopSession } from "@/features/shop/components/shop-session"
 
 export const metadata: Metadata = {
-  title: "Tienda de monedas · English Mission",
+  title: "Tienda · English Mission",
 }
 
 export default function ShopPage() {

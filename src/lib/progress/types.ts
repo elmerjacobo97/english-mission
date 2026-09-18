@@ -28,11 +28,19 @@ export type ShopState = {
   count: number
 }
 
+export type CocoLookId = "classic" | "ocean" | "sunset" | "night" | "party"
+
+export type LooksState = {
+  owned: CocoLookId[]
+  equipped: CocoLookId
+}
+
 export type Progress = {
-  version: 5
+  version: 6
   coins: number
   missions: Record<string, MissionProgress>
   reviews: Record<string, ReviewCard>
   streak: StreakState
   shop: ShopState
+  looks: LooksState
 }

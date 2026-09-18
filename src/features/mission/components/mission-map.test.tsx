@@ -12,9 +12,9 @@ import { MissionMap } from "./mission-map"
 
 function seedStreak(streak: Partial<StreakState>) {
   window.localStorage.setItem(
-    "english-mission:progress:v5",
+    "english-mission:progress:v6",
     JSON.stringify({
-      version: 5,
+      version: 6,
       coins: 0,
       missions: {},
       reviews: {},
@@ -26,6 +26,7 @@ function seedStreak(streak: Partial<StreakState>) {
         ...streak,
       },
       shop: { day: null, count: 0 },
+      looks: { owned: [], equipped: "classic" },
     }),
   )
   reloadProgress()
@@ -101,7 +102,7 @@ describe("MissionMap", () => {
     expect(screen.queryByText(/¡Racha de 7 días!/)).not.toBeInTheDocument()
     expect(getProgressSnapshot().streak.pendingMilestone).toBeNull()
     const stored = JSON.parse(
-      window.localStorage.getItem("english-mission:progress:v5") ?? "{}",
+      window.localStorage.getItem("english-mission:progress:v6") ?? "{}",
     ) as { streak?: { pendingMilestone?: unknown } }
     expect(stored.streak?.pendingMilestone).toBeNull()
 
@@ -143,7 +144,7 @@ describe("MissionMap", () => {
 
     expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
     expect(
-      window.localStorage.getItem("english-mission:progress:v5"),
+      window.localStorage.getItem("english-mission:progress:v6"),
     ).toBeNull()
   })
 
@@ -159,7 +160,7 @@ describe("MissionMap", () => {
 
     expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
     expect(
-      window.localStorage.getItem("english-mission:progress:v5"),
+      window.localStorage.getItem("english-mission:progress:v6"),
     ).not.toBeNull()
     expect(getProgressSnapshot().coins).toBe(20)
   })

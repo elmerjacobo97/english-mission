@@ -7,6 +7,7 @@ import {
   getProgressServerSnapshot,
   getProgressSnapshot,
   resetProgress,
+  selectLook,
   spendCoins,
   subscribeProgress,
 } from "./progress-store"
@@ -22,6 +23,7 @@ export function useProgress() {
     progress,
     addCoins,
     spendCoins,
+    selectLook,
     clearPendingMilestone,
     reset: resetProgress,
   }

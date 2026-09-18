@@ -1,8 +1,11 @@
 "use client"
 
 import { useId } from "react"
+import { COCO_LOOKS } from "@/features/shop/content/coco-looks"
+import { useProgress } from "@/lib/progress/use-progress"
+import type { CocoLookId } from "@/lib/progress/types"
 import { CHARACTERS } from "../content/characters"
-import type { CharacterId, Mood } from "../types/character"
+import type { CharacterConfig, CharacterId, Mood } from "../types/character"
 
 const INK = "#2a1d14"
 
@@ -10,16 +13,35 @@ type CharacterAvatarProps = {
   character: CharacterId
   mood?: Mood
   size?: number
+  lookId?: CocoLookId
   className?: string
+}
+
+function cocoConfig(lookId: CocoLookId): CharacterConfig {
+  const look = COCO_LOOKS.find((entry) => entry.id === lookId)
+  if (!look) {
+    return CHARACTERS.coco
+  }
+  return {
+    ...CHARACTERS.coco,
+    shirt: look.shirt,
+    hair: look.hair,
+    background: look.background,
+  }
 }
 
 export function CharacterAvatar({
   character,
   mood = "neutral",
   size = 56,
+  lookId,
   className = "",
 }: CharacterAvatarProps) {
-  const config = CHARACTERS[character]
+  const { progress } = useProgress()
+  const config =
+    character === "coco"
+      ? cocoConfig(lookId ?? progress.looks.equipped)
+      : CHARACTERS[character]
   const clipId = useId()
   const isParrot = config.species === "parrot"
   const eyesClosed = mood === "happy"

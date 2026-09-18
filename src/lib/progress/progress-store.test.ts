@@ -11,9 +11,10 @@ import {
   registerDailyActivity,
   reloadProgress,
   resetProgress,
+  selectLook,
   spendCoins,
 } from "./progress-store"
-import type { ShopState, StreakState } from "./types"
+import type { LooksState, ShopState, StreakState } from "./types"
 
 const NOW = 1_000_000_000_000
 
@@ -25,6 +26,8 @@ const emptyStreak: StreakState = {
 }
 
 const emptyShop: ShopState = { day: null, count: 0 }
+
+const emptyLooks: LooksState = { owned: [], equipped: "classic" }
 
 function day(year: number, month: number, dayOfMonth: number): number {
   return new Date(year, month - 1, dayOfMonth, 12).getTime()
@@ -107,8 +110,59 @@ describe("recordReviewResult", () => {
   })
 })
 
+describe("migration from v5", () => {
+  test("keeps coins, missions, reviews, streak and shop and adds empty looks", () => {
+    window.localStorage.setItem(
+      "english-mission:progress:v5",
+      JSON.stringify({
+        version: 5,
+        coins: 30,
+        missions: {
+          supermercado: { completed: true, stars: 2, bestCoins: 20 },
+        },
+        reviews: {
+          apple: { box: 2, dueAt: NOW, lastReviewedAt: NOW },
+        },
+        streak: {
+          current: 4,
+          best: 6,
+          lastDay: "2026-09-17",
+          pendingMilestone: 3,
+        },
+        shop: { day: "2026-09-17", count: 2 },
+      }),
+    )
+    reloadProgress()
+
+    expect(getProgressSnapshot()).toEqual({
+      version: 6,
+      coins: 30,
+      missions: {
+        supermercado: { completed: true, stars: 2, bestCoins: 20 },
+      },
+      reviews: {
+        apple: { box: 2, dueAt: NOW, lastReviewedAt: NOW },
+      },
+      streak: {
+        current: 4,
+        best: 6,
+        lastDay: "2026-09-17",
+        pendingMilestone: 3,
+      },
+      shop: { day: "2026-09-17", count: 2 },
+      looks: emptyLooks,
+    })
+    expect(
+      window.localStorage.getItem("english-mission:progress:v6"),
+    ).toContain("supermercado")
+    expect(
+      window.localStorage.getItem("english-mission:progress:v5"),
+    ).toBeNull()
+  })
+})
+
 describe("migration from v4", () => {
-  test("keeps coins, missions, reviews and streak and adds an empty shop", () => {
+  test("keeps coins, missions, reviews and streak and adds an empty shop and looks", () => {
     window.localStorage.setItem(
       "english-mission:progress:v4",
       JSON.stringify({
@@ -131,7 +185,7 @@ describe("migration from v4", () => {
     reloadProgress()
 
     expect(getProgressSnapshot()).toEqual({
-      version: 5,
+      version: 6,
       coins: 30,
       missions: {
         supermercado: { completed: true, stars: 2, bestCoins: 20 },
@@ -146,9 +200,10 @@ describe("migration from v4", () => {
         pendingMilestone: 3,
       },
       shop: emptyShop,
+      looks: emptyLooks,
     })
     expect(
-      window.localStorage.getItem("english-mission:progress:v5"),
+      window.localStorage.getItem("english-mission:progress:v6"),
     ).toContain("supermercado")
     expect(
       window.localStorage.getItem("english-mission:progress:v4"),
@@ -168,7 +223,7 @@ describe("migration from v4", () => {
 })
 
 describe("migration from v3", () => {
-  test("keeps coins, missions and reviews and adds an empty streak", () => {
+  test("keeps coins, missions and reviews and adds an empty streak, shop and looks", () => {
     window.localStorage.setItem(
       "english-mission:progress:v3",
       JSON.stringify({
@@ -185,7 +240,7 @@ describe("migration from v3", () => {
     reloadProgress()
 
     expect(getProgressSnapshot()).toEqual({
-      version: 5,
+      version: 6,
       coins: 30,
       missions: {
         supermercado: { completed: true, stars: 2, bestCoins: 20 },
@@ -195,9 +250,10 @@ describe("migration from v3", () => {
       },
       streak: emptyStreak,
       shop: emptyShop,
+      looks: emptyLooks,
     })
     expect(
-      window.localStorage.getItem("english-mission:progress:v5"),
+      window.localStorage.getItem("english-mission:progress:v6"),
     ).toContain("supermercado")
     expect(
       window.localStorage.getItem("english-mission:progress:v3"),
@@ -206,7 +262,7 @@ describe("migration from v3", () => {
 })
 
 describe("migration from v2", () => {
-  test("keeps coins and missions and adds an empty schedule", () => {
+  test("keeps coins and missions and adds an empty schedule, looks and shop", () => {
     window.localStorage.setItem(
       "english-mission:progress:v2",
       JSON.stringify({
@@ -220,7 +276,7 @@ describe("migration from v2", () => {
     reloadProgress()
 
     expect(getProgressSnapshot()).toEqual({
-      version: 5,
+      version: 6,
       coins: 30,
       missions: {
         supermercado: { completed: true, stars: 2, bestCoins: 20 },
@@ -228,9 +284,10 @@ describe("migration from v2", () => {
       reviews: {},
       streak: emptyStreak,
       shop: emptyShop,
+      looks: emptyLooks,
     })
     expect(
-      window.localStorage.getItem("english-mission:progress:v5"),
+      window.localStorage.getItem("english-mission:progress:v6"),
     ).toContain("supermercado")
     expect(
       window.localStorage.getItem("english-mission:progress:v2"),
@@ -251,7 +308,7 @@ describe("migration from v1", () => {
     reloadProgress()
 
     expect(getProgressSnapshot()).toEqual({
-      version: 5,
+      version: 6,
       coins: 45,
       missions: {
         supermercado: { completed: true, stars: 1, bestCoins: 0 },
@@ -259,9 +316,10 @@ describe("migration from v1", () => {
       reviews: {},
       streak: emptyStreak,
       shop: emptyShop,
+      looks: emptyLooks,
     })
     expect(
-      window.localStorage.getItem("english-mission:progress:v5"),
+      window.localStorage.getItem("english-mission:progress:v6"),
     ).toContain("supermercado")
     expect(
       window.localStorage.getItem("english-mission:progress:v1"),
@@ -276,6 +334,45 @@ describe("migration from v1", () => {
     reloadProgress()
     expect(getProgressSnapshot().coins).toBe(0)
     expect(getProgressSnapshot().missions).toEqual({})
+  })
+})
+
+describe("selectLook", () => {
+  test("buying ocean with 25 coins leaves 0, owned and equipped", () => {
+    addCoins(25)
+
+    expect(selectLook("ocean")).toBe(true)
+
+    expect(getProgressSnapshot().coins).toBe(0)
+    expect(getProgressSnapshot().looks).toEqual({
+      owned: ["ocean"],
+      equipped: "ocean",
+    })
+  })
+
+  test("re-equipping classic costs nothing", () => {
+    addCoins(25)
+    selectLook("ocean")
+    addCoins(10)
+
+    expect(selectLook("classic")).toBe(true)
+
+    expect(getProgressSnapshot().coins).toBe(10)
+    expect(getProgressSnapshot().looks).toEqual({
+      owned: ["ocean"],
+      equipped: "classic",
+    })
+  })
+
+  test("no mutation when the balance is short", () => {
+    addCoins(25)
+    const before = getProgressSnapshot()
+
+    expect(selectLook("party")).toBe(false)
+
+    expect(getProgressSnapshot()).toBe(before)
+    expect(getProgressSnapshot().coins).toBe(25)
+    expect(getProgressSnapshot().looks).toEqual(emptyLooks)
   })
 })
 
@@ -374,17 +471,20 @@ describe("clearPendingMilestone", () => {
 })
 
 describe("resetProgress", () => {
-  test("clears the review schedule, the streak and the shop", () => {
+  test("clears the review schedule, the streak, the shop and the looks", () => {
     recordReviewResult("apple", true, NOW)
     registerDailyActivity(day(2026, 9, 10))
     recordRecharge(10, day(2026, 9, 10))
+    addCoins(25)
+    selectLook("ocean")
     resetProgress()
 
     expect(getProgressSnapshot().reviews).toEqual({})
     expect(getProgressSnapshot().streak).toEqual(emptyStreak)
     expect(getProgressSnapshot().shop).toEqual(emptyShop)
+    expect(getProgressSnapshot().looks).toEqual(emptyLooks)
     expect(
-      window.localStorage.getItem("english-mission:progress:v5"),
+      window.localStorage.getItem("english-mission:progress:v6"),
     ).toBeNull()
   })
 })

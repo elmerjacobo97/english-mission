@@ -175,7 +175,7 @@ describe("MissionPlayer", () => {
     expect(getProgressSnapshot().streak.current).toBe(1)
 
     const stored = JSON.parse(
-      window.localStorage.getItem("english-mission:progress:v5") ?? "{}",
+      window.localStorage.getItem("english-mission:progress:v6") ?? "{}",
     ) as { streak?: { current?: number } }
     expect(stored.streak?.current).toBe(1)
   })
