@@ -65,6 +65,24 @@ describe("MissionMap", () => {
     ).toBeInTheDocument()
   })
 
+  test("offers the review card when words are due", () => {
+    recordMissionResult("la-llegada", { stars: 1, payout: 0, bestCoins: 0 })
+
+    render(<MissionMap />)
+
+    expect(
+      screen.getByRole("link", { name: /Repasar vocabulario/ }),
+    ).toHaveAttribute("href", "/review")
+  })
+
+  test("hides the review card without due words", () => {
+    render(<MissionMap />)
+
+    expect(
+      screen.queryByRole("link", { name: /Repasar/ }),
+    ).not.toBeInTheDocument()
+  })
+
   test("reset asks for confirmation and clears stored progress", async () => {
     const user = userEvent.setup()
     addCoins(20)
@@ -81,7 +99,7 @@ describe("MissionMap", () => {
 
     expect(screen.queryByText(/¿Seguro\?/)).not.toBeInTheDocument()
     expect(
-      window.localStorage.getItem("english-mission:progress:v2"),
+      window.localStorage.getItem("english-mission:progress:v3"),
     ).toBeNull()
   })
 
@@ -96,7 +114,7 @@ describe("MissionMap", () => {
     await user.click(screen.getByRole("button", { name: "Cancelar" }))
 
     expect(
-      window.localStorage.getItem("english-mission:progress:v2"),
+      window.localStorage.getItem("english-mission:progress:v3"),
     ).not.toBeNull()
     expect(screen.getByText("20")).toBeInTheDocument()
   })

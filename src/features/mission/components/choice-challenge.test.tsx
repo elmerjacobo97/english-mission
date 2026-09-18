@@ -12,7 +12,10 @@ const beat: ChoiceChallengeData = {
   correct: 1,
 }
 
-function setup({ coins = 0 }: { coins?: number } = {}) {
+function setup({
+  coins = 0,
+  freeHints = false,
+}: { coins?: number; freeHints?: boolean } = {}) {
   const onSolved = vi.fn()
   const onContinue = vi.fn()
   const onSpendCoins = vi.fn((amount: number) => coins >= amount)
@@ -21,6 +24,7 @@ function setup({ coins = 0 }: { coins?: number } = {}) {
       beat={beat}
       coins={coins}
       rewardsEnabled
+      freeHints={freeHints}
       profile={testProfile}
       onSpendCoins={onSpendCoins}
       onSolved={onSolved}
@@ -112,5 +116,19 @@ describe("ChoiceChallenge", () => {
   test("hint stays disabled without coins", () => {
     setup({ coins: 0 })
     expect(screen.getByRole("button", { name: /Pista/ })).toBeDisabled()
+  })
+
+  test("free hints say Pista gratis and spend nothing", async () => {
+    const user = userEvent.setup()
+    const { onSpendCoins } = setup({ coins: 0, freeHints: true })
+    const hintButton = screen.getByRole("button", { name: "Pista gratis" })
+    expect(hintButton).toBeEnabled()
+
+    await user.click(hintButton)
+
+    expect(onSpendCoins).not.toHaveBeenCalled()
+    expect(
+      await screen.findByText("Eliminé una opción incorrecta."),
+    ).toBeInTheDocument()
   })
 })

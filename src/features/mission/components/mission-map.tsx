@@ -12,6 +12,7 @@ import {
 } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useState } from "react"
+import { useDueReviews } from "@/features/review/hooks/use-due-reviews"
 import { useProgress } from "@/lib/progress/use-progress"
 import {
   CHAPTER_TITLES,
@@ -26,6 +27,7 @@ const CHAPTERS: Chapter[] = [1, 2, 3]
 
 export function MissionMap() {
   const { progress, reset } = useProgress()
+  const dueCount = useDueReviews()
   const [confirmingReset, setConfirmingReset] = useState(false)
 
   const continueSlug = nextMissionSlug(progress)
@@ -213,6 +215,19 @@ export function MissionMap() {
         >
           <BookOpenText weight="fill" size={20} aria-hidden />
           Cuaderno de vocabulario
+        </Link>
+      )}
+
+      {dueCount > 0 && (
+        <Link
+          href="/review"
+          className="flex min-h-12 items-center gap-2.5 rounded-3xl border-2 border-accent/30 bg-paper px-5 font-display font-semibold text-accent-deep shadow-card transition hover:-translate-y-0.5"
+        >
+          <ArrowCounterClockwise weight="bold" size={20} aria-hidden />
+          Repasar vocabulario
+          <span className="ml-auto rounded-full bg-accent px-2.5 py-0.5 text-sm font-bold text-ink">
+            {dueCount}
+          </span>
         </Link>
       )}
 

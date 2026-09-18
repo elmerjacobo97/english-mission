@@ -14,12 +14,13 @@ Narrative English-learning game. Next.js 16.3.5 App Router + React 19 + Tailwind
 
 ## Commands
 
-Package manager is pnpm; the README's npm/yarn/bun instructions are stale boilerplate.
+Package manager is pnpm; the README's npm/yarn/bun instructions are stale boilerplate. The user runs everything through `rtk` (CLI output proxy that compresses command output), so keep the `rtk` prefix when running and reporting commands.
 
-- `pnpm dev` / `pnpm build` / `pnpm test` / `pnpm lint`
-- Single test file: `pnpm vitest run src/features/mission/components/choice-challenge.test.tsx`
-- Typecheck has no script: `pnpm exec tsc --noEmit`. Run `pnpm dev` or `pnpm build` at least once so `next-env.d.ts` can resolve the generated `.next/types/*` typed-route files.
-- Verify before finishing: `pnpm lint && pnpm exec tsc --noEmit && pnpm test`.
+- `rtk pnpm dev` / `rtk pnpm build` / `rtk pnpm test` / `rtk pnpm lint`
+- Single test file: `rtk pnpm test src/features/mission/components/choice-challenge.test.tsx`
+- Typecheck has no script: `rtk tsc --noEmit` (equivalent to `pnpm exec tsc --noEmit`). Run `rtk pnpm dev` or `rtk pnpm build` at least once so `next-env.d.ts` can resolve the generated `.next/types/*` typed-route files.
+- Verify before finishing: `rtk pnpm lint && rtk tsc --noEmit && rtk pnpm test`.
+- `rtk vitest run <file>` also works but hides stdout; read results from the JSON report it writes to `.vitest/json/output.json`.
 
 ## Content invariants
 
@@ -31,9 +32,9 @@ The same test suite scans all of `src/` for Spain regionalisms (`SPAINISMS` in `
 
 ## Architecture
 
-- `src/app` — thin routes only: `/` map, `/mision/[slug]` player, `/cuaderno` notebook. Route pages use Next 16 global types (`PageProps<'/mision/[slug]'>`, `LayoutProps<'/'>`), not imported prop types.
+- `src/app` — thin routes only: `/` map, `/mision/[slug]` player, `/cuaderno` notebook, `/review` spaced-repetition session. Route pages use Next 16 global types (`PageProps<'/mision/[slug]'>`, `LayoutProps<'/'>`), not imported prop types.
 - `src/features/mission` — all game code: `types/`, `content/`, `utils/`, `hooks/`, `components/`. `mission-player.tsx` builds the shared challenge props and renders one component per `beat.kind`; the submit button lives outside the form and targets `form="challenge-form"` (tests submit via `src/test/submit-challenge.ts`).
-- `src/lib/progress` — module-level store persisted to `english-mission:progress:v2` (migrates v1). Consumed through `useSyncExternalStore` (`use-progress.ts`), never effect+setState: eslint-config-next 16 enables `react-hooks/set-state-in-effect`. Server snapshot is `emptyProgress` for hydration safety.
+- `src/lib/progress` — module-level store persisted to `english-mission:progress:v3` (migrates v2 and v1). Consumed through `useSyncExternalStore` (`use-progress.ts`), never effect+setState: eslint-config-next 16 enables `react-hooks/set-state-in-effect`. Server snapshot is `emptyProgress` for hydration safety. Reuse the same pattern for any other client-only snapshot (e.g. `src/features/review/hooks/use-review-run.ts`).
 - `src/lib/speech.ts` — browser SpeechSynthesis only; playback is user-triggered (🔊 buttons), no autoplay and no audio files.
 - Styling: Tailwind v4 tokens declared in `src/app/globals.css` `@theme` (`bg-surface`, `text-ink`, `shadow-card`, `font-display`). Fonts via `next/font` (Fredoka display, Nunito body). Phosphor icons for chrome; emoji stay in narrative content.
 

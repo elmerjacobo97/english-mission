@@ -6,8 +6,17 @@ export type MissionProgress = {
   bestCoins: number
 }
 
+export type ReviewBox = 1 | 2 | 3
+
+export type ReviewCard = {
+  box: ReviewBox
+  dueAt: number
+  lastReviewedAt: number | null
+}
+
 export type Progress = {
-  version: 2
+  version: 3
   coins: number
   missions: Record<string, MissionProgress>
+  reviews: Record<string, ReviewCard>
 }

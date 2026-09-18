@@ -1,8 +1,14 @@
 "use client"
 
-import { ArrowLeft, BookOpenText, SpeakerHigh } from "@phosphor-icons/react"
+import {
+  ArrowCounterClockwise,
+  ArrowLeft,
+  BookOpenText,
+  SpeakerHigh,
+} from "@phosphor-icons/react"
 import Link from "next/link"
 import { useSyncExternalStore } from "react"
+import { useDueReviews } from "@/features/review/hooks/use-due-reviews"
 import { useProgress } from "@/lib/progress/use-progress"
 import {
   getSpeechSupportServerSnapshot,
@@ -17,6 +23,7 @@ const CHAPTERS: Chapter[] = [1, 2, 3]
 
 export function Notebook() {
   const { progress } = useProgress()
+  const dueCount = useDueReviews()
   const speechAvailable = useSyncExternalStore(
     subscribeSpeechSupport,
     getSpeechSupportSnapshot,
@@ -67,6 +74,20 @@ export function Notebook() {
         <p className="font-semibold text-muted">
           Tu vocabulario, capítulo a capítulo. Toca una palabra para oírla.
         </p>
+        {dueCount > 0 && (
+          <Link
+            href="/review"
+            className="flex min-h-12 items-center justify-between gap-2.5 rounded-2xl border-2 border-accent/30 bg-paper px-5 font-display font-semibold text-accent-deep shadow-card transition hover:-translate-y-0.5"
+          >
+            <span className="flex items-center gap-2.5">
+              <ArrowCounterClockwise weight="bold" size={20} aria-hidden />
+              Repasar
+            </span>
+            <span className="rounded-full bg-accent px-2.5 py-0.5 text-sm font-bold text-ink">
+              {dueCount}
+            </span>
+          </Link>
+        )}
       </header>
 
       {sections.length === 0 ? (

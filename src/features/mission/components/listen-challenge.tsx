@@ -18,6 +18,7 @@ export function ListenChallenge({
   beat,
   coins,
   rewardsEnabled,
+  freeHints,
   profile,
   solvedOutcome,
   speechAvailable = false,
@@ -46,7 +47,7 @@ export function ListenChallenge({
     if (run.hint || run.solved) {
       return
     }
-    if (!onSpendCoins(profile.hintCost)) {
+    if (!freeHints && !onSpendCoins(profile.hintCost)) {
       return
     }
     setHiddenOption(hintForOption(beat))
@@ -73,6 +74,7 @@ export function ListenChallenge({
       hint={run.hint}
       hintCost={profile.hintCost}
       coins={coins}
+      freeHints={freeHints}
       note={beat.note}
       onRequestHint={handleRequestHint}
       onContinue={run.solved ? onContinue : undefined}

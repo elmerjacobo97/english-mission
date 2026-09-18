@@ -1,9 +1,16 @@
-import type { MissionProgress, Progress, Stars } from "./types"
+import { nextCard } from "@/features/review/utils/schedule"
+import type { MissionProgress, Progress, ReviewCard, Stars } from "./types"
 
-const STORAGE_KEY = "english-mission:progress:v2"
-const LEGACY_STORAGE_KEY = "english-mission:progress:v1"
+const STORAGE_KEY = "english-mission:progress:v3"
+const LEGACY_V2_KEY = "english-mission:progress:v2"
+const LEGACY_V1_KEY = "english-mission:progress:v1"
 
-export const emptyProgress: Progress = { version: 2, coins: 0, missions: {} }
+export const emptyProgress: Progress = {
+  version: 3,
+  coins: 0,
+  missions: {},
+  reviews: {},
+}
 
 let current: Progress | null = null
 const listeners = new Set<() => void>()
@@ -23,47 +30,100 @@ function isMissionProgress(value: unknown): value is MissionProgress {
   )
 }
 
+function isMissionMap(value: unknown): value is Record<string, MissionProgress> {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    Object.values(value).every(isMissionProgress)
+  )
+}
+
+function isReviewCard(value: unknown): value is ReviewCard {
+  if (typeof value !== "object" || value === null) {
+    return false
+  }
+  const candidate = value as Partial<ReviewCard>
+  return (
+    (candidate.box === 1 || candidate.box === 2 || candidate.box === 3) &&
+    typeof candidate.dueAt === "number" &&
+    Number.isFinite(candidate.dueAt) &&
+    (candidate.lastReviewedAt === null ||
+      (typeof candidate.lastReviewedAt === "number" &&
+        Number.isFinite(candidate.lastReviewedAt)))
+  )
+}
+
+function isReviewMap(value: unknown): value is Record<string, ReviewCard> {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    Object.values(value).every(isReviewCard)
+  )
+}
+
 function isProgress(value: unknown): value is Progress {
   if (typeof value !== "object" || value === null) {
     return false
   }
   const candidate = value as Partial<Progress>
   return (
-    candidate.version === 2 &&
+    candidate.version === 3 &&
     typeof candidate.coins === "number" &&
     Number.isFinite(candidate.coins) &&
     candidate.coins >= 0 &&
-    typeof candidate.missions === "object" &&
-    candidate.missions !== null &&
-    Object.values(candidate.missions).every(isMissionProgress)
+    isMissionMap(candidate.missions) &&
+    isReviewMap(candidate.reviews)
   )
 }
 
-function migrateLegacy(): Progress | null {
-  const raw = window.localStorage.getItem(LEGACY_STORAGE_KEY)
+function parseStorage(key: string): unknown {
+  const raw = window.localStorage.getItem(key)
   if (!raw) {
     return null
   }
   try {
-    const parsed: unknown = JSON.parse(raw)
-    const legacy = parsed as { version?: number; coins?: number; completed?: unknown }
-    if (
-      legacy.version !== 1 ||
-      typeof legacy.coins !== "number" ||
-      !Array.isArray(legacy.completed)
-    ) {
-      return null
-    }
-    const missions: Record<string, MissionProgress> = {}
-    for (const slug of legacy.completed) {
-      if (typeof slug === "string") {
-        missions[slug] = { completed: true, stars: 1, bestCoins: 0 }
-      }
-    }
-    return { version: 2, coins: legacy.coins, missions }
+    return JSON.parse(raw)
   } catch {
     return null
   }
+}
+
+function migrateV2(parsed: unknown): Progress | null {
+  if (typeof parsed !== "object" || parsed === null) {
+    return null
+  }
+  const legacy = parsed as { version?: number; coins?: number; missions?: unknown }
+  if (
+    legacy.version !== 2 ||
+    typeof legacy.coins !== "number" ||
+    !Number.isFinite(legacy.coins) ||
+    legacy.coins < 0 ||
+    !isMissionMap(legacy.missions)
+  ) {
+    return null
+  }
+  return { version: 3, coins: legacy.coins, missions: legacy.missions, reviews: {} }
+}
+
+function migrateV1(parsed: unknown): Progress | null {
+  if (typeof parsed !== "object" || parsed === null) {
+    return null
+  }
+  const legacy = parsed as { version?: number; coins?: number; completed?: unknown }
+  if (
+    legacy.version !== 1 ||
+    typeof legacy.coins !== "number" ||
+    !Array.isArray(legacy.completed)
+  ) {
+    return null
+  }
+  const missions: Record<string, MissionProgress> = {}
+  for (const slug of legacy.completed) {
+    if (typeof slug === "string") {
+      missions[slug] = { completed: true, stars: 1, bestCoins: 0 }
+    }
+  }
+  return { version: 3, coins: legacy.coins, missions, reviews: {} }
 }
 
 function read(): Progress {
@@ -71,17 +131,16 @@ function read(): Progress {
     return emptyProgress
   }
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY)
-    if (raw) {
-      const parsed: unknown = JSON.parse(raw)
-      if (isProgress(parsed)) {
-        return parsed
-      }
+    const stored = parseStorage(STORAGE_KEY)
+    if (isProgress(stored)) {
+      return stored
     }
-    const migrated = migrateLegacy()
+    const fromV2 = migrateV2(parseStorage(LEGACY_V2_KEY))
+    const migrated = fromV2 ?? migrateV1(parseStorage(LEGACY_V1_KEY))
     if (migrated) {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated))
-      window.localStorage.removeItem(LEGACY_STORAGE_KEY)
+      window.localStorage.removeItem(LEGACY_V2_KEY)
+      window.localStorage.removeItem(LEGACY_V1_KEY)
       return migrated
     }
     return emptyProgress
@@ -174,11 +233,32 @@ export function recordMissionResult(
   })
 }
 
+export function recordReviewResult(
+  key: string,
+  passed: boolean,
+  now: number = Date.now(),
+): void {
+  const progress = getProgressSnapshot()
+  const previous = progress.reviews[key] ?? {
+    box: 1,
+    dueAt: now,
+    lastReviewedAt: null,
+  }
+  mutation({
+    ...progress,
+    reviews: {
+      ...progress.reviews,
+      [key]: nextCard(previous, passed, now),
+    },
+  })
+}
+
 export function resetProgress(): void {
   current = emptyProgress
   if (typeof window !== "undefined") {
     window.localStorage.removeItem(STORAGE_KEY)
-    window.localStorage.removeItem(LEGACY_STORAGE_KEY)
+    window.localStorage.removeItem(LEGACY_V2_KEY)
+    window.localStorage.removeItem(LEGACY_V1_KEY)
   }
   listeners.forEach((listener) => listener())
 }

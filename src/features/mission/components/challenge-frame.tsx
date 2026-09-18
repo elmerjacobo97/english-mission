@@ -20,6 +20,7 @@ type ChallengeFrameProps = {
   hint: string | null
   hintCost: number
   coins: number
+  freeHints?: boolean
   note?: GrammarNoteData
   onRequestHint: () => void
   onContinue?: () => void
@@ -34,13 +35,14 @@ export function ChallengeFrame({
   hint,
   hintCost,
   coins,
+  freeHints = false,
   note,
   onRequestHint,
   onContinue,
   children,
 }: ChallengeFrameProps) {
   const solved = Boolean(onContinue)
-  const canAffordHint = coins >= hintCost
+  const canAffordHint = freeHints || coins >= hintCost
   const attempts = Array.from({ length: maxAttempts }, (_, i) => i)
 
   return (
@@ -95,7 +97,7 @@ export function ChallengeFrame({
               className="flex min-h-11 items-center gap-2 self-start rounded-2xl border-2 border-accent/30 bg-paper px-4 font-display text-sm font-semibold text-accent-deep transition hover:bg-accent/10 disabled:opacity-40"
             >
               <Lightbulb weight="fill" size={18} aria-hidden />
-              Pista · {hintCost} monedas
+              {freeHints ? "Pista gratis" : `Pista · ${hintCost} monedas`}
             </button>
             {!canAffordHint && (
               <span className="text-xs font-semibold text-muted">
