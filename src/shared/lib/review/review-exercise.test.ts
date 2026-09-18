@@ -1,7 +1,10 @@
 import { describe, expect, test } from "vitest"
 import type { ReviewBox } from "@/shared/lib/progress/types"
 import type { ReviewQueueItem, ReviewWord } from "./review-queue"
-import { buildReviewChallenge } from "./review-exercise"
+import {
+  buildPracticeChallenge,
+  buildReviewChallenge,
+} from "./review-exercise"
 
 const pool: ReviewWord[] = [
   { key: "apple", en: "apple", es: "manzana", level: 1, chapter: 1 },
@@ -103,5 +106,68 @@ describe("tiny notebooks", () => {
       true,
     )
     expect(challenge.kind).toBe("type")
+  })
+})
+
+describe("practice builder", () => {
+  test("box 1 builds a choice with the word as the correct option", () => {
+    const result = buildPracticeChallenge(word("tea", 1), pool, true)
+    expect(result.challenge.kind).toBe("choice")
+    expect(result.speakText).toBeNull()
+    if (result.challenge.kind !== "choice") {
+      return
+    }
+    expect(result.challenge.options[result.challenge.correct]).toBe("tea")
+  })
+
+  test("box 1 falls back to typing when the pool has a single word", () => {
+    const single = [pool[0]]
+    const result = buildPracticeChallenge(
+      { ...single[0], box: 1 },
+      single,
+      true,
+    )
+    expect(result.challenge.kind).toBe("type")
+    expect(result.speakText).toBeNull()
+  })
+
+  test("box 2 builds a typing challenge without speak text", () => {
+    const result = buildPracticeChallenge(word("bread", 2), pool, true)
+    expect(result.challenge.kind).toBe("type")
+    expect(result.speakText).toBeNull()
+  })
+
+  test("box 3 builds dictation when speech is available", () => {
+    const result = buildPracticeChallenge(word("apple", 3), pool, true)
+    expect(result.challenge.kind).toBe("type")
+    expect(result.speakText).toBe("apple")
+    if (result.challenge.kind !== "type") {
+      return
+    }
+    expect(result.challenge.prompt).toBe("Escucha y escribe en inglés.")
+  })
+
+  test("box 3 falls back to plain typing without speech", () => {
+    const result = buildPracticeChallenge(word("apple", 3), pool, false)
+    expect(result.challenge.kind).toBe("type")
+    expect(result.speakText).toBeNull()
+  })
+
+  test("the answer is always the word in english", () => {
+    for (const box of [1, 2, 3] as const) {
+      for (const speech of [true, false]) {
+        const result = buildPracticeChallenge(word("banana", box), pool, speech)
+        if (result.challenge.kind === "type") {
+          expect(result.challenge.accepted).toContain("banana")
+          continue
+        }
+        expect(result.challenge.kind).toBe("choice")
+        if (result.challenge.kind === "choice") {
+          expect(result.challenge.options[result.challenge.correct]).toBe(
+            "banana",
+          )
+        }
+      }
+    }
   })
 })

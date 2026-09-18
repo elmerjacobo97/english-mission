@@ -3,6 +3,7 @@ import type {
   ListenChallenge,
   TypeChallenge,
 } from "@/shared/lib/game/types/beat"
+import type { ReviewBox } from "@/shared/lib/progress/types"
 import type { ReviewQueueItem, ReviewWord } from "./review-queue"
 
 function optionWords(word: ReviewWord, pool: ReviewWord[]): string[] {
@@ -82,4 +83,44 @@ export function buildReviewChallenge(
     }
   }
   return typeChallenge(word)
+}
+
+export type PracticeChallenge = {
+  challenge: Challenge
+  speakText: string | null
+}
+
+export function buildPracticeChallenge(
+  word: ReviewWord & { box: ReviewBox },
+  pool: ReviewWord[],
+  speechAvailable: boolean,
+): PracticeChallenge {
+  if (word.box === 1) {
+    const built = buildOptions(word, pool)
+    if (built) {
+      return {
+        challenge: {
+          kind: "choice",
+          prompt: `¿Cómo se dice «${word.es}» en inglés?`,
+          options: built.options,
+          correct: built.correct,
+        },
+        speakText: null,
+      }
+    }
+    return { challenge: typeChallenge(word), speakText: null }
+  }
+  if (word.box === 2) {
+    return { challenge: typeChallenge(word), speakText: null }
+  }
+  if (speechAvailable) {
+    return {
+      challenge: {
+        ...typeChallenge(word),
+        prompt: "Escucha y escribe en inglés.",
+      },
+      speakText: word.en,
+    }
+  }
+  return { challenge: typeChallenge(word), speakText: null }
 }
