@@ -52,12 +52,12 @@ export function StoryBeat({
       <p className="text-lg font-semibold leading-relaxed">{beat.es}</p>
 
       {beat.en && (
-        <div className={`flex ${isYou ? "justify-end" : "justify-start"}`}>
+        <div className="flex justify-start">
           <div
-            className={`relative max-w-[94%] rounded-3xl border-2 p-4 pb-5 ${
+            className={`max-w-[94%] rounded-3xl border-2 p-4 ${
               isYou
-                ? "rounded-br-md border-accent/30 bg-paper"
-                : "rounded-bl-md border-teal/25 bg-teal-soft"
+                ? "border-accent/30 bg-paper"
+                : "border-teal/25 bg-teal-soft"
             }`}
           >
             <div className="flex items-center gap-3">
@@ -104,14 +104,6 @@ export function StoryBeat({
                 )}
               </span>
             </div>
-            <span
-              aria-hidden
-              className={`absolute -bottom-[9px] h-4 w-4 rotate-45 border-b-2 ${
-                isYou
-                  ? "right-10 border-r-2 border-accent/30 bg-paper"
-                  : "left-10 border-l-2 border-teal/25 bg-teal-soft"
-              }`}
-            />
           </div>
         </div>
       )}

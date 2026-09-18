@@ -79,7 +79,7 @@ export function DialogueChallenge({
               className="shrink-0"
             />
           )}
-        <div className="relative flex-1 rounded-3xl rounded-bl-md border-2 border-teal/25 bg-teal-soft p-4 pb-5">
+        <div className="flex-1 rounded-3xl border-2 border-teal/25 bg-teal-soft p-4">
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -94,10 +94,6 @@ export function DialogueChallenge({
               «{beat.line}»
             </p>
           </div>
-          <span
-            aria-hidden
-            className="absolute -bottom-[9px] left-10 h-4 w-4 rotate-45 border-b-2 border-l-2 border-teal/25 bg-teal-soft"
-          />
         </div>
         </div>
 
