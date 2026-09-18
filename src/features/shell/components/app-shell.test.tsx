@@ -1,0 +1,80 @@
+import { render, screen, within } from "@testing-library/react"
+import { beforeEach, describe, expect, test, vi } from "vitest"
+import { addCoins, recordMissionResult } from "@/lib/progress/progress-store"
+import { AppShell } from "./app-shell"
+
+const pathname = { current: "/" }
+
+vi.mock("next/navigation", () => ({
+  usePathname: () => pathname.current,
+}))
+
+describe("AppShell", () => {
+  beforeEach(() => {
+    pathname.current = "/"
+  })
+
+  test("renders the four destinations and the content", () => {
+    render(<AppShell>contenido de la página</AppShell>)
+
+    const nav = screen.getByRole("navigation", { name: "Navegación" })
+    expect(within(nav).getAllByRole("link")).toHaveLength(4)
+    expect(within(nav).getByRole("link", { name: "Mapa" })).toHaveAttribute(
+      "href",
+      "/",
+    )
+    expect(within(nav).getByRole("link", { name: "Cuaderno" })).toHaveAttribute(
+      "href",
+      "/notebook",
+    )
+    expect(within(nav).getByRole("link", { name: /Repaso/ })).toHaveAttribute(
+      "href",
+      "/review",
+    )
+    expect(within(nav).getByRole("link", { name: "Tienda" })).toHaveAttribute(
+      "href",
+      "/shop",
+    )
+    expect(screen.getByText("contenido de la página")).toBeInTheDocument()
+  })
+
+  test("marks only the current route as the active page", () => {
+    pathname.current = "/notebook"
+    render(<AppShell>contenido</AppShell>)
+
+    const nav = screen.getByRole("navigation", { name: "Navegación" })
+    expect(within(nav).getByRole("link", { name: "Cuaderno" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    )
+    expect(
+      within(nav).getByRole("link", { name: "Mapa" }),
+    ).not.toHaveAttribute("aria-current")
+    expect(
+      within(nav).getByRole("link", { name: /Repaso/ }),
+    ).not.toHaveAttribute("aria-current")
+  })
+
+  test("shows coins and streak in the header", () => {
+    addCoins(40)
+    render(<AppShell>contenido</AppShell>)
+
+    expect(screen.getByLabelText("Monedas: 40")).toBeInTheDocument()
+    expect(screen.getByLabelText(/Récord: 0 días/)).toBeInTheDocument()
+  })
+
+  test("badges the review tab with the due count", () => {
+    recordMissionResult("la-llegada", { stars: 1, payout: 0, bestCoins: 0 })
+    render(<AppShell>contenido</AppShell>)
+
+    const reviewLink = screen.getByRole("link", { name: /Repaso/ })
+    expect(within(reviewLink).getByText(/^\d+$/)).toBeInTheDocument()
+  })
+
+  test("shows no badge without due words", () => {
+    render(<AppShell>contenido</AppShell>)
+
+    const reviewLink = screen.getByRole("link", { name: "Repaso" })
+    expect(within(reviewLink).queryByText(/^\d+$/)).not.toBeInTheDocument()
+  })
+})

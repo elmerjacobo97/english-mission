@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, ArrowRight } from "@phosphor-icons/react"
+import { ArrowCounterClockwise, ArrowRight } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useSyncExternalStore } from "react"
 import { ChoiceChallenge } from "@/features/mission/components/choice-challenge"
@@ -14,18 +14,6 @@ import {
 import { useReviewRun } from "../hooks/use-review-run"
 import { ReviewSummary } from "./review-summary"
 
-function BackLink() {
-  return (
-    <Link
-      href="/cuaderno"
-      aria-label="Volver al cuaderno"
-      className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-ink/10 bg-surface shadow-card"
-    >
-      <ArrowLeft weight="bold" size={20} aria-hidden />
-    </Link>
-  )
-}
-
 export function ReviewSession() {
   const speechAvailable = useSyncExternalStore(
     subscribeSpeechSupport,
@@ -36,10 +24,17 @@ export function ReviewSession() {
 
   if (run.total === 0) {
     return (
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 px-4 py-5">
+      <main className="flex flex-1 flex-col gap-6">
         <header className="flex items-center gap-3">
-          <BackLink />
-          <h1 className="font-display text-xl font-bold">Repaso</h1>
+          <h1 className="flex items-center gap-2 font-display text-2xl font-bold">
+            <ArrowCounterClockwise
+              weight="fill"
+              size={24}
+              className="text-accent-strong"
+              aria-hidden
+            />
+            Repaso
+          </h1>
         </header>
         <section className="flex flex-col items-center gap-4 rounded-3xl border-2 border-dashed border-ink/15 bg-white/60 p-6 text-center">
           <span className="text-4xl" aria-hidden>
@@ -50,7 +45,7 @@ export function ReviewSession() {
             No hay palabras vencidas. Vuelve cuando toque el próximo repaso.
           </p>
           <Link
-            href="/cuaderno"
+            href="/notebook"
             className="flex min-h-12 items-center rounded-2xl bg-accent-strong px-5 font-display font-semibold text-white shadow-pop transition active:translate-y-0.5"
           >
             Ir al cuaderno
@@ -62,16 +57,9 @@ export function ReviewSession() {
 
   if (run.phase === "complete") {
     return (
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 px-4 py-5">
+      <main className="flex flex-1 flex-col gap-6">
         <header className="flex items-center gap-3">
-          <Link
-            href="/"
-            aria-label="Volver al mapa"
-            className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-ink/10 bg-surface shadow-card"
-          >
-            <ArrowLeft weight="bold" size={20} aria-hidden />
-          </Link>
-          <h1 className="font-display text-xl font-bold">Repaso</h1>
+          <h1 className="font-display text-2xl font-bold">Repaso</h1>
         </header>
         <ReviewSummary
           stats={run.stats}
@@ -97,9 +85,8 @@ export function ReviewSession() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-4 px-4 py-5">
+    <main className="flex flex-1 flex-col gap-4">
       <header className="flex items-center justify-between gap-3">
-        <BackLink />
         <p className="font-display text-sm font-semibold text-muted">Repaso</p>
         <span className="rounded-full border-2 border-ink/10 bg-surface px-3 py-2 font-display text-sm font-semibold shadow-card">
           {run.index + 1} de {run.total}

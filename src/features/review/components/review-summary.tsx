@@ -63,7 +63,7 @@ export function ReviewSummary({
           </button>
         )}
         <Link
-          href="/cuaderno"
+          href="/notebook"
           className="flex min-h-12 items-center justify-center rounded-2xl border-2 border-ink/10 bg-surface px-5 font-display font-semibold text-muted shadow-card transition hover:text-ink"
         >
           Volver al cuaderno

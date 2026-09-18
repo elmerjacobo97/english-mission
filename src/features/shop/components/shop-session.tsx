@@ -1,32 +1,27 @@
 "use client"
 
-import { ArrowLeft, Coins, Storefront } from "@phosphor-icons/react"
+import { Coins, Storefront } from "@phosphor-icons/react"
 import Link from "next/link"
 import { ChoiceChallenge } from "@/features/mission/components/choice-challenge"
 import { MAX_DAILY_RECHARGES } from "@/lib/progress/shop"
 import { useShopRun } from "../hooks/use-shop-run"
 import { SHOP_PROFILE } from "../utils/shop-exercise"
 
-function BackLink() {
-  return (
-    <Link
-      href="/"
-      aria-label="Volver al mapa"
-      className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-ink/10 bg-surface shadow-card"
-    >
-      <ArrowLeft weight="bold" size={20} aria-hidden />
-    </Link>
-  )
-}
-
 export function ShopSession() {
   const run = useShopRun()
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 px-4 py-5">
+    <main className="flex flex-1 flex-col gap-6">
       <header className="flex items-center gap-3">
-        <BackLink />
-        <h1 className="font-display text-xl font-bold">Tienda de monedas</h1>
+        <h1 className="flex items-center gap-2 font-display text-2xl font-bold">
+          <Storefront
+            weight="fill"
+            size={24}
+            className="text-accent-strong"
+            aria-hidden
+          />
+          Tienda de monedas
+        </h1>
       </header>
 
       {!run.hasWords ? (

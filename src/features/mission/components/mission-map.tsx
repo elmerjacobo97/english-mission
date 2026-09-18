@@ -2,20 +2,15 @@
 
 import {
   ArrowCounterClockwise,
-  BookOpenText,
   CheckCircle,
-  Coins,
   Fire,
   Lock,
-  MapTrifold,
   Play,
   Star,
-  Storefront,
   X,
 } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useState } from "react"
-import { useDueReviews } from "@/features/review/hooks/use-due-reviews"
 import { STREAK_MILESTONES } from "@/lib/progress/streak"
 import { useProgress } from "@/lib/progress/use-progress"
 import {
@@ -31,28 +26,22 @@ const CHAPTERS: Chapter[] = [1, 2, 3]
 
 export function MissionMap() {
   const { progress, clearPendingMilestone, reset } = useProgress()
-  const dueCount = useDueReviews()
   const [confirmingReset, setConfirmingReset] = useState(false)
 
   const { streak } = progress
   const { pendingMilestone } = streak
 
   const continueSlug = nextMissionSlug(progress)
-  const continueEntry = chapterEntries(1)
-    .concat(chapterEntries(2), chapterEntries(3))
-    .find((entry) => entry.slug === continueSlug)
 
   const hasProgress =
     Object.keys(progress.missions).length > 0 || progress.coins > 0
-  const hasNotebook = Object.values(progress.missions).some(
-    (mission) => mission.completed,
-  )
 
   function renderEntry(entry: MissionPlanEntry) {
     const unlocked = isUnlocked(entry, progress)
     const missionProgress = progress.missions[entry.slug]
     const completed = missionProgress?.completed === true
     const stars = missionProgress?.stars ?? 0
+    const isNext = entry.slug === continueSlug
 
     if (!entry.written) {
       return (
@@ -116,15 +105,22 @@ export function MissionMap() {
         </span>
         <Link
           href={`/mision/${entry.slug}`}
-          className="flex min-w-0 flex-1 flex-col gap-3 rounded-3xl border-2 border-ink/10 bg-surface p-4 shadow-card transition hover:-translate-y-0.5"
+          className={`flex min-w-0 flex-1 flex-col gap-3 rounded-3xl border-2 bg-surface p-4 transition hover:-translate-y-0.5 ${
+            isNext ? "border-accent shadow-pop" : "border-ink/10 shadow-card"
+          }`}
         >
           <span className="flex items-start gap-3">
             <span className="text-3xl" aria-hidden>
               {entry.emoji}
             </span>
             <span className="flex min-w-0 flex-1 flex-col">
-              <span className="font-display text-xs font-semibold uppercase tracking-widest text-muted">
+              <span className="flex items-center gap-2 font-display text-xs font-semibold uppercase tracking-widest text-muted">
                 Misión {entry.order} · Nivel {entry.level}
+                {isNext && !completed && (
+                  <span className="rounded-full bg-accent px-2 py-0.5 text-[11px] font-bold tracking-normal text-ink normal-case">
+                    Siguiente
+                  </span>
+                )}
               </span>
               <span className="font-display text-lg leading-tight font-bold">
                 {entry.title}
@@ -170,52 +166,25 @@ export function MissionMap() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 px-4 py-8">
-      <header className="flex flex-col gap-3">
-        <div className="flex items-center justify-between gap-3">
-          <h1 className="flex items-center gap-2 font-display text-2xl font-bold">
-            <MapTrifold
-              weight="fill"
-              size={28}
-              className="text-accent-strong"
-              aria-hidden
-            />
-            English Mission
-          </h1>
-          <div className="flex items-center gap-2">
-            <span
-              key={`coins-${progress.coins}`}
-              className="animate-pop flex items-center gap-1.5 rounded-full border-2 border-ink/10 bg-surface px-3 py-2 font-display text-sm font-semibold shadow-card"
-            >
-              <Coins
-                weight="duotone"
-                size={18}
-                className="text-accent-strong"
-                aria-hidden
-              />
-              {progress.coins}
-            </span>
-            <span
-              key={`streak-${streak.current}`}
-              className="animate-pop flex items-center gap-1.5 rounded-full border-2 border-ink/10 bg-surface px-3 py-2 font-display text-sm font-semibold shadow-card"
-              aria-label={`Racha de ${streak.current} días. Récord: ${streak.best} días`}
-              title={`Récord: ${streak.best} días`}
-            >
-              <Fire
-                weight="duotone"
-                size={18}
-                className={
-                  streak.current > 0 ? "text-error" : "text-ink/30"
-                }
-                aria-hidden
-              />
-              {streak.current === 0 ? "Empieza hoy" : streak.current}
-            </span>
-          </div>
+    <main className="flex flex-1 flex-col gap-6">
+      <header className="flex items-start justify-between gap-3">
+        <div className="flex flex-col gap-3">
+          <h1 className="font-display text-2xl font-bold">Misiones</h1>
+          <p className="font-semibold text-muted">
+            Una historia en 12 misiones: de tu primer día a sentirte en casa.
+          </p>
         </div>
-        <p className="font-semibold text-muted">
-          Una historia en 12 misiones: de tu primer día a sentirte en casa.
-        </p>
+        {hasProgress && (
+          <button
+            type="button"
+            onClick={() => setConfirmingReset(true)}
+            aria-label="Reiniciar progreso"
+            title="Reiniciar progreso"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-ink/10 bg-surface text-muted shadow-card transition hover:text-error"
+          >
+            <ArrowCounterClockwise weight="bold" size={18} aria-hidden />
+          </button>
+        )}
       </header>
 
       {pendingMilestone !== null && (
@@ -239,52 +208,6 @@ export function MissionMap() {
             <X weight="bold" size={16} aria-hidden />
           </button>
         </div>
-      )}
-
-      {continueEntry && (
-        <Link
-          href={`/mision/${continueEntry.slug}`}
-          className="flex min-h-14 items-center justify-between gap-3 rounded-3xl border-2 border-accent-deep/20 bg-accent px-5 font-display font-bold text-ink shadow-card transition hover:-translate-y-0.5"
-        >
-          <span className="flex items-center gap-2.5">
-            <Play weight="fill" size={22} aria-hidden />
-            Continuar
-          </span>
-          <span className="truncate text-sm font-semibold">
-            {continueEntry.emoji} {continueEntry.title}
-          </span>
-        </Link>
-      )}
-
-      <Link
-        href="/shop"
-        className="flex min-h-12 items-center gap-2.5 rounded-3xl border-2 border-accent/30 bg-paper px-5 font-display font-semibold text-accent-deep shadow-card transition hover:-translate-y-0.5"
-      >
-        <Storefront weight="fill" size={20} aria-hidden />
-        Tienda de monedas
-      </Link>
-
-      {hasNotebook && (
-        <Link
-          href="/cuaderno"
-          className="flex min-h-12 items-center gap-2.5 rounded-3xl border-2 border-teal/25 bg-teal-soft px-5 font-display font-semibold text-teal-strong shadow-card transition hover:-translate-y-0.5"
-        >
-          <BookOpenText weight="fill" size={20} aria-hidden />
-          Cuaderno de vocabulario
-        </Link>
-      )}
-
-      {dueCount > 0 && (
-        <Link
-          href="/review"
-          className="flex min-h-12 items-center gap-2.5 rounded-3xl border-2 border-accent/30 bg-paper px-5 font-display font-semibold text-accent-deep shadow-card transition hover:-translate-y-0.5"
-        >
-          <ArrowCounterClockwise weight="bold" size={20} aria-hidden />
-          Repasar vocabulario
-          <span className="ml-auto rounded-full bg-accent px-2.5 py-0.5 text-sm font-bold text-ink">
-            {dueCount}
-          </span>
-        </Link>
       )}
 
       {CHAPTERS.map((chapter) => {
@@ -315,45 +238,56 @@ export function MissionMap() {
         )
       })}
 
-      {hasProgress && (
-        <footer className="flex flex-col gap-3">
-          {confirmingReset ? (
-            <div className="animate-slide-in flex flex-col gap-3 rounded-3xl border-2 border-error/20 bg-error-soft p-5">
-              <p className="font-display font-semibold text-error">
-                Esto borra tus monedas, estrellas y misiones completadas.
-                ¿Seguro?
-              </p>
-              <div className="flex gap-2.5">
-                <button
-                  type="button"
-                  onClick={() => {
-                    reset()
-                    setConfirmingReset(false)
-                  }}
-                  className="min-h-11 rounded-2xl bg-error px-4 font-display font-semibold text-white"
-                >
-                  Sí, borrar todo
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setConfirmingReset(false)}
-                  className="min-h-11 rounded-2xl border-2 border-ink/10 bg-surface px-4 font-display font-semibold shadow-card"
-                >
-                  Cancelar
-                </button>
-              </div>
+      {confirmingReset && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          onKeyDown={(event) => {
+            if (event.key === "Escape") {
+              setConfirmingReset(false)
+            }
+          }}
+        >
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-ink/40"
+            onClick={() => setConfirmingReset(false)}
+          />
+          <div
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="reset-title"
+            aria-describedby="reset-body"
+            className="animate-pop relative flex w-full max-w-sm flex-col gap-4 rounded-3xl border-2 border-error/20 bg-surface p-5 shadow-card"
+          >
+            <p id="reset-title" className="font-display text-lg font-bold">
+              ¿Reiniciar progreso?
+            </p>
+            <p id="reset-body" className="text-sm font-semibold text-muted">
+              Esto borra tus monedas, estrellas y misiones completadas. No se
+              puede deshacer.
+            </p>
+            <div className="flex justify-end gap-2.5">
+              <button
+                type="button"
+                autoFocus
+                onClick={() => setConfirmingReset(false)}
+                className="min-h-11 rounded-2xl border-2 border-ink/10 bg-surface px-4 font-display font-semibold shadow-card"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  reset()
+                  setConfirmingReset(false)
+                }}
+                className="min-h-11 rounded-2xl bg-error px-4 font-display font-semibold text-white"
+              >
+                Sí, borrar todo
+              </button>
             </div>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setConfirmingReset(true)}
-              className="flex min-h-11 items-center gap-2 self-start rounded-2xl border-2 border-ink/10 bg-surface px-4 font-display text-sm font-semibold text-muted shadow-card transition hover:text-ink"
-            >
-              <ArrowCounterClockwise weight="bold" size={18} aria-hidden />
-              Reiniciar progreso
-            </button>
-          )}
-        </footer>
+          </div>
+        </div>
       )}
     </main>
   )

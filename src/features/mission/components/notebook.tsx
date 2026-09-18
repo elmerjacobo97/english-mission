@@ -2,7 +2,6 @@
 
 import {
   ArrowCounterClockwise,
-  ArrowLeft,
   BookOpenText,
   SpeakerHigh,
 } from "@phosphor-icons/react"
@@ -51,26 +50,17 @@ export function Notebook() {
   }).filter((section) => section.words.length > 0)
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 px-4 py-5">
+    <main className="flex flex-1 flex-col gap-6">
       <header className="flex flex-col gap-3">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/"
-            aria-label="Volver al mapa"
-            className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-ink/10 bg-surface shadow-card"
-          >
-            <ArrowLeft weight="bold" size={20} aria-hidden />
-          </Link>
-          <h1 className="flex items-center gap-2 font-display text-xl font-bold">
-            <BookOpenText
-              weight="fill"
-              size={22}
-              className="text-teal-strong"
-              aria-hidden
-            />
-            Cuaderno
-          </h1>
-        </div>
+        <h1 className="flex items-center gap-2 font-display text-2xl font-bold">
+          <BookOpenText
+            weight="fill"
+            size={24}
+            className="text-teal-strong"
+            aria-hidden
+          />
+          Cuaderno
+        </h1>
         <p className="font-semibold text-muted">
           Tu vocabulario, capítulo a capítulo. Toca una palabra para oírla.
         </p>

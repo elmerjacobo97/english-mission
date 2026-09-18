@@ -45,13 +45,9 @@ describe("MissionMap", () => {
       screen.getAllByText("Completa la misión anterior para desbloquearla"),
     ).toHaveLength(3)
     expect(screen.getAllByText("Próximamente")).toHaveLength(8)
-    expect(screen.getByRole("link", { name: /Continuar/ })).toHaveAttribute(
-      "href",
-      "/mision/la-llegada",
-    )
-    expect(
-      screen.queryByRole("link", { name: /Cuaderno/ }),
-    ).not.toBeInTheDocument()
+    const nextCard = screen.getByRole("link", { name: /La llegada/ })
+    expect(nextCard).toHaveAttribute("href", "/mision/la-llegada")
+    expect(nextCard).toHaveTextContent("Siguiente")
   })
 
   test("reflects stars, stamps and unlocks from the store", () => {
@@ -60,19 +56,14 @@ describe("MissionMap", () => {
 
     render(<MissionMap />)
 
-    expect(screen.getByText("40")).toBeInTheDocument()
     expect(screen.getByText("COMPLETADA")).toBeInTheDocument()
     expect(screen.getByRole("link", { name: /Repetir/ })).toBeInTheDocument()
     expect(
       screen.getByRole("img", { name: "2 de 3 estrellas" }),
     ).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: /Continuar/ })).toHaveAttribute(
-      "href",
-      "/mision/la-llegada",
-    )
-    expect(
-      screen.getByRole("link", { name: /Cuaderno de vocabulario/ }),
-    ).toBeInTheDocument()
+    const nextCard = screen.getByRole("link", { name: /La llegada/ })
+    expect(nextCard).toHaveAttribute("href", "/mision/la-llegada")
+    expect(nextCard).not.toHaveTextContent("Siguiente")
     expect(
       screen.getAllByText("Completa la misión anterior para desbloquearla"),
     ).toHaveLength(2)
@@ -83,66 +74,12 @@ describe("MissionMap", () => {
 
     render(<MissionMap />)
 
-    expect(screen.getByRole("link", { name: /Continuar/ })).toHaveAttribute(
-      "href",
-      "/mision/supermercado",
-    )
+    const nextCard = screen.getByRole("link", { name: /supermercado/ })
+    expect(nextCard).toHaveAttribute("href", "/mision/supermercado")
+    expect(nextCard).toHaveTextContent("Siguiente")
     expect(
       screen.getByRole("img", { name: "3 de 3 estrellas" }),
     ).toBeInTheDocument()
-  })
-
-  test("offers the review card when words are due", () => {
-    recordMissionResult("la-llegada", { stars: 1, payout: 0, bestCoins: 0 })
-
-    render(<MissionMap />)
-
-    expect(
-      screen.getByRole("link", { name: /Repasar vocabulario/ }),
-    ).toHaveAttribute("href", "/review")
-  })
-
-  test("hides the review card without due words", () => {
-    render(<MissionMap />)
-
-    expect(
-      screen.queryByRole("link", { name: /Repasar/ }),
-    ).not.toBeInTheDocument()
-  })
-
-  test("shows the coin shop card without progress", () => {
-    render(<MissionMap />)
-
-    expect(
-      screen.getByRole("link", { name: /Tienda de monedas/ }),
-    ).toHaveAttribute("href", "/shop")
-  })
-
-  test("keeps the coin shop card visible with progress", () => {
-    addCoins(40)
-    recordMissionResult("la-llegada", { stars: 2, payout: 0, bestCoins: 40 })
-
-    render(<MissionMap />)
-
-    expect(
-      screen.getByRole("link", { name: /Tienda de monedas/ }),
-    ).toHaveAttribute("href", "/shop")
-  })
-
-  test("shows the streak chip with Empieza hoy at zero", () => {
-    render(<MissionMap />)
-
-    expect(screen.getByText("Empieza hoy")).toBeInTheDocument()
-    expect(screen.getByLabelText(/Récord: 0 días/)).toBeInTheDocument()
-  })
-
-  test("shows the current streak with the record in the accessible text", () => {
-    seedStreak({ current: 5, best: 9, lastDay: "2026-09-10" })
-
-    render(<MissionMap />)
-
-    expect(screen.getByText("5")).toBeInTheDocument()
-    expect(screen.getByLabelText(/Récord: 9 días/)).toBeInTheDocument()
   })
 
   test("shows the milestone notice, closes it and does not bring it back", async () => {
@@ -179,7 +116,15 @@ describe("MissionMap", () => {
     expect(screen.queryByText(/¡Racha de/)).not.toBeInTheDocument()
   })
 
-  test("reset asks for confirmation and clears stored progress", async () => {
+  test("hides the reset button without progress", () => {
+    render(<MissionMap />)
+
+    expect(
+      screen.queryByRole("button", { name: /Reiniciar progreso/ }),
+    ).not.toBeInTheDocument()
+  })
+
+  test("reset asks for confirmation in a dialog and clears stored progress", async () => {
     const user = userEvent.setup()
     addCoins(20)
     render(<MissionMap />)
@@ -188,18 +133,21 @@ describe("MissionMap", () => {
       screen.getByRole("button", { name: /Reiniciar progreso/ }),
     )
     expect(
+      screen.getByRole("alertdialog", { name: "¿Reiniciar progreso?" }),
+    ).toBeInTheDocument()
+    expect(
       screen.getByText(/Esto borra tus monedas, estrellas y misiones/),
     ).toBeInTheDocument()
 
     await user.click(screen.getByRole("button", { name: "Sí, borrar todo" }))
 
-    expect(screen.queryByText(/¿Seguro\?/)).not.toBeInTheDocument()
+    expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
     expect(
       window.localStorage.getItem("english-mission:progress:v5"),
     ).toBeNull()
   })
 
-  test("cancel keeps progress", async () => {
+  test("cancel keeps progress and closes the dialog", async () => {
     const user = userEvent.setup()
     addCoins(20)
     render(<MissionMap />)
@@ -209,9 +157,24 @@ describe("MissionMap", () => {
     )
     await user.click(screen.getByRole("button", { name: "Cancelar" }))
 
+    expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
     expect(
       window.localStorage.getItem("english-mission:progress:v5"),
     ).not.toBeNull()
-    expect(screen.getByText("20")).toBeInTheDocument()
+    expect(getProgressSnapshot().coins).toBe(20)
+  })
+
+  test("closes the reset dialog with Escape", async () => {
+    const user = userEvent.setup()
+    addCoins(20)
+    render(<MissionMap />)
+
+    await user.click(
+      screen.getByRole("button", { name: /Reiniciar progreso/ }),
+    )
+    await user.keyboard("{Escape}")
+
+    expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
+    expect(getProgressSnapshot().coins).toBe(20)
   })
 })
