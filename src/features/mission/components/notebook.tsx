@@ -8,6 +8,7 @@ import {
 import Link from "next/link"
 import { useSyncExternalStore } from "react"
 import { useDueReviews } from "@/features/review/hooks/use-due-reviews"
+import { PageHeader } from "@/features/shell/components/page-header"
 import { useProgress } from "@/lib/progress/use-progress"
 import {
   getSpeechSupportServerSnapshot,
@@ -51,19 +52,11 @@ export function Notebook() {
 
   return (
     <main className="flex flex-1 flex-col gap-6">
-      <header className="flex flex-col gap-3">
-        <h1 className="flex items-center gap-2 font-display text-2xl font-bold">
-          <BookOpenText
-            weight="fill"
-            size={24}
-            className="text-teal-strong"
-            aria-hidden
-          />
-          Cuaderno
-        </h1>
-        <p className="font-semibold text-muted">
-          Tu vocabulario, capítulo a capítulo. Toca una palabra para oírla.
-        </p>
+      <PageHeader
+        icon={BookOpenText}
+        title="Cuaderno"
+        description="Tu vocabulario, capítulo a capítulo. Toca una palabra para oírla."
+      >
         {dueCount > 0 && (
           <Link
             href="/review"
@@ -78,7 +71,7 @@ export function Notebook() {
             </span>
           </Link>
         )}
-      </header>
+      </PageHeader>
 
       {sections.length === 0 ? (
         <section className="flex flex-col items-center gap-4 rounded-3xl border-2 border-dashed border-ink/15 bg-white/60 p-6 text-center">

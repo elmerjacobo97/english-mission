@@ -42,7 +42,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { streak } = progress
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col md:grid md:grid-cols-[16rem_minmax(0,1fr)] md:border-x-2 md:border-ink/10">
+    <div className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col md:grid md:grid-cols-[16rem_minmax(0,1fr)] md:grid-rows-[auto_minmax(0,1fr)] md:border-x-2 md:border-ink/10">
       <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b-2 border-ink/10 bg-paper/95 px-4 py-3 backdrop-blur md:col-start-2 md:row-start-1 md:px-8">
         <Link
           href="/"

@@ -6,6 +6,7 @@ import { useSyncExternalStore } from "react"
 import { ChoiceChallenge } from "@/features/mission/components/choice-challenge"
 import { ListenChallenge } from "@/features/mission/components/listen-challenge"
 import { TypeChallenge } from "@/features/mission/components/type-challenge"
+import { PageHeader } from "@/features/shell/components/page-header"
 import {
   getSpeechSupportServerSnapshot,
   getSpeechSupportSnapshot,
@@ -25,17 +26,11 @@ export function ReviewSession() {
   if (run.total === 0) {
     return (
       <main className="flex flex-1 flex-col gap-6">
-        <header className="flex items-center gap-3">
-          <h1 className="flex items-center gap-2 font-display text-2xl font-bold">
-            <ArrowCounterClockwise
-              weight="fill"
-              size={24}
-              className="text-accent-strong"
-              aria-hidden
-            />
-            Repaso
-          </h1>
-        </header>
+        <PageHeader
+          icon={ArrowCounterClockwise}
+          title="Repaso"
+          description="Palabras que ya viste, justo cuando toca repasarlas."
+        />
         <section className="flex flex-col items-center gap-4 rounded-3xl border-2 border-dashed border-ink/15 bg-white/60 p-6 text-center">
           <span className="text-4xl" aria-hidden>
             🎉
@@ -58,9 +53,11 @@ export function ReviewSession() {
   if (run.phase === "complete") {
     return (
       <main className="flex flex-1 flex-col gap-6">
-        <header className="flex items-center gap-3">
-          <h1 className="font-display text-2xl font-bold">Repaso</h1>
-        </header>
+        <PageHeader
+          icon={ArrowCounterClockwise}
+          title="Repaso"
+          description="Palabras que ya viste, justo cuando toca repasarlas."
+        />
         <ReviewSummary
           stats={run.stats}
           hasMore={run.hasMore}

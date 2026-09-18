@@ -5,12 +5,14 @@ import {
   CheckCircle,
   Fire,
   Lock,
+  MapTrifold,
   Play,
   Star,
   X,
 } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useState } from "react"
+import { PageHeader } from "@/features/shell/components/page-header"
 import { STREAK_MILESTONES } from "@/lib/progress/streak"
 import { useProgress } from "@/lib/progress/use-progress"
 import {
@@ -130,7 +132,7 @@ export function MissionMap() {
               </span>
             </span>
           </span>
-          <span className="flex items-center gap-2">
+          <span className="flex flex-wrap items-center gap-2">
             <span className="flex shrink-0 items-center gap-1.5 rounded-2xl bg-accent-strong px-4 py-2 font-display text-sm font-semibold text-white shadow-pop">
               {completed ? (
                 <ArrowCounterClockwise weight="bold" size={18} aria-hidden />
@@ -158,7 +160,7 @@ export function MissionMap() {
                 ))}
               </span>
             )}
-            {completed && <MissionStamp />}
+            {completed && <MissionStamp className="ml-auto" />}
           </span>
         </Link>
       </li>
@@ -167,25 +169,24 @@ export function MissionMap() {
 
   return (
     <main className="flex flex-1 flex-col gap-6">
-      <header className="flex items-start justify-between gap-3">
-        <div className="flex flex-col gap-3">
-          <h1 className="font-display text-2xl font-bold">Misiones</h1>
-          <p className="font-semibold text-muted">
-            Una historia en 12 misiones: de tu primer día a sentirte en casa.
-          </p>
-        </div>
-        {hasProgress && (
-          <button
-            type="button"
-            onClick={() => setConfirmingReset(true)}
-            aria-label="Reiniciar progreso"
-            title="Reiniciar progreso"
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-ink/10 bg-surface text-muted shadow-card transition hover:text-error"
-          >
-            <ArrowCounterClockwise weight="bold" size={18} aria-hidden />
-          </button>
-        )}
-      </header>
+      <PageHeader
+        icon={MapTrifold}
+        title="Misiones"
+        description="Una historia en 12 misiones: de tu primer día a sentirte en casa."
+        aside={
+          hasProgress && (
+            <button
+              type="button"
+              onClick={() => setConfirmingReset(true)}
+              aria-label="Reiniciar progreso"
+              title="Reiniciar progreso"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-ink/10 bg-surface text-muted shadow-card transition hover:text-error"
+            >
+              <ArrowCounterClockwise weight="bold" size={18} aria-hidden />
+            </button>
+          )
+        }
+      />
 
       {pendingMilestone !== null && (
         <div className="animate-slide-in flex items-center gap-3 rounded-3xl border-2 border-accent-deep/20 bg-accent px-5 py-4 shadow-card">

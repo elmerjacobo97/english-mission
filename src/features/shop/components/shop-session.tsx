@@ -3,6 +3,7 @@
 import { Coins, Storefront } from "@phosphor-icons/react"
 import Link from "next/link"
 import { ChoiceChallenge } from "@/features/mission/components/choice-challenge"
+import { PageHeader } from "@/features/shell/components/page-header"
 import { MAX_DAILY_RECHARGES } from "@/lib/progress/shop"
 import { useShopRun } from "../hooks/use-shop-run"
 import { SHOP_PROFILE } from "../utils/shop-exercise"
@@ -12,17 +13,11 @@ export function ShopSession() {
 
   return (
     <main className="flex flex-1 flex-col gap-6">
-      <header className="flex items-center gap-3">
-        <h1 className="flex items-center gap-2 font-display text-2xl font-bold">
-          <Storefront
-            weight="fill"
-            size={24}
-            className="text-accent-strong"
-            aria-hidden
-          />
-          Tienda de monedas
-        </h1>
-      </header>
+      <PageHeader
+        icon={Storefront}
+        title="Tienda de monedas"
+        description="Resuelve una palabra que ya viste y gana monedas."
+      />
 
       {!run.hasWords ? (
         <section className="flex flex-col items-center gap-4 rounded-3xl border-2 border-dashed border-ink/15 bg-white/60 p-6 text-center">
@@ -94,15 +89,7 @@ export function ShopSession() {
         </section>
       ) : (
         <section className="flex flex-col gap-4 rounded-3xl border-2 border-ink/10 bg-surface p-6 shadow-card">
-          <div className="flex items-center gap-3">
-            <Storefront
-              weight="fill"
-              size={28}
-              className="text-accent-strong"
-              aria-hidden
-            />
-            <p className="font-display text-lg font-bold">{`Tu saldo: ${run.coins} monedas`}</p>
-          </div>
+          <p className="font-display text-lg font-bold">{`Tu saldo: ${run.coins} monedas`}</p>
           <p className="flex items-center gap-2 font-semibold text-muted">
             <Coins weight="fill" size={18} aria-hidden />
             {`Recargas hoy: ${run.usedToday}/${MAX_DAILY_RECHARGES}`}

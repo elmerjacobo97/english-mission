@@ -83,11 +83,11 @@ body {
 
 @keyframes stamp {
   0% {
-    transform: rotate(-12deg) scale(1.7);
+    transform: scale(1.7);
     opacity: 0;
   }
   100% {
-    transform: rotate(-12deg) scale(1);
+    transform: scale(1);
     opacity: 1;
   }
 }
