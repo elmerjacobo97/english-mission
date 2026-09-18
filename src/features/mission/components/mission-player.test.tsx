@@ -26,10 +26,10 @@ async function playPerfect(user: ReturnType<typeof userEvent.setup>) {
   await next(user)
   await solve(user, "Hola")
   await next(user)
+  await solve(user, "My name is Alex")
   await next(user)
   await solve(user, "Thanks")
   await next(user)
-  await solve(user, "My name is Alex")
   await next(user)
 }
 
@@ -71,10 +71,10 @@ describe("MissionPlayer", () => {
     await user.click(screen.getByRole("button", { name: "Adiós" }))
     await solve(user, "Hola")
     await next(user)
+    await solve(user, "My name is Alex")
     await next(user)
     await solve(user, "Thanks")
     await next(user)
-    await solve(user, "My name is Alex")
     await next(user)
 
     expect(await screen.findByText("¡Misión cumplida!")).toBeInTheDocument()

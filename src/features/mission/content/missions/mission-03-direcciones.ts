@@ -4,17 +4,16 @@ export const mission03Beats: Beat[] = [
   {
     kind: "story",
     es: "Marta te dijo que hay trabajo al otro lado del barrio. Sales temprano a buscar la parada del bus.",
-    en: "Hello! Where is the bus stop?",
+    en: "Where is the bus stop?",
     speaker: "you",
     vocab: [
       ["where", "dónde"],
       ["bus stop", "parada del bus"],
     ],
-    character: "marta",
   },
   {
     kind: "choice",
-    prompt: "Estás perdido y quieres preguntar por un lugar. ¿Qué palabra usas?",
+    prompt: "Coco te mira desde la ventana. Ensayas la pregunta. ¿Con qué palabra empiezas?",
     options: ["Where", "Thanks", "Money"],
     correct: 0,
     character: "coco",
@@ -22,19 +21,15 @@ export const mission03Beats: Beat[] = [
   },
   {
     kind: "story",
-    es: "Un señor mayor te responde y señala la calle.",
-    en: "Go straight and turn left.",
-    speaker: "beto",
-    vocab: [
-      ["straight", "derecho"],
-      ["left", "izquierda"],
-    ],
+    es: "En la esquina ves a un señor mayor. Te acercas a Don Beto.",
+    en: "Hello! Where is the bus stop?",
+    speaker: "you",
     character: "beto",
-    mood: "happy",
+    mood: "curious",
   },
   {
     kind: "order",
-    prompt: "Ordena la pregunta: «¿Dónde está la parada del bus?»",
+    prompt: "Aún estás perdido. Ordena la pregunta: «¿Dónde está la parada del bus?»",
     tokens: ["is", "Where", "bus", "the", "stop"],
     solution: ["Where", "is", "the", "bus", "stop"],
     character: "beto",
@@ -45,15 +40,27 @@ export const mission03Beats: Beat[] = [
   },
   {
     kind: "story",
-    es: "Llegas a la parada: está muy cerca de tu casa.",
-    en: "It's near my home.",
-    speaker: "you",
-    vocab: [["near", "cerca"]],
+    es: "Don Beto señala la calle y te da la primera indicación.",
+    en: "Go straight and turn left.",
+    speaker: "beto",
+    vocab: [
+      ["straight", "derecho"],
+      ["left", "izquierda"],
+    ],
+    character: "beto",
+    mood: "happy",
+  },
+  {
+    kind: "fill",
+    prompt: "Completa lo que te acaba de decir Don Beto.",
+    sentence: "Go ___ and turn left.",
+    answer: "straight",
+    character: "beto",
   },
   {
     kind: "type",
     prompt:
-      "Don Beto no te entendió. Escribe en inglés: «¿Dónde está la parada del bus?»",
+      "El ruido de la calle tapó el final. Pregunta otra vez: «¿Dónde está la parada del bus?»",
     accepted: ["where is the bus stop"],
     hint: "Where is the b__ s___",
     character: "beto",
@@ -65,7 +72,7 @@ export const mission03Beats: Beat[] = [
   },
   {
     kind: "story",
-    es: "Don Beto añade que no está lejos y señala a la derecha.",
+    es: "Don Beto se acerca y aclara: no está lejos, a la derecha.",
     en: "It's not far. The bus stop is on the right.",
     speaker: "beto",
     vocab: [
@@ -76,11 +83,11 @@ export const mission03Beats: Beat[] = [
     mood: "happy",
   },
   {
-    kind: "fill",
-    prompt: "Completa lo que te dijo Don Beto.",
-    sentence: "Go ___ and turn left.",
-    answer: "straight",
-    character: "beto",
+    kind: "story",
+    es: "Sigues las indicaciones y llegas a la parada: está muy cerca de tu casa.",
+    en: "It's near my home.",
+    speaker: "you",
+    vocab: [["near", "cerca"]],
   },
   {
     kind: "story",

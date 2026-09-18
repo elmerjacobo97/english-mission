@@ -47,6 +47,14 @@ export const mission01Beats: Beat[] = [
     },
   },
   {
+    kind: "choice",
+    prompt: "Es tu turno: quieres presentarte. ¿Qué dices?",
+    options: ["My name is Alex", "No, thanks", "Goodbye"],
+    correct: 0,
+    character: "marta",
+    mood: "curious",
+  },
+  {
     kind: "story",
     es: "Marta te pregunta si necesitas ayuda. Tú asientes y das las gracias.",
     en: "Yes, please. Thanks!",
@@ -68,7 +76,7 @@ export const mission01Beats: Beat[] = [
   },
   {
     kind: "story",
-    es: "Marta te explica el camino y se despide con la mano.",
+    es: "Marta te indica el edificio y se despide con la mano.",
     en: "Goodbye! Good luck!",
     speaker: "marta",
     vocab: [["goodbye", "adiós"]],
@@ -76,16 +84,8 @@ export const mission01Beats: Beat[] = [
     mood: "happy",
   },
   {
-    kind: "choice",
-    prompt: "Conoces a alguien nuevo y quieres presentarte. ¿Qué dices?",
-    options: ["My name is Alex", "No, thanks", "Goodbye"],
-    correct: 0,
-    character: "marta",
-    mood: "curious",
-  },
-  {
     kind: "story",
-    es: "Un loro del edificio repite lo que acabas de decir. Ya tienes dirección, una amiga y un loro charlatán.",
+    es: "Entras al edificio. Un loro verde te saluda y repite tu presentación.",
     en: "Nice to meet you!",
     speaker: "coco",
     character: "coco",
