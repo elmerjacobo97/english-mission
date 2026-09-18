@@ -5,6 +5,7 @@ export const mission04Beats: Beat[] = [
     kind: "story",
     es: "Antes de la entrevista entras a un café a desayunar. Cami te atiende desde el mostrador.",
     en: "Good morning! I want breakfast.",
+    speaker: "you",
     vocab: [["breakfast", "desayuno"]],
     character: "cami",
     mood: "happy",
@@ -20,6 +21,7 @@ export const mission04Beats: Beat[] = [
     kind: "story",
     es: "Pides un café con la fórmula más educada.",
     en: "Can I have a coffee, please?",
+    speaker: "you",
     vocab: [
       ["can I have", "¿me trae?"],
       ["coffee", "café"],
@@ -42,6 +44,7 @@ export const mission04Beats: Beat[] = [
     kind: "story",
     es: "Cami te pregunta si quieres azúcar.",
     en: "Do you want sugar?",
+    speaker: "cami",
     vocab: [
       ["sugar", "azúcar"],
       ["tea", "té"],
@@ -60,6 +63,7 @@ export const mission04Beats: Beat[] = [
     kind: "story",
     es: "Cami te trae una taza grande y el desayuno.",
     en: "The cup is big!",
+    speaker: "you",
     vocab: [
       ["cup", "taza"],
       ["bill", "cuenta"],
@@ -82,6 +86,7 @@ export const mission04Beats: Beat[] = [
     kind: "story",
     es: "Pagas, das las gracias y sales a la calle. Coco te despide desde la ventana. Tu primer café en inglés: hecho.",
     en: "Thanks! The breakfast was great.",
+    speaker: "you",
     character: "coco",
     mood: "happy",
   },

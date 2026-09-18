@@ -10,11 +10,14 @@ type GrammarNoteProps = {
 
 export function GrammarNote({ note }: GrammarNoteProps) {
   return (
-    <details className="rounded-2xl border-2 border-teal/25 bg-teal-soft px-4 py-3">
+    <details
+      open={note.open}
+      className="rounded-2xl border-2 border-teal/25 bg-teal-soft px-4 py-3"
+    >
       <summary className="cursor-pointer list-none font-display text-sm font-semibold text-teal-strong [&::-webkit-details-marker]:hidden">
         <span className="inline-flex items-center gap-2">
           <BookOpenText weight="fill" size={18} aria-hidden />
-          Gramática: {note.title}
+          {note.label ?? "Gramática"}: {note.title}
         </span>
       </summary>
       <div className="mt-3 flex items-start gap-2.5">

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useChallengeRun } from "../hooks/use-challenge-run"
 import type { TypeChallenge as TypeChallengeType } from "../types/beat"
 import { checkTypedAnswer } from "../utils/answer-check"
@@ -30,6 +30,8 @@ export function TypeChallenge({
     onSolved,
   })
   const [value, setValue] = useState("")
+  const [emptySubmit, setEmptySubmit] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   function handleRequestHint() {
     if (run.hint || run.solved) {
@@ -46,6 +48,12 @@ export function TypeChallenge({
     if (run.solved) {
       return
     }
+    if (value.trim().length === 0) {
+      setEmptySubmit(true)
+      inputRef.current?.focus()
+      return
+    }
+    setEmptySubmit(false)
 
     const result = checkTypedAnswer(value, beat.accepted, profile.typoTolerance)
     if (result.ok) {
@@ -82,17 +90,25 @@ export function TypeChallenge({
         </label>
         <input
           id="typed-answer"
+          ref={inputRef}
           type="text"
           value={run.solved ? beat.accepted[0] : value}
-          onChange={(event) => setValue(event.target.value)}
+          onChange={(event) => {
+            setValue(event.target.value)
+            setEmptySubmit(false)
+          }}
           disabled={run.solved}
           autoComplete="off"
           autoCapitalize="off"
           spellCheck={false}
-          required
           placeholder="Escribe en inglés..."
           className="min-h-14 rounded-2xl border-2 border-ink/10 bg-surface px-4 py-3.5 font-display text-lg font-semibold transition focus:border-teal focus:outline-none disabled:bg-ink/5"
         />
+        {emptySubmit && (
+          <p className="animate-slide-in text-sm font-semibold text-muted">
+            Escribe tu respuesta antes de comprobar.
+          </p>
+        )}
       </form>
     </ChallengeFrame>
   )

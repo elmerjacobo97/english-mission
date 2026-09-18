@@ -5,6 +5,8 @@ export type Vocabulary = [en: string, es: string]
 export type GrammarNote = {
   title: string
   body: string
+  label?: string
+  open?: boolean
 }
 
 type BeatMeta = {
@@ -13,12 +15,17 @@ type BeatMeta = {
   note?: GrammarNote
 }
 
-export type StoryBeat = BeatMeta & {
+export type Speaker = "you" | CharacterId
+
+type StoryBase = BeatMeta & {
   kind: "story"
   es: string
-  en?: string
   vocab?: Vocabulary[]
 }
+
+export type StoryBeat =
+  | (StoryBase & { en: string; speaker: Speaker })
+  | (StoryBase & { en?: undefined; speaker?: Speaker })
 
 export type ChoiceChallenge = BeatMeta & {
   kind: "choice"

@@ -5,6 +5,7 @@ export const mission02Beats: Beat[] = [
     kind: "story",
     es: "Tu habitación es pequeña y el refrigerador está vacío. Tienes hambre.",
     en: "I want bread and milk.",
+    speaker: "you",
     vocab: [
       ["bread", "pan"],
       ["milk", "leche"],
@@ -19,6 +20,7 @@ export const mission02Beats: Beat[] = [
     kind: "story",
     es: "Sales a la calle. A dos cuadras hay un mercado pequeño.",
     en: "I'm going to the market.",
+    speaker: "you",
     vocab: [["water", "agua"]],
   },
   {
@@ -31,6 +33,7 @@ export const mission02Beats: Beat[] = [
     kind: "story",
     es: "Entras al mercado y el vendedor te saluda.",
     en: "Hello! Can I help you?",
+    speaker: "nico",
     vocab: [["buy", "comprar"]],
     character: "nico",
     mood: "happy",
@@ -50,6 +53,7 @@ export const mission02Beats: Beat[] = [
     kind: "story",
     es: "Señalas lo que quieres y pides por favor.",
     en: "Bananas, apples, bread and water, please.",
+    speaker: "you",
     vocab: [
       ["banana", "plátano"],
       ["apple", "manzana"],
@@ -73,12 +77,14 @@ export const mission02Beats: Beat[] = [
     kind: "story",
     es: "Pagas con un billete y guardas el cambio.",
     en: "Here is the money. Thanks!",
+    speaker: "you",
     vocab: [["money", "dinero"]],
   },
   {
     kind: "story",
     es: "Sales del mercado con la bolsa llena. El refrigerador ya no está vacío.",
     en: "Mission complete!",
+    speaker: "coco",
     character: "coco",
     mood: "happy",
   },

@@ -65,6 +65,15 @@ describe("TypeChallenge", () => {
     })
   })
 
+  test("empty submit asks for an answer without paying", async () => {
+    const { onSolved } = setup()
+    submitChallengeForm()
+    expect(
+      await screen.findByText("Escribe tu respuesta antes de comprobar."),
+    ).toBeInTheDocument()
+    expect(onSolved).not.toHaveBeenCalled()
+  })
+
   test("points at the wrong word", async () => {
     const user = userEvent.setup()
     setup()

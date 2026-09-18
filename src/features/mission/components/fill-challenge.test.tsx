@@ -58,6 +58,15 @@ describe("FillChallenge", () => {
     expect(screen.getByText("and turn left.")).toBeInTheDocument()
   })
 
+  test("empty submit asks for the missing word without paying", async () => {
+    const { onSolved } = setup()
+    submitChallengeForm()
+    expect(
+      await screen.findByText("Escribe la palabra que falta antes de comprobar."),
+    ).toBeInTheDocument()
+    expect(onSolved).not.toHaveBeenCalled()
+  })
+
   test("wrong word shows retry feedback", async () => {
     const user = userEvent.setup()
     setup()

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useChallengeRun } from "../hooks/use-challenge-run"
 import type { FillChallenge as FillChallengeType } from "../types/beat"
 import { checkTypedAnswer } from "../utils/answer-check"
@@ -31,6 +31,8 @@ export function FillChallenge({
     onSolved,
   })
   const [value, setValue] = useState("")
+  const [emptySubmit, setEmptySubmit] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const [before, after] = beat.sentence.split("___")
 
@@ -49,6 +51,12 @@ export function FillChallenge({
     if (run.solved) {
       return
     }
+    if (value.trim().length === 0) {
+      setEmptySubmit(true)
+      inputRef.current?.focus()
+      return
+    }
+    setEmptySubmit(false)
     const result = checkTypedAnswer(value, accepted, profile.typoTolerance)
     if (result.ok) {
       run.registerSuccess()
@@ -82,19 +90,27 @@ export function FillChallenge({
           </label>
           <input
             id="fill-answer"
+            ref={inputRef}
             type="text"
             value={run.solved ? beat.answer : value}
-            onChange={(event) => setValue(event.target.value)}
+            onChange={(event) => {
+              setValue(event.target.value)
+              setEmptySubmit(false)
+            }}
             disabled={run.solved}
             autoComplete="off"
             autoCapitalize="off"
             spellCheck={false}
-            required
             size={Math.max(beat.answer.length + 2, 8)}
             className="rounded-xl border-2 border-teal/40 bg-surface px-3 py-1.5 text-center font-display text-lg font-semibold transition focus:border-teal focus:outline-none disabled:bg-ink/5"
           />
           <span>{after}</span>
         </p>
+        {emptySubmit && (
+          <p className="animate-slide-in text-sm font-semibold text-muted">
+            Escribe la palabra que falta antes de comprobar.
+          </p>
+        )}
       </form>
     </ChallengeFrame>
   )

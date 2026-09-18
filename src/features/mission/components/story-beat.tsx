@@ -23,18 +23,28 @@ export function StoryBeat({
   useEffect(() => stopSpeaking, [])
 
   const showText = englishVisible || revealed
+  const isYou = beat.speaker === "you"
+  const scene = beat.character ? CHARACTERS[beat.character] : null
+  const speakerId =
+    beat.speaker && beat.speaker !== "you" ? beat.speaker : null
+  const speaker = speakerId ? CHARACTERS[speakerId] : null
 
   return (
     <section className="flex flex-col gap-5 rounded-3xl border-2 border-ink/10 bg-surface p-6 shadow-card">
-      {beat.character && (
+      {beat.character && scene && (
         <div className="flex items-center gap-2.5">
           <CharacterAvatar
             character={beat.character}
             mood={beat.mood}
             size={46}
           />
-          <span className="font-display text-sm font-semibold text-muted">
-            {CHARACTERS[beat.character].name}
+          <span className="flex flex-col">
+            <span className="font-display text-sm font-semibold">
+              {scene.name}
+            </span>
+            <span className="text-xs font-semibold text-muted">
+              {scene.role}
+            </span>
           </span>
         </div>
       )}
@@ -42,37 +52,67 @@ export function StoryBeat({
       <p className="text-lg font-semibold leading-relaxed">{beat.es}</p>
 
       {beat.en && (
-        <div className="relative rounded-3xl rounded-bl-md border-2 border-teal/25 bg-teal-soft p-4 pb-5">
-          <div className="flex items-center gap-3">
-            {speechAvailable && (
-              <button
-                type="button"
-                onClick={() => speak(beat.en ?? "")}
-                aria-label="Reproducir en inglés"
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-strong text-white shadow-pop transition active:translate-y-0.5"
-              >
-                <SpeakerHigh weight="fill" size={22} aria-hidden />
-              </button>
-            )}
-            {showText ? (
-              <p className="font-display text-lg font-semibold text-teal-strong">
-                «{beat.en}»
-              </p>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setRevealed(true)}
-                className="flex min-h-11 items-center gap-2 rounded-2xl border-2 border-teal/30 bg-surface px-4 font-display text-sm font-semibold text-teal-strong"
-              >
-                <Eye weight="bold" size={18} aria-hidden />
-                Ver texto
-              </button>
-            )}
+        <div className={`flex ${isYou ? "justify-end" : "justify-start"}`}>
+          <div
+            className={`relative max-w-[94%] rounded-3xl border-2 p-4 pb-5 ${
+              isYou
+                ? "rounded-br-md border-accent/30 bg-paper"
+                : "rounded-bl-md border-teal/25 bg-teal-soft"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              {speechAvailable && (
+                <button
+                  type="button"
+                  onClick={() => speak(beat.en ?? "")}
+                  aria-label="Reproducir en inglés"
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-strong text-white shadow-pop transition active:translate-y-0.5"
+                >
+                  <SpeakerHigh weight="fill" size={22} aria-hidden />
+                </button>
+              )}
+              <span className="flex flex-col gap-1">
+                <span className="flex items-center gap-1.5">
+                  {speakerId && (
+                    <CharacterAvatar character={speakerId} size={20} />
+                  )}
+                  <span
+                    className={`font-display text-xs font-semibold uppercase tracking-widest ${
+                      isYou ? "text-accent-deep" : "text-teal-strong"
+                    }`}
+                  >
+                    {isYou ? "Tú dices" : `${speaker?.name} dice`}
+                  </span>
+                </span>
+                {showText ? (
+                  <p
+                    className={`font-display text-lg font-semibold ${
+                      isYou ? "text-ink" : "text-teal-strong"
+                    }`}
+                  >
+                    «{beat.en}»
+                  </p>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setRevealed(true)}
+                    className="flex min-h-11 items-center gap-2 self-start rounded-2xl border-2 border-teal/30 bg-surface px-4 font-display text-sm font-semibold text-teal-strong"
+                  >
+                    <Eye weight="bold" size={18} aria-hidden />
+                    Ver texto
+                  </button>
+                )}
+              </span>
+            </div>
+            <span
+              aria-hidden
+              className={`absolute -bottom-[9px] h-4 w-4 rotate-45 border-b-2 ${
+                isYou
+                  ? "right-10 border-r-2 border-accent/30 bg-paper"
+                  : "left-10 border-l-2 border-teal/25 bg-teal-soft"
+              }`}
+            />
           </div>
-          <span
-            aria-hidden
-            className="absolute -bottom-[9px] left-10 h-4 w-4 rotate-45 border-b-2 border-l-2 border-teal/25 bg-teal-soft"
-          />
         </div>
       )}
 

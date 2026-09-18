@@ -20,6 +20,7 @@ export type Accessory = "none" | "glasses" | "beard" | "earrings" | "cap"
 
 export type CharacterConfig = {
   name: string
+  role: string
   species: Species
   skin: string
   hair: string

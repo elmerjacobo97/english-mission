@@ -2,6 +2,7 @@ import type { CharacterConfig, CharacterId } from '../types/character';
 
 export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
   coco: {
+    role: "el loro de la vecina",
     name: 'Coco',
     species: 'parrot',
     skin: '#1f9d55',
@@ -12,6 +13,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
     accessory: 'none',
   },
   marta: {
+    role: "tu vecina",
     name: 'Marta',
     species: 'human',
     skin: '#e8b48a',
@@ -22,6 +24,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
     accessory: 'earrings',
   },
   nico: {
+    role: "el vendedor del mercado",
     name: 'Nico',
     species: 'human',
     skin: '#c98a5e',
@@ -32,6 +35,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
     accessory: 'none',
   },
   beto: {
+    role: "el señor que te orienta",
     name: 'Don Beto',
     species: 'human',
     skin: '#dfa77a',
@@ -42,6 +46,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
     accessory: 'glasses',
   },
   cami: {
+    role: "la chica del café",
     name: 'Cami',
     species: 'human',
     skin: '#f2c9a0',
@@ -52,6 +57,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
     accessory: 'earrings',
   },
   chofer: {
+    role: "el chofer del bus",
     name: 'El chofer',
     species: 'human',
     skin: '#8d5524',
@@ -62,6 +68,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
     accessory: 'cap',
   },
   rosa: {
+    role: "la señora de la lavandería",
     name: 'Rosa',
     species: 'human',
     skin: '#d9a06b',
@@ -72,6 +79,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
     accessory: 'earrings',
   },
   sergio: {
+    role: "el dueño del departamento",
     name: 'Sergio',
     species: 'human',
     skin: '#e8b48a',
@@ -82,6 +90,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
     accessory: 'beard',
   },
   sofia: {
+    role: "tu jefa",
     name: 'Sofía',
     species: 'human',
     skin: '#f0c8a0',
@@ -92,6 +101,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
     accessory: 'none',
   },
   tere: {
+    role: "tu compañera de trabajo",
     name: 'Tere',
     species: 'human',
     skin: '#c98a5e',

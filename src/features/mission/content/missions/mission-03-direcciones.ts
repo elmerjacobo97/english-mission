@@ -5,6 +5,7 @@ export const mission03Beats: Beat[] = [
     kind: "story",
     es: "Marta te dijo que hay trabajo al otro lado del barrio. Sales temprano a buscar la parada del bus.",
     en: "Hello! Where is the bus stop?",
+    speaker: "you",
     vocab: [
       ["where", "dónde"],
       ["bus stop", "parada del bus"],
@@ -23,6 +24,7 @@ export const mission03Beats: Beat[] = [
     kind: "story",
     es: "Un señor mayor te responde y señala la calle.",
     en: "Go straight and turn left.",
+    speaker: "beto",
     vocab: [
       ["straight", "derecho"],
       ["left", "izquierda"],
@@ -45,6 +47,7 @@ export const mission03Beats: Beat[] = [
     kind: "story",
     es: "Llegas a la parada: está muy cerca de tu casa.",
     en: "It's near my home.",
+    speaker: "you",
     vocab: [["near", "cerca"]],
   },
   {
@@ -64,6 +67,7 @@ export const mission03Beats: Beat[] = [
     kind: "story",
     es: "Don Beto añade que no está lejos y señala a la derecha.",
     en: "It's not far. The bus stop is on the right.",
+    speaker: "beto",
     vocab: [
       ["right", "derecha"],
       ["far", "lejos"],
@@ -82,6 +86,7 @@ export const mission03Beats: Beat[] = [
     kind: "story",
     es: "Un loro se posa en la banca y repite el nombre de la parada. Ya sabes moverte por el barrio.",
     en: "Thanks! See you tomorrow.",
+    speaker: "you",
     character: "coco",
     mood: "happy",
   },
