@@ -1,34 +1,63 @@
-import type {
-  ChoiceChallenge,
-  OrderChallenge,
-  TypeChallenge,
-} from "../types/beat"
+import type { Stars } from "@/lib/progress/types"
+import type { FillChallenge, OrderChallenge, TypeChallenge } from "../types/beat"
+import type { DifficultyProfile } from "./difficulty"
 
-export const HINT_COST = 5
-export const FIRST_TRY_REWARD = 10
-export const RETRY_REWARD = 5
-export const MAX_ATTEMPTS = 3
+export const THREE_STAR_BONUS = 10
 
-export function coinsForAttempt(wrongAttempts: number): number {
+export function coinsForAttempt(
+  wrongAttempts: number,
+  profile: DifficultyProfile,
+): number {
   if (wrongAttempts === 0) {
-    return FIRST_TRY_REWARD
+    return profile.firstTryReward
   }
-  if (wrongAttempts < MAX_ATTEMPTS) {
-    return RETRY_REWARD
+  if (wrongAttempts < profile.attemptsBeforeReveal) {
+    return profile.retryReward
   }
   return 0
+}
+
+export function starsForRun(run: {
+  wrongAttempts: number
+  hintsUsed: number
+  reveals: number
+}): Stars {
+  if (run.reveals === 0 && run.hintsUsed === 0 && run.wrongAttempts === 0) {
+    return 3
+  }
+  if (run.reveals === 0 && run.wrongAttempts <= 2) {
+    return 2
+  }
+  return 1
+}
+
+export function missionPayout(input: {
+  stars: Stars
+  earned: number
+  bonusCoins: number
+  firstCompletion: boolean
+  previousStars: Stars
+}): { payout: number; bestCoins: number } {
+  const completionBonus = input.firstCompletion ? input.bonusCoins : 0
+  const threeStarBonus =
+    input.stars === 3 && input.previousStars < 3 ? THREE_STAR_BONUS : 0
+  return {
+    payout: completionBonus + threeStarBonus,
+    bestCoins: input.earned + completionBonus,
+  }
 }
 
 export function successMessage(
   wrongAttempts: number,
   rewardsEnabled: boolean,
+  profile: DifficultyProfile,
 ): string {
   if (!rewardsEnabled) {
     return "¡Correcto!"
   }
-  return wrongAttempts === 0
-    ? `¡Correcto! +${FIRST_TRY_REWARD} monedas`
-    : `¡Correcto! +${RETRY_REWARD} monedas`
+  const reward =
+    wrongAttempts === 0 ? profile.firstTryReward : profile.retryReward
+  return `¡Correcto! +${reward} monedas`
 }
 
 export function revealedDetail(rewardsEnabled: boolean): string {
@@ -37,7 +66,10 @@ export function revealedDetail(rewardsEnabled: boolean): string {
     : "Sigues avanzando."
 }
 
-export function hintForChoice(challenge: ChoiceChallenge): number {
+export function hintForOption(challenge: {
+  options: string[]
+  correct: number
+}): number {
   return challenge.options.findIndex((_, i) => i !== challenge.correct)
 }
 
@@ -56,4 +88,9 @@ export function hintForOrder(
 
 export function hintForType(challenge: TypeChallenge): string {
   return challenge.hint
+}
+
+export function hintForFill(challenge: FillChallenge): string {
+  const rest = "_".repeat(Math.max(challenge.answer.length - 1, 1))
+  return `${challenge.answer[0]}${rest}`
 }

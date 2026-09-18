@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, test, vi } from "vitest"
+import { testProfile } from "@/test/fixtures"
 import type { TypeChallenge as TypeChallengeData } from "../types/beat"
 import { TypeChallenge } from "./type-challenge"
 
@@ -20,6 +21,7 @@ function setup({ coins = 0 }: { coins?: number } = {}) {
       beat={beat}
       coins={coins}
       rewardsEnabled
+      profile={testProfile}
       onSpendCoins={onSpendCoins}
       onSolved={onSolved}
       onContinue={onContinue}
@@ -42,14 +44,24 @@ describe("TypeChallenge", () => {
     const user = userEvent.setup()
     const { onSolved } = setup()
     await submit(user, "i want two banans")
-    expect(onSolved).toHaveBeenCalledWith(10)
+    expect(onSolved).toHaveBeenCalledWith({
+      reward: 10,
+      wrongAttempts: 0,
+      hintUsed: false,
+      revealed: false,
+    })
   })
 
   test("accepts numeric variants", async () => {
     const user = userEvent.setup()
     const { onSolved } = setup()
     await submit(user, "I want 2 bananas!")
-    expect(onSolved).toHaveBeenCalledWith(10)
+    expect(onSolved).toHaveBeenCalledWith({
+      reward: 10,
+      wrongAttempts: 0,
+      hintUsed: false,
+      revealed: false,
+    })
   })
 
   test("points at the wrong word", async () => {
@@ -67,18 +79,30 @@ describe("TypeChallenge", () => {
     await submit(user, "i want two breads")
     await submit(user, "i want two breads")
     await submit(user, "i want two breads")
-    expect(onSolved).toHaveBeenCalledWith(0)
+    expect(onSolved).toHaveBeenCalledWith({
+      reward: 0,
+      wrongAttempts: 3,
+      hintUsed: false,
+      revealed: true,
+    })
+    expect(screen.getByLabelText("Tu respuesta en inglés")).toBeDisabled()
     expect(
       await screen.findByText("La respuesta era: i want two bananas"),
     ).toBeInTheDocument()
-    expect(screen.getByLabelText("Tu respuesta en inglés")).toBeDisabled()
   })
 
-  test("hint shows the masked answer and spends coins", async () => {
+  test("hint shows the masked answer and flags the outcome", async () => {
     const user = userEvent.setup()
-    const { onSpendCoins } = setup({ coins: 5 })
+    const { onSolved, onSpendCoins } = setup({ coins: 5 })
     await user.click(screen.getByRole("button", { name: /Pista/ }))
     expect(onSpendCoins).toHaveBeenCalledWith(5)
     expect(await screen.findByText("I want two b______")).toBeInTheDocument()
+    await submit(user, "i want two bananas")
+    expect(onSolved).toHaveBeenCalledWith({
+      reward: 10,
+      wrongAttempts: 0,
+      hintUsed: true,
+      revealed: false,
+    })
   })
 })

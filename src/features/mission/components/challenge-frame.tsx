@@ -17,6 +17,7 @@ export type ChallengeFeedback = {
 type ChallengeFrameProps = {
   prompt: string
   wrongAttempts: number
+  maxAttempts: number
   feedback: ChallengeFeedback | null
   hint: string | null
   hintCost: number
@@ -29,6 +30,7 @@ type ChallengeFrameProps = {
 export function ChallengeFrame({
   prompt,
   wrongAttempts,
+  maxAttempts,
   feedback,
   hint,
   hintCost,
@@ -39,6 +41,7 @@ export function ChallengeFrame({
 }: ChallengeFrameProps) {
   const solved = Boolean(onContinue)
   const canAffordHint = coins >= hintCost
+  const attempts = Array.from({ length: maxAttempts }, (_, i) => i)
 
   return (
     <section className="flex flex-col gap-5 rounded-3xl border-2 border-ink/10 bg-surface p-6 shadow-card">
@@ -52,9 +55,9 @@ export function ChallengeFrame({
         <div
           className="flex items-center gap-1.5"
           role="img"
-          aria-label={`Intentos fallidos: ${wrongAttempts} de 3`}
+          aria-label={`Intentos fallidos: ${wrongAttempts} de ${maxAttempts}`}
         >
-          {[0, 1, 2].map((dot) => (
+          {attempts.map((dot) => (
             <span
               key={dot}
               className={`h-2.5 w-8 rounded-full transition-colors ${

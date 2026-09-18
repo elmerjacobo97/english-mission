@@ -1,25 +1,15 @@
 "use client"
 
 import { useState } from "react"
+import { useChallengeRun } from "../hooks/use-challenge-run"
 import type { OrderChallenge as OrderChallengeType } from "../types/beat"
 import { checkOrderedAnswer } from "../utils/answer-check"
-import {
-  HINT_COST,
-  MAX_ATTEMPTS,
-  coinsForAttempt,
-  hintForOrder,
-  revealedDetail,
-  successMessage,
-} from "../utils/rewards"
-import { ChallengeFrame, type ChallengeFeedback } from "./challenge-frame"
+import { hintForOrder } from "../utils/rewards"
+import type { ChallengeProps } from "./challenge-props"
+import { ChallengeFrame } from "./challenge-frame"
 
-type OrderChallengeProps = {
+type OrderChallengeProps = ChallengeProps & {
   beat: OrderChallengeType
-  coins: number
-  rewardsEnabled: boolean
-  onSpendCoins: (amount: number) => boolean
-  onSolved: (reward: number) => void
-  onContinue: () => void
 }
 
 function rebuildAvailable(tokens: string[], placed: string[]): string[] {
@@ -38,99 +28,84 @@ export function OrderChallenge({
   beat,
   coins,
   rewardsEnabled,
+  profile,
   onSpendCoins,
   onSolved,
   onContinue,
 }: OrderChallengeProps) {
+  const run = useChallengeRun({
+    profile,
+    rewardsEnabled,
+    correctAnswer: beat.solution.join(" "),
+    onSolved,
+  })
   const [placed, setPlaced] = useState<string[]>([])
-  const [wrongAttempts, setWrongAttempts] = useState(0)
-  const [feedback, setFeedback] = useState<ChallengeFeedback | null>(null)
-  const [hint, setHint] = useState<string | null>(null)
-  const [solved, setSolved] = useState(false)
 
   const available = rebuildAvailable(beat.tokens, placed)
   const complete = placed.length === beat.solution.length
 
   function handlePlace(token: string) {
-    if (solved) {
+    if (run.solved) {
       return
     }
     setPlaced((current) => [...current, token])
-    setFeedback(null)
+    run.clearFeedback()
   }
 
   function handleRemove(index: number) {
-    if (solved) {
+    if (run.solved) {
       return
     }
     setPlaced((current) => current.filter((_, i) => i !== index))
-    setFeedback(null)
+    run.clearFeedback()
   }
 
   function handleRequestHint() {
-    if (hint || solved) {
-      return
-    }
-    if (!onSpendCoins(HINT_COST)) {
+    if (run.hint || run.solved) {
       return
     }
     const attempt: (string | null)[] = [
       ...placed,
-      ...Array.from({ length: beat.solution.length - placed.length }, () => null),
+      ...Array.from(
+        { length: beat.solution.length - placed.length },
+        () => null,
+      ),
     ]
     const reveal = hintForOrder(beat, attempt)
-    if (!reveal) {
+    if (!reveal || !onSpendCoins(profile.hintCost)) {
       return
     }
     setPlaced(beat.solution.slice(0, reveal.position + 1))
-    setHint(`La palabra ${reveal.position + 1} es «${reveal.token}».`)
+    run.applyHint(`La palabra ${reveal.position + 1} es «${reveal.token}».`)
   }
 
   function handleCheck() {
-    if (solved || !complete) {
+    if (run.solved || !complete) {
       return
     }
     if (checkOrderedAnswer(placed, beat.solution)) {
-      setSolved(true)
-      onSolved(coinsForAttempt(wrongAttempts))
-      setFeedback({
-        tone: "success",
-        message: successMessage(wrongAttempts, rewardsEnabled),
-        detail: beat.solution.join(" "),
-      })
+      run.registerSuccess()
       return
     }
-
-    const attempts = wrongAttempts + 1
-    setWrongAttempts(attempts)
-    if (attempts >= MAX_ATTEMPTS) {
-      setSolved(true)
+    const isLastAttempt =
+      run.wrongAttempts + 1 >= profile.attemptsBeforeReveal
+    if (isLastAttempt) {
       setPlaced(beat.solution)
-      onSolved(0)
-      setFeedback({
-        tone: "error",
-        message: `La frase era: ${beat.solution.join(" ")}`,
-        detail: revealedDetail(rewardsEnabled),
-      })
-      return
     }
-    setFeedback({
-      tone: "error",
-      message: "El orden no es correcto. Inténtalo otra vez.",
-      detail: `Te quedan ${MAX_ATTEMPTS - attempts} intentos.`,
-    })
+    run.registerMistake("El orden no es correcto. Inténtalo otra vez.")
   }
 
   return (
     <ChallengeFrame
       prompt={beat.prompt}
-      wrongAttempts={wrongAttempts}
-      feedback={feedback}
-      hint={hint}
-      hintCost={HINT_COST}
+      wrongAttempts={run.wrongAttempts}
+      maxAttempts={profile.attemptsBeforeReveal}
+      feedback={run.feedback}
+      hint={run.hint}
+      hintCost={profile.hintCost}
       coins={coins}
       onRequestHint={handleRequestHint}
-      onContinue={solved ? onContinue : undefined}
+      onContinue={run.solved ? onContinue : undefined}
     >
       <div className="flex flex-col gap-4">
         <div className="flex min-h-16 flex-wrap items-center gap-2 rounded-2xl border-2 border-dashed border-ink/15 bg-paper p-3">
@@ -144,7 +119,7 @@ export function OrderChallenge({
               key={`${token}-${index}`}
               type="button"
               onClick={() => handleRemove(index)}
-              disabled={solved}
+              disabled={run.solved}
               className="rounded-xl bg-accent-strong px-3 py-2 font-display font-semibold text-white shadow-pop"
             >
               {token}
@@ -158,7 +133,7 @@ export function OrderChallenge({
               key={`${token}-${index}`}
               type="button"
               onClick={() => handlePlace(token)}
-              disabled={solved}
+              disabled={run.solved}
               className="min-h-11 rounded-xl border-2 border-ink/10 bg-surface px-3 py-2 font-display font-semibold transition hover:border-accent hover:bg-paper disabled:opacity-40"
             >
               {token}
@@ -166,7 +141,7 @@ export function OrderChallenge({
           ))}
         </div>
 
-        {!solved && (
+        {!run.solved && (
           <button
             type="button"
             onClick={handleCheck}

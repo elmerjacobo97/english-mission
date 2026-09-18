@@ -1,5 +1,13 @@
+export type Stars = 0 | 1 | 2 | 3
+
+export type MissionProgress = {
+  completed: boolean
+  stars: Stars
+  bestCoins: number
+}
+
 export type Progress = {
-  version: 1
+  version: 2
   coins: number
-  completed: string[]
+  missions: Record<string, MissionProgress>
 }

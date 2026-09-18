@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, test, vi } from "vitest"
+import { testProfile } from "@/test/fixtures"
 import type { ChoiceChallenge as ChoiceChallengeData } from "../types/beat"
 import { ChoiceChallenge } from "./choice-challenge"
 
@@ -20,6 +21,7 @@ function setup({ coins = 0 }: { coins?: number } = {}) {
       beat={beat}
       coins={coins}
       rewardsEnabled
+      profile={testProfile}
       onSpendCoins={onSpendCoins}
       onSolved={onSolved}
       onContinue={onContinue}
@@ -33,7 +35,12 @@ describe("ChoiceChallenge", () => {
     const user = userEvent.setup()
     const { onSolved } = setup()
     await user.click(screen.getByRole("button", { name: "banana" }))
-    expect(onSolved).toHaveBeenCalledWith(10)
+    expect(onSolved).toHaveBeenCalledWith({
+      reward: 10,
+      wrongAttempts: 0,
+      hintUsed: false,
+      revealed: false,
+    })
     expect(
       await screen.findByText("¡Correcto! +10 monedas"),
     ).toBeInTheDocument()
@@ -52,12 +59,17 @@ describe("ChoiceChallenge", () => {
     ).toBeInTheDocument()
   })
 
-  test("pays half the reward after a failed attempt", async () => {
+  test("pays half the reward and reports attempts after a failure", async () => {
     const user = userEvent.setup()
     const { onSolved } = setup()
     await user.click(screen.getByRole("button", { name: "bread" }))
     await user.click(screen.getByRole("button", { name: "banana" }))
-    expect(onSolved).toHaveBeenCalledWith(5)
+    expect(onSolved).toHaveBeenCalledWith({
+      reward: 5,
+      wrongAttempts: 1,
+      hintUsed: false,
+      revealed: false,
+    })
   })
 
   test("reveals the answer after three failures and pays nothing", async () => {
@@ -66,18 +78,20 @@ describe("ChoiceChallenge", () => {
     await user.click(screen.getByRole("button", { name: "apple" }))
     await user.click(screen.getByRole("button", { name: "bread" }))
     await user.click(screen.getByRole("button", { name: "apple" }))
-    expect(onSolved).toHaveBeenCalledWith(0)
+    expect(onSolved).toHaveBeenCalledWith({
+      reward: 0,
+      wrongAttempts: 3,
+      hintUsed: false,
+      revealed: true,
+    })
     expect(
       await screen.findByText("La respuesta era: banana"),
     ).toBeInTheDocument()
-    expect(
-      screen.getByRole("button", { name: "Continuar" }),
-    ).toBeInTheDocument()
   })
 
-  test("hint spends coins and hides a wrong option", async () => {
+  test("hint spends coins, hides a wrong option and flags the outcome", async () => {
     const user = userEvent.setup()
-    const { onSpendCoins } = setup({ coins: 5 })
+    const { onSolved, onSpendCoins } = setup({ coins: 5 })
     await user.click(screen.getByRole("button", { name: /Pista/ }))
     expect(onSpendCoins).toHaveBeenCalledWith(5)
     expect(
@@ -86,6 +100,13 @@ describe("ChoiceChallenge", () => {
     expect(screen.getByRole("button", { name: "apple" })).toHaveClass(
       "invisible",
     )
+    await user.click(screen.getByRole("button", { name: "banana" }))
+    expect(onSolved).toHaveBeenCalledWith({
+      reward: 10,
+      wrongAttempts: 0,
+      hintUsed: true,
+      revealed: false,
+    })
   })
 
   test("hint stays disabled without coins", () => {

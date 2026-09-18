@@ -3,7 +3,6 @@
 import { useSyncExternalStore } from "react"
 import {
   addCoins,
-  finishMission,
   getProgressServerSnapshot,
   getProgressSnapshot,
   resetProgress,
@@ -21,7 +20,6 @@ export function useProgress() {
   return {
     progress,
     addCoins,
-    finishMission,
     spendCoins,
     reset: resetProgress,
   }

@@ -2,17 +2,17 @@
 
 import { useState } from "react"
 import { useChallengeRun } from "../hooks/use-challenge-run"
-import type { TypeChallenge as TypeChallengeType } from "../types/beat"
+import type { FillChallenge as FillChallengeType } from "../types/beat"
 import { checkTypedAnswer } from "../utils/answer-check"
-import { hintForType } from "../utils/rewards"
+import { hintForFill } from "../utils/rewards"
 import type { ChallengeProps } from "./challenge-props"
 import { ChallengeFrame } from "./challenge-frame"
 
-type TypeChallengeProps = ChallengeProps & {
-  beat: TypeChallengeType
+type FillChallengeProps = ChallengeProps & {
+  beat: FillChallengeType
 }
 
-export function TypeChallenge({
+export function FillChallenge({
   beat,
   coins,
   rewardsEnabled,
@@ -20,14 +20,17 @@ export function TypeChallenge({
   onSpendCoins,
   onSolved,
   onContinue,
-}: TypeChallengeProps) {
+}: FillChallengeProps) {
+  const accepted = [beat.answer, ...(beat.alternatives ?? [])]
   const run = useChallengeRun({
     profile,
     rewardsEnabled,
-    correctAnswer: beat.accepted[0],
+    correctAnswer: beat.answer,
     onSolved,
   })
   const [value, setValue] = useState("")
+
+  const [before, after] = beat.sentence.split("___")
 
   function handleRequestHint() {
     if (run.hint || run.solved) {
@@ -36,7 +39,7 @@ export function TypeChallenge({
     if (!onSpendCoins(profile.hintCost)) {
       return
     }
-    run.applyHint(hintForType(beat))
+    run.applyHint(`La palabra empieza por «${hintForFill(beat)}».`)
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -44,17 +47,12 @@ export function TypeChallenge({
     if (run.solved) {
       return
     }
-
-    const result = checkTypedAnswer(value, beat.accepted, profile.typoTolerance)
+    const result = checkTypedAnswer(value, accepted, profile.typoTolerance)
     if (result.ok) {
       run.registerSuccess()
       return
     }
-    run.registerMistake(
-      result.wrongWord
-        ? `La palabra «${result.wrongWord}» no es correcta.`
-        : "Revisa la frase e inténtalo otra vez.",
-    )
+    run.registerMistake("Esa palabra no completa la frase. Prueba otra vez.")
   }
 
   return (
@@ -70,21 +68,25 @@ export function TypeChallenge({
       onContinue={run.solved ? onContinue : undefined}
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-        <label htmlFor="typed-answer" className="sr-only">
-          Tu respuesta en inglés
-        </label>
-        <input
-          id="typed-answer"
-          type="text"
-          value={run.solved ? beat.accepted[0] : value}
-          onChange={(event) => setValue(event.target.value)}
-          disabled={run.solved}
-          autoComplete="off"
-          autoCapitalize="off"
-          spellCheck={false}
-          placeholder="Escribe en inglés..."
-          className="min-h-14 rounded-2xl border-2 border-ink/10 bg-surface px-4 py-3.5 font-display text-lg font-semibold transition focus:border-teal focus:outline-none disabled:bg-ink/5"
-        />
+        <p className="flex flex-wrap items-center gap-2 rounded-2xl border-2 border-ink/10 bg-paper px-4 py-3 font-display text-lg font-semibold">
+          <span>{before}</span>
+          <label htmlFor="fill-answer" className="sr-only">
+            Palabra que falta
+          </label>
+          <input
+            id="fill-answer"
+            type="text"
+            value={run.solved ? beat.answer : value}
+            onChange={(event) => setValue(event.target.value)}
+            disabled={run.solved}
+            autoComplete="off"
+            autoCapitalize="off"
+            spellCheck={false}
+            size={Math.max(beat.answer.length + 2, 8)}
+            className="rounded-xl border-2 border-teal/40 bg-surface px-3 py-1.5 text-center font-display text-lg font-semibold transition focus:border-teal focus:outline-none disabled:bg-ink/5"
+          />
+          <span>{after}</span>
+        </p>
         {!run.solved && (
           <button
             type="submit"

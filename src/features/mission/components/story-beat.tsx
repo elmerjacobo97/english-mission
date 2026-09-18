@@ -1,22 +1,27 @@
 "use client"
 
-import { ArrowRight, SpeakerHigh } from "@phosphor-icons/react"
-import { useEffect } from "react"
+import { ArrowRight, Eye, SpeakerHigh } from "@phosphor-icons/react"
+import { useEffect, useState } from "react"
 import { speak, stopSpeaking } from "@/lib/speech"
 import type { StoryBeat as StoryBeatData } from "../types/beat"
 
 type StoryBeatProps = {
   beat: StoryBeatData
   speechAvailable: boolean
+  englishVisible: boolean
   onContinue: () => void
 }
 
 export function StoryBeat({
   beat,
   speechAvailable,
+  englishVisible,
   onContinue,
 }: StoryBeatProps) {
+  const [revealed, setRevealed] = useState(englishVisible)
   useEffect(() => stopSpeaking, [])
+
+  const showText = englishVisible || revealed
 
   return (
     <section className="flex flex-col gap-5 rounded-3xl border-2 border-ink/10 bg-surface p-6 shadow-card">
@@ -35,9 +40,20 @@ export function StoryBeat({
                 <SpeakerHigh weight="fill" size={22} aria-hidden />
               </button>
             )}
-            <p className="font-display text-lg font-semibold text-teal-strong">
-              «{beat.en}»
-            </p>
+            {showText ? (
+              <p className="font-display text-lg font-semibold text-teal-strong">
+                «{beat.en}»
+              </p>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setRevealed(true)}
+                className="flex min-h-11 items-center gap-2 rounded-2xl border-2 border-teal/30 bg-surface px-4 font-display text-sm font-semibold text-teal-strong"
+              >
+                <Eye weight="bold" size={18} aria-hidden />
+                Ver texto
+              </button>
+            )}
           </div>
           <span
             aria-hidden

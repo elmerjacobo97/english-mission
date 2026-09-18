@@ -1,4 +1,5 @@
 const MIN_TYPO_LENGTH = 4
+const DEFAULT_TYPO_TOLERANCE = 1
 
 export function normalizeAnswer(value: string): string {
   return value
@@ -27,17 +28,26 @@ function editDistance(a: string, b: string): number {
   return previous[b.length]
 }
 
-function isCloseEnough(typed: string, expected: string): boolean {
+function isCloseEnough(
+  typed: string,
+  expected: string,
+  typoTolerance: number,
+): boolean {
   if (typed === expected) return true
+  if (typoTolerance === 0) return false
   if (typed.length < MIN_TYPO_LENGTH || expected.length < MIN_TYPO_LENGTH) {
     return false
   }
-  return editDistance(typed, expected) <= 1
+  return editDistance(typed, expected) <= typoTolerance
 }
 
 export type TypedCheck = { ok: true } | { ok: false; wrongWord?: string }
 
-export function checkTypedAnswer(input: string, accepted: string[]): TypedCheck {
+export function checkTypedAnswer(
+  input: string,
+  accepted: string[],
+  typoTolerance: number = DEFAULT_TYPO_TOLERANCE,
+): TypedCheck {
   const normalized = normalizeAnswer(input)
   if (normalized.length === 0) {
     return { ok: false }
@@ -52,7 +62,11 @@ export function checkTypedAnswer(input: string, accepted: string[]): TypedCheck 
     if (typedWords.length !== expectedWords.length) {
       continue
     }
-    if (typedWords.every((word, i) => isCloseEnough(word, expectedWords[i]))) {
+    if (
+      typedWords.every((word, i) =>
+        isCloseEnough(word, expectedWords[i], typoTolerance),
+      )
+    ) {
       return { ok: true }
     }
   }
@@ -60,7 +74,9 @@ export function checkTypedAnswer(input: string, accepted: string[]): TypedCheck 
   const reference = normalizeAnswer(accepted[0]).split(" ")
   const wrongWord =
     typedWords.length === reference.length
-      ? typedWords.find((word, i) => !isCloseEnough(word, reference[i]))
+      ? typedWords.find(
+          (word, i) => !isCloseEnough(word, reference[i], typoTolerance),
+        )
       : undefined
   return { ok: false, wrongWord }
 }

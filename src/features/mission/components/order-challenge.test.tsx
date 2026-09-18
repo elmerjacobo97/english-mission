@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, test, vi } from "vitest"
+import { testProfile } from "@/test/fixtures"
 import type { OrderChallenge as OrderChallengeData } from "../types/beat"
 import { OrderChallenge } from "./order-challenge"
 
@@ -20,6 +21,7 @@ function setup({ coins = 0 }: { coins?: number } = {}) {
       beat={beat}
       coins={coins}
       rewardsEnabled
+      profile={testProfile}
       onSpendCoins={onSpendCoins}
       onSolved={onSolved}
       onContinue={onContinue}
@@ -28,10 +30,7 @@ function setup({ coins = 0 }: { coins?: number } = {}) {
   return { onSolved, onContinue, onSpendCoins }
 }
 
-async function place(
-  user: ReturnType<typeof userEvent.setup>,
-  token: string,
-) {
+async function place(user: ReturnType<typeof userEvent.setup>, token: string) {
   await user.click(screen.getByRole("button", { name: token }))
 }
 
@@ -43,7 +42,12 @@ describe("OrderChallenge", () => {
       await place(user, token)
     }
     await user.click(screen.getByRole("button", { name: "Comprobar" }))
-    expect(onSolved).toHaveBeenCalledWith(10)
+    expect(onSolved).toHaveBeenCalledWith({
+      reward: 10,
+      wrongAttempts: 0,
+      hintUsed: false,
+      revealed: false,
+    })
   })
 
   test("wrong order shows retry feedback", async () => {
@@ -77,6 +81,31 @@ describe("OrderChallenge", () => {
       await place(user, token)
     }
     await user.click(screen.getByRole("button", { name: "Comprobar" }))
-    expect(onSolved).toHaveBeenCalledWith(10)
+    expect(onSolved).toHaveBeenCalledWith({
+      reward: 10,
+      wrongAttempts: 0,
+      hintUsed: true,
+      revealed: false,
+    })
+  })
+
+  test("reveals the solution on the last attempt", async () => {
+    const user = userEvent.setup()
+    const { onSolved } = setup()
+    for (const token of ["to", "I", "bananas", "want", "buy"]) {
+      await place(user, token)
+    }
+    for (let attempt = 0; attempt < 3; attempt++) {
+      await user.click(screen.getByRole("button", { name: "Comprobar" }))
+    }
+    expect(onSolved).toHaveBeenCalledWith({
+      reward: 0,
+      wrongAttempts: 3,
+      hintUsed: false,
+      revealed: true,
+    })
+    expect(
+      await screen.findByText("La respuesta era: I want to buy bananas"),
+    ).toBeInTheDocument()
   })
 })

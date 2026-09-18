@@ -1,9 +1,6 @@
 "use client"
 
-import {
-  ArrowLeft,
-  Coins,
-} from "@phosphor-icons/react"
+import { ArrowLeft, Coins } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useEffect, useSyncExternalStore } from "react"
 import {
@@ -15,6 +12,9 @@ import {
 import { useMissionRun } from "../hooks/use-mission-run"
 import type { Mission } from "../types/mission"
 import { ChoiceChallenge } from "./choice-challenge"
+import { DialogueChallenge } from "./dialogue-challenge"
+import { FillChallenge } from "./fill-challenge"
+import { ListenChallenge } from "./listen-challenge"
 import { MissionComplete } from "./mission-complete"
 import { OrderChallenge } from "./order-challenge"
 import { StoryBeat } from "./story-beat"
@@ -34,12 +34,17 @@ export function MissionPlayer({ mission }: MissionPlayerProps) {
 
   useEffect(() => stopSpeaking, [])
 
-  function handleSolved(reward: number) {
-    run.reportSolved(reward)
-  }
-
   const beat = run.beat
   const progressPercent = Math.round(((run.index + 1) / run.total) * 100)
+
+  const shared = {
+    coins: run.coins,
+    rewardsEnabled: run.rewardsEnabled,
+    profile: run.profile,
+    onSpendCoins: run.spendCoins,
+    onSolved: run.reportSolved,
+    onContinue: run.goNext,
+  }
 
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-4 px-4 py-5">
@@ -86,7 +91,11 @@ export function MissionPlayer({ mission }: MissionPlayerProps) {
       {run.phase === "complete" ? (
         <MissionComplete
           mission={mission}
+          stars={run.stars}
           earned={run.earned}
+          completionBonus={run.completionBonus}
+          threeStarBonus={run.threeStarBonus}
+          totalPaid={run.totalPaid}
           isReplay={run.isReplay}
           onRestart={run.restart}
         />
@@ -96,37 +105,26 @@ export function MissionPlayer({ mission }: MissionPlayerProps) {
             <StoryBeat
               beat={beat}
               speechAvailable={speechAvailable}
+              englishVisible={run.profile.englishVisible}
               onContinue={run.goNext}
             />
           )}
-          {beat.kind === "choice" && (
-            <ChoiceChallenge
+          {beat.kind === "choice" && <ChoiceChallenge beat={beat} {...shared} />}
+          {beat.kind === "order" && <OrderChallenge beat={beat} {...shared} />}
+          {beat.kind === "type" && <TypeChallenge beat={beat} {...shared} />}
+          {beat.kind === "fill" && <FillChallenge beat={beat} {...shared} />}
+          {beat.kind === "listen" && (
+            <ListenChallenge
               beat={beat}
-              coins={run.coins}
-              rewardsEnabled={run.rewardsEnabled}
-              onSpendCoins={run.spendCoins}
-              onSolved={handleSolved}
-              onContinue={run.goNext}
+              speechAvailable={speechAvailable}
+              {...shared}
             />
           )}
-          {beat.kind === "order" && (
-            <OrderChallenge
+          {beat.kind === "dialogue" && (
+            <DialogueChallenge
               beat={beat}
-              coins={run.coins}
-              rewardsEnabled={run.rewardsEnabled}
-              onSpendCoins={run.spendCoins}
-              onSolved={handleSolved}
-              onContinue={run.goNext}
-            />
-          )}
-          {beat.kind === "type" && (
-            <TypeChallenge
-              beat={beat}
-              coins={run.coins}
-              rewardsEnabled={run.rewardsEnabled}
-              onSpendCoins={run.spendCoins}
-              onSolved={handleSolved}
-              onContinue={run.goNext}
+              speechAvailable={speechAvailable}
+              {...shared}
             />
           )}
         </div>
