@@ -14,8 +14,20 @@ const fredoka = Fredoka({
 });
 
 export const metadata: Metadata = {
-  title: 'English Mission',
+  metadataBase: new URL('https://english-mission.elmerjacobo.dev'),
+  title: {
+    default: 'English Mission',
+    template: '%s · English Mission',
+  },
   description: 'Aprende inglés viviendo una historia por misiones.',
+  openGraph: {
+    type: 'website',
+    siteName: 'English Mission',
+    url: '/',
+  },
+  twitter: {
+    card: 'summary',
+  },
 };
 
 export const viewport: Viewport = {

@@ -2,7 +2,8 @@ import type { Metadata } from "next"
 import { ReviewSession } from "@/features/review/components/review-session"
 
 export const metadata: Metadata = {
-  title: "Repaso · English Mission",
+  title: "Repaso",
+  alternates: { canonical: "/review" },
 }
 
 export default function ReviewPage() {
