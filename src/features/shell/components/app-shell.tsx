@@ -13,6 +13,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import type { ReactNode } from "react"
 import { useDueReviews } from "@/features/review/hooks/use-due-reviews"
+import { APP_VERSION } from "@/lib/app-version"
 import { useProgress } from "@/lib/progress/use-progress"
 
 type ShellNavItem = {
@@ -89,7 +90,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <nav
         aria-label="Navegación"
-        className="fixed inset-x-0 bottom-0 z-30 border-t-2 border-ink/10 bg-paper/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:sticky md:top-0 md:col-start-1 md:row-span-2 md:row-start-1 md:h-dvh md:border-t-0 md:border-r-2 md:py-6"
+        className="fixed inset-x-0 bottom-0 z-30 border-t-2 border-ink/10 bg-paper/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:sticky md:top-0 md:col-start-1 md:row-span-2 md:row-start-1 md:flex md:h-dvh md:flex-col md:border-t-0 md:border-r-2 md:py-6"
       >
         <p className="hidden px-4 pb-2 font-display text-xs font-semibold uppercase tracking-widest text-muted md:block">
           Navegación
@@ -125,6 +126,9 @@ export function AppShell({ children }: { children: ReactNode }) {
             )
           })}
         </ul>
+        <p className="hidden pt-4 text-center text-xs font-bold text-muted md:mt-auto md:block">
+          Versión {APP_VERSION}
+        </p>
       </nav>
 
       <div className="flex-1 px-4 pt-6 pb-28 md:col-start-2 md:row-start-2 md:px-8 md:pt-8 md:pb-12">

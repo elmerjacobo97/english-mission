@@ -77,4 +77,10 @@ describe("AppShell", () => {
     const reviewLink = screen.getByRole("link", { name: "Repaso" })
     expect(within(reviewLink).queryByText(/^\d+$/)).not.toBeInTheDocument()
   })
+
+  test("shows the app version", () => {
+    render(<AppShell>contenido</AppShell>)
+
+    expect(screen.getByText(/^Versión \d+\.\d+\.\d+$/)).toBeInTheDocument()
+  })
 })
