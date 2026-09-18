@@ -1,6 +1,6 @@
 import { render, screen, within } from "@testing-library/react"
 import { beforeEach, describe, expect, test, vi } from "vitest"
-import { addCoins, recordMissionResult } from "@/lib/progress/progress-store"
+import { addCoins, recordMissionResult } from "@/shared/lib/progress/progress-store"
 import { AppShell } from "./app-shell"
 
 const pathname = { current: "/" }

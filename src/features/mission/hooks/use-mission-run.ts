@@ -5,13 +5,13 @@ import {
   getMissionProgress,
   recordMissionResult,
   registerDailyActivity,
-} from "@/lib/progress/progress-store"
-import { useProgress } from "@/lib/progress/use-progress"
-import type { Beat } from "@/lib/game/types/beat"
-import type { Mission } from "@/lib/game/types/mission"
-import type { ChallengeOutcome, MissionRunStats } from "@/lib/game/types/run"
-import { profileFor } from "@/lib/game/utils/difficulty"
-import { missionPayout, starsForRun } from "@/lib/game/utils/rewards"
+} from "@/shared/lib/progress/progress-store"
+import { useProgress } from "@/shared/hooks/use-progress"
+import type { Beat } from "@/shared/lib/game/types/beat"
+import type { Mission } from "@/shared/lib/game/types/mission"
+import type { ChallengeOutcome, MissionRunStats } from "@/shared/lib/game/types/run"
+import { profileFor } from "@/shared/lib/game/utils/difficulty"
+import { missionPayout, starsForRun } from "@/shared/lib/game/utils/rewards"
 
 export type MissionPhase = "playing" | "complete"
 

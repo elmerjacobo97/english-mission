@@ -1,8 +1,8 @@
 import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, test } from "vitest"
-import { getMissionProgress, getProgressSnapshot } from "@/lib/progress/progress-store"
-import { findMission } from "@/lib/curriculum/mission-catalog"
+import { getMissionProgress, getProgressSnapshot } from "@/shared/lib/progress/progress-store"
+import { findMission } from "@/shared/lib/curriculum/mission-catalog"
 import { MissionPlayer } from "./mission-player"
 
 const mission = findMission("la-llegada") ?? (() => {

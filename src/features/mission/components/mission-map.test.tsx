@@ -6,8 +6,8 @@ import {
   getProgressSnapshot,
   recordMissionResult,
   reloadProgress,
-} from "@/lib/progress/progress-store"
-import type { StreakState } from "@/lib/progress/types"
+} from "@/shared/lib/progress/progress-store"
+import type { StreakState } from "@/shared/lib/progress/types"
 import { MissionMap } from "./mission-map"
 
 function seedStreak(streak: Partial<StreakState>) {

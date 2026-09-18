@@ -3,7 +3,7 @@ import { describe, expect, test } from "vitest"
 import {
   recordMissionResult,
   recordReviewResult,
-} from "@/lib/progress/progress-store"
+} from "@/shared/lib/progress/progress-store"
 import { Notebook } from "./notebook"
 
 const MISSION_1_WORDS = [

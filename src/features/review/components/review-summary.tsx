@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { CharacterAvatar } from "@/components/game/character-avatar"
+import { CharacterAvatar } from "@/shared/components/game/character-avatar"
 import type { ReviewStats } from "../hooks/use-review-run"
 
 type ReviewSummaryProps = {

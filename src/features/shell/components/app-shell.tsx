@@ -12,9 +12,9 @@ import {
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import type { ReactNode } from "react"
-import { useDueReviews } from "@/lib/review/use-due-reviews"
-import { APP_VERSION } from "@/lib/app-version"
-import { useProgress } from "@/lib/progress/use-progress"
+import { useDueReviews } from "@/shared/hooks/use-due-reviews"
+import { APP_VERSION } from "@/shared/lib/app-version"
+import { useProgress } from "@/shared/hooks/use-progress"
 
 type ShellNavItem = {
   href: string

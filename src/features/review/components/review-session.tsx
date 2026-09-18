@@ -3,15 +3,15 @@
 import { ArrowCounterClockwise, ArrowRight } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useSyncExternalStore } from "react"
-import { ChoiceChallenge } from "@/components/game/choice-challenge"
-import { ListenChallenge } from "@/components/game/listen-challenge"
-import { TypeChallenge } from "@/components/game/type-challenge"
-import { PageHeader } from "@/components/page-header"
+import { ChoiceChallenge } from "@/shared/components/game/choice-challenge"
+import { ListenChallenge } from "@/shared/components/game/listen-challenge"
+import { TypeChallenge } from "@/shared/components/game/type-challenge"
+import { PageHeader } from "@/shared/components/page-header"
 import {
   getSpeechSupportServerSnapshot,
   getSpeechSupportSnapshot,
   subscribeSpeechSupport,
-} from "@/lib/speech"
+} from "@/shared/lib/speech"
 import { useReviewRun } from "../hooks/use-review-run"
 import { ReviewSummary } from "./review-summary"
 

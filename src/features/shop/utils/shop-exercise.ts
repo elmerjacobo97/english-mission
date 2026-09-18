@@ -1,11 +1,11 @@
-import type { ChoiceChallenge } from "@/lib/game/types/beat"
+import type { ChoiceChallenge } from "@/shared/lib/game/types/beat"
 import {
   profileFor,
   type DifficultyProfile,
-} from "@/lib/game/utils/difficulty"
-import { coinsForAttempt } from "@/lib/game/utils/rewards"
-import { buildReviewChallenge } from "@/lib/review/review-exercise"
-import type { ReviewWord } from "@/lib/review/review-queue"
+} from "@/shared/lib/game/utils/difficulty"
+import { coinsForAttempt } from "@/shared/lib/game/utils/rewards"
+import { buildReviewChallenge } from "@/shared/lib/review/review-exercise"
+import type { ReviewWord } from "@/shared/lib/review/review-queue"
 
 export const SHOP_PROFILE: DifficultyProfile = profileFor(1)
 

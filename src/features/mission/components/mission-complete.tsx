@@ -7,8 +7,8 @@ import {
   Star,
 } from "@phosphor-icons/react"
 import Link from "next/link"
-import type { Stars } from "@/lib/progress/types"
-import type { Mission } from "@/lib/game/types/mission"
+import type { Stars } from "@/shared/lib/progress/types"
+import type { Mission } from "@/shared/lib/game/types/mission"
 import { MissionStamp } from "./mission-stamp"
 
 type MissionCompleteProps = {

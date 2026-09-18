@@ -8,7 +8,7 @@ import {
   getProgressSnapshot,
   recordMissionResult,
   recordReviewResult,
-} from "@/lib/progress/progress-store"
+} from "@/shared/lib/progress/progress-store"
 import { ReviewSession } from "./review-session"
 
 const BLOCKED_WORDS = [

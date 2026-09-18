@@ -5,8 +5,8 @@ import {
   addCoins,
   getProgressSnapshot,
   recordMissionResult,
-} from "@/lib/progress/progress-store"
-import { localDayKey } from "@/lib/progress/streak"
+} from "@/shared/lib/progress/progress-store"
+import { localDayKey } from "@/shared/lib/progress/streak"
 import { ShopSession } from "./shop-session"
 
 function completeMissionOne() {

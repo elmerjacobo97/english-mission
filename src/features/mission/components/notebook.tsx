@@ -7,17 +7,17 @@ import {
 } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useSyncExternalStore } from "react"
-import { useDueReviews } from "@/lib/review/use-due-reviews"
-import { PageHeader } from "@/components/page-header"
-import { useProgress } from "@/lib/progress/use-progress"
+import { useDueReviews } from "@/shared/hooks/use-due-reviews"
+import { PageHeader } from "@/shared/components/page-header"
+import { useProgress } from "@/shared/hooks/use-progress"
 import {
   getSpeechSupportServerSnapshot,
   getSpeechSupportSnapshot,
   speak,
   subscribeSpeechSupport,
-} from "@/lib/speech"
-import { CHAPTER_TITLES, chapterEntries } from "@/lib/curriculum/mission-catalog"
-import type { Chapter } from "@/lib/game/types/mission"
+} from "@/shared/lib/speech"
+import { CHAPTER_TITLES, chapterEntries } from "@/shared/lib/curriculum/mission-catalog"
+import type { Chapter } from "@/shared/lib/game/types/mission"
 
 const CHAPTERS: Chapter[] = [1, 2, 3]
 

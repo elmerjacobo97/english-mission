@@ -12,16 +12,16 @@ import {
 } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useState } from "react"
-import { PageHeader } from "@/components/page-header"
-import { STREAK_MILESTONES } from "@/lib/progress/streak"
-import { useProgress } from "@/lib/progress/use-progress"
+import { PageHeader } from "@/shared/components/page-header"
+import { STREAK_MILESTONES } from "@/shared/lib/progress/streak"
+import { useProgress } from "@/shared/hooks/use-progress"
 import {
   CHAPTER_TITLES,
   chapterEntries,
   isUnlocked,
   nextMissionSlug,
-} from "@/lib/curriculum/mission-catalog"
-import type { Chapter, MissionPlanEntry } from "@/lib/game/types/mission"
+} from "@/shared/lib/curriculum/mission-catalog"
+import type { Chapter, MissionPlanEntry } from "@/shared/lib/game/types/mission"
 import { MissionStamp } from "./mission-stamp"
 
 const CHAPTERS: Chapter[] = [1, 2, 3]
