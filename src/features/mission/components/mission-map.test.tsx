@@ -36,13 +36,13 @@ describe("MissionMap", () => {
     ).toHaveLength(3)
     expect(screen.getAllByText("Próximamente")).toHaveLength(8)
     const nextCard = screen.getByRole("link", { name: /La llegada/ })
-    expect(nextCard).toHaveAttribute("href", "/mision/la-llegada")
+    expect(nextCard).toHaveAttribute("href", "/mission/arrival")
     expect(nextCard).toHaveTextContent("Siguiente")
   })
 
   test("reflects stars, stamps and unlocks from the store", () => {
     addCoins(40)
-    recordMissionResult("la-llegada", { stars: 2, payout: 0, bestCoins: 40 })
+    recordMissionResult("arrival", { stars: 2, payout: 0, bestCoins: 40 })
 
     render(<MissionMap />)
 
@@ -52,7 +52,7 @@ describe("MissionMap", () => {
       screen.getByRole("img", { name: "2 de 3 estrellas" }),
     ).toBeInTheDocument()
     const nextCard = screen.getByRole("link", { name: /La llegada/ })
-    expect(nextCard).toHaveAttribute("href", "/mision/la-llegada")
+    expect(nextCard).toHaveAttribute("href", "/mission/arrival")
     expect(nextCard).not.toHaveTextContent("Siguiente")
     expect(
       screen.getAllByText("Completa la misión anterior para desbloquearla"),
@@ -60,12 +60,12 @@ describe("MissionMap", () => {
   })
 
   test("points to the next mission once the first one is mastered", () => {
-    recordMissionResult("la-llegada", { stars: 3, payout: 0, bestCoins: 45 })
+    recordMissionResult("arrival", { stars: 3, payout: 0, bestCoins: 45 })
 
     render(<MissionMap />)
 
     const nextCard = screen.getByRole("link", { name: /supermercado/ })
-    expect(nextCard).toHaveAttribute("href", "/mision/supermercado")
+    expect(nextCard).toHaveAttribute("href", "/mission/supermarket")
     expect(nextCard).toHaveTextContent("Siguiente")
     expect(
       screen.getByRole("img", { name: "3 de 3 estrellas" }),

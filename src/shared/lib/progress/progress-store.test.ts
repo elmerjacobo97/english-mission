@@ -46,7 +46,7 @@ describe("initialization", () => {
       ...emptyProgress,
       coins: 42,
       missions: {
-        supermercado: { completed: true, stars: 2 as const, bestCoins: 20 },
+        supermarket: { completed: true, stars: 2 as const, bestCoins: 20 },
       },
     }
     initProgress(serverProgress, "user-1")
@@ -79,12 +79,12 @@ describe("recordMissionResult", () => {
   test("marks completed, keeps best values and syncs core plus mission", () => {
     startWithProgress()
 
-    recordMissionResult("supermercado", {
+    recordMissionResult("supermarket", {
       stars: 2,
       payout: 20,
       bestCoins: 20,
     })
-    expect(getMissionProgress("supermercado")).toEqual({
+    expect(getMissionProgress("supermarket")).toEqual({
       completed: true,
       stars: 2,
       bestCoins: 20,
@@ -93,12 +93,12 @@ describe("recordMissionResult", () => {
     expect(queuedTables()).toEqual(["progress_core", "mission_progress"])
 
     mockedEnqueue.mockClear()
-    recordMissionResult("supermercado", {
+    recordMissionResult("supermarket", {
       stars: 1,
       payout: 0,
       bestCoins: 10,
     })
-    expect(getMissionProgress("supermercado")).toEqual({
+    expect(getMissionProgress("supermarket")).toEqual({
       completed: true,
       stars: 2,
       bestCoins: 20,

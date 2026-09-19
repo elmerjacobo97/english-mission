@@ -44,7 +44,7 @@ The same test suite scans all of `src/` for Spain regionalisms (`SPAINISMS` in `
 
 ## Architecture
 
-- `src/app` — thin routes only. The `(app)` route group wraps `/` map, `/notebook`, `/review` and `/shop` in `AppShell`; `/mision/[slug]` renders its own player chrome outside the shell. Route pages use Next 16 global types (`PageProps<'/mision/[slug]'>`, `LayoutProps<'/'>`), not imported prop types.
+- `src/app` — thin routes only. The `(app)` route group wraps `/` map, `/notebook`, `/review`, `/shop` and `/mission/[slug]` in `AppShell`. Route pages use Next 16 global types (`PageProps<'/mission/[slug]'>`, `LayoutProps<'/'>`), not imported prop types.
 - Structure: `src/app` (routes) → `src/features/*` (domain slices) → `src/shared/{components,hooks,lib}` (reusable code). Dependency direction `app -> features -> shared`; `src/features/*` never import each other and `src/shared/*` never imports features. Each feature slice keeps `components/` and `hooks/` (shop adds `utils/`); put new slice code there.
 - Boundaries: shared game code lives in `src/shared/`: `lib/game` (`types/`, `utils/` with `difficulty`/`rewards`/`answer-check`, `content/` with `characters`/`coco-looks`), `lib/curriculum` (plan, catalog, missions, validation utils), `lib/review` (spaced repetition: `schedule`, `review-queue`, `review-exercise`), `hooks/` (`use-challenge-run`, `use-due-reviews`, `use-progress`), `components/game` (challenge UI) and `components/page-header.tsx`.
 - `src/features/shell` — `app-shell.tsx` (desktop sidebar / mobile bottom bar, coins + streak header). Reuse `PageHeader` from `src/shared/components/page-header.tsx` for any new page so titles and descriptions stay homologated.

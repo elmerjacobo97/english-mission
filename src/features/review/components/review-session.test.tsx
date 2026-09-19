@@ -21,7 +21,7 @@ const BLOCKED_WORDS = [
 ]
 
 function seedTwoDueWords() {
-  recordMissionResult("la-llegada", { stars: 1, payout: 30, bestCoins: 30 })
+  recordMissionResult("arrival", { stars: 1, payout: 30, bestCoins: 30 })
   for (const word of BLOCKED_WORDS) {
     recordReviewResult(word, true)
   }
@@ -97,7 +97,7 @@ describe("ReviewSession", () => {
     const serverHtml = renderToString(<ReviewSession />)
     expect(serverHtml).toContain("Todo al día")
 
-    recordMissionResult("la-llegada", { stars: 1, payout: 0, bestCoins: 0 })
+    recordMissionResult("arrival", { stars: 1, payout: 0, bestCoins: 0 })
 
     const recoverable: unknown[] = []
     const container = document.createElement("div")
@@ -117,8 +117,8 @@ describe("ReviewSession", () => {
 
   test("caps the session at ten words and offers the rest", async () => {
     const user = userEvent.setup()
-    recordMissionResult("la-llegada", { stars: 1, payout: 0, bestCoins: 0 })
-    recordMissionResult("supermercado", { stars: 1, payout: 0, bestCoins: 0 })
+    recordMissionResult("arrival", { stars: 1, payout: 0, bestCoins: 0 })
+    recordMissionResult("supermarket", { stars: 1, payout: 0, bestCoins: 0 })
     for (const word of ["banana", "apple", "bread", "milk"]) {
       recordReviewResult(word, true)
     }

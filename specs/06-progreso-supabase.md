@@ -10,7 +10,7 @@
 **Dentro:**
 
 - Cuentas con magic link (correo) vía Supabase Auth. Sin contraseñas.
-- Login obligatorio: sin sesión, `/`, `/notebook`, `/review`, `/shop` y `/mision/[slug]` redirigen a `/login`.
+- Login obligatorio: sin sesión, `/`, `/notebook`, `/review`, `/shop` y `/mission/[slug]` redirigen a `/login`.
 - Ruta `/login` con formulario de correo, estado "revisa tu correo" y error si el envío falla.
 - Route Handler `/auth/confirm` que canjea el código del enlace y redirige al mapa.
 - Correo del usuario y botón "Salir" en el header de `AppShell`.
@@ -253,7 +253,7 @@ Convenciones del modelo:
 - [ ] `login-form` muestra error cuando el envío falla (test de componente).
 - [ ] `user-menu` muestra el correo y "Salir" llama a `signOut` y navega a `/login` (test de componente).
 - [ ] `AppShell` pinta el slot `account` en el header (test de componente).
-- [ ] Sin sesión, `/`, `/notebook`, `/review`, `/shop` y `/mision/[slug]` redirigen a `/login`; con sesión, `/login` redirige a `/` (prueba manual).
+- [ ] Sin sesión, `/`, `/notebook`, `/review`, `/shop` y `/mission/[slug]` redirigen a `/login`; con sesión, `/login` redirige a `/` (prueba manual).
 
 **Progreso y sincronización**
 

@@ -5,8 +5,8 @@ import { getMissionProgress, getProgressSnapshot } from "@/shared/lib/progress/p
 import { findMission } from "@/shared/lib/curriculum/mission-catalog"
 import { MissionPlayer } from "./mission-player"
 
-const mission = findMission("la-llegada") ?? (() => {
-  throw new Error("la misión la-llegada no existe en el catálogo")
+const mission = findMission("arrival") ?? (() => {
+  throw new Error("la misión arrival no existe en el catálogo")
 })()
 
 async function next(user: ReturnType<typeof userEvent.setup>) {
@@ -53,7 +53,7 @@ describe("MissionPlayer", () => {
     expect(screen.getByText("+55")).toBeInTheDocument()
 
     await waitFor(() => {
-      const progress = getMissionProgress("la-llegada")
+      const progress = getMissionProgress("arrival")
       expect(progress.completed).toBe(true)
       expect(progress.stars).toBe(3)
     })
@@ -84,7 +84,7 @@ describe("MissionPlayer", () => {
     expect(screen.getByText("+25")).toBeInTheDocument()
     expect(screen.getByText("+40")).toBeInTheDocument()
     await waitFor(() => {
-      expect(getMissionProgress("la-llegada").stars).toBe(2)
+      expect(getMissionProgress("arrival").stars).toBe(2)
     })
   })
 
@@ -107,13 +107,13 @@ describe("MissionPlayer", () => {
     await next(user)
     await next(user)
     await solve(user, "Hola")
-    expect(screen.getByText("10")).toBeInTheDocument()
+    expect(getProgressSnapshot().coins).toBe(10)
 
     await user.click(screen.getByRole("button", { name: "Anterior" }))
     expect(
       await screen.findByText("Ya superaste esta prueba."),
     ).toBeInTheDocument()
-    expect(screen.getByText("10")).toBeInTheDocument()
+    expect(getProgressSnapshot().coins).toBe(10)
 
     await user.click(screen.getByRole("button", { name: /Continuar/ }))
     await user.click(screen.getByRole("button", { name: "Anterior" }))
@@ -127,7 +127,7 @@ describe("MissionPlayer", () => {
     expect(
       await screen.findByText("Ya superaste esta prueba."),
     ).toBeInTheDocument()
-    expect(screen.getByText("10")).toBeInTheDocument()
+    expect(getProgressSnapshot().coins).toBe(10)
   })
 
   test("replay awards no coins and keeps the best stars", async () => {
@@ -146,7 +146,7 @@ describe("MissionPlayer", () => {
       await screen.findByText(/Ya conocías esta misión/),
     ).toBeInTheDocument()
     await waitFor(() => {
-      const progress = getMissionProgress("la-llegada")
+      const progress = getMissionProgress("arrival")
       expect(progress.stars).toBe(3)
       expect(progress.bestCoins).toBe(45)
     })

@@ -21,7 +21,7 @@ const completeRows = {
   shop: { day: "2026-09-18", count: 2 },
   looks: { owned: ["ocean", "party"], equipped: "party" },
   missions: [
-    { slug: "la-llegada", completed: true, stars: 3, best_coins: 45 },
+    { slug: "arrival", completed: true, stars: 3, best_coins: 45 },
   ],
   reviews: [
     {
@@ -39,7 +39,7 @@ describe("toProgress", () => {
       version: 6,
       coins: 42,
       missions: {
-        "la-llegada": { completed: true, stars: 3, bestCoins: 45 },
+        arrival: { completed: true, stars: 3, bestCoins: 45 },
       },
       reviews: {
         hello: { box: 2, dueAt: 1_000, lastReviewedAt: 900 },
@@ -94,7 +94,7 @@ describe("toProgress", () => {
       ...emptyProgress,
       coins: 0,
       missions: {
-        "la-llegada": { completed: true, stars: 3, bestCoins: 45 },
+        arrival: { completed: true, stars: 3, bestCoins: 45 },
       },
       reviews: {
         hello: { box: 2, dueAt: 1_000, lastReviewedAt: 900 },
@@ -124,7 +124,7 @@ describe("payload mappers", () => {
     expect(shopPayload({ day: shop.day, count: shop.count })).toEqual(shop)
     expect(looksPayload({ owned: ["ocean", "party"], equipped: "party" })).toEqual(looks)
     expect(
-      missionPayload("la-llegada", {
+      missionPayload("arrival", {
         completed: mission.completed,
         stars: 3,
         bestCoins: 45,

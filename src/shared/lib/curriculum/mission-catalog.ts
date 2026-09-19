@@ -1,9 +1,9 @@
 import type { Progress } from "@/shared/lib/progress/types"
 import type { Beat } from "@/shared/lib/game/types/beat"
 import type { Chapter, Mission, MissionPlanEntry } from "@/shared/lib/game/types/mission"
-import { mission01Beats } from "./missions/mission-01-la-llegada"
-import { mission02Beats } from "./missions/mission-02-supermercado"
-import { mission03Beats } from "./missions/mission-03-direcciones"
+import { mission01Beats } from "./missions/mission-01-arrival"
+import { mission02Beats } from "./missions/mission-02-supermarket"
+import { mission03Beats } from "./missions/mission-03-directions"
 import { mission04Beats } from "./missions/mission-04-cafe"
 import { missionPlan } from "./plan"
 
@@ -14,9 +14,9 @@ export const CHAPTER_TITLES: Record<Chapter, string> = {
 }
 
 const beatsBySlug: Record<string, Beat[]> = {
-  "la-llegada": mission01Beats,
-  supermercado: mission02Beats,
-  direcciones: mission03Beats,
+  arrival: mission01Beats,
+  supermarket: mission02Beats,
+  directions: mission03Beats,
   cafe: mission04Beats,
 }
 

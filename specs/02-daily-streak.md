@@ -115,7 +115,7 @@ Convenciones:
 - **No:** día de gracia o congelar racha. Reabre reglas y estado intermedio.
 - **Sí:** hitos 3/7/30 pagan 10/25/50 y se pueden volver a ganar en una racha nueva. Acotado por calendario: no es farmeable.
 - **No:** monedas por cada día activo. Infla la economía y el spec 01 ya rechazó monedas fáciles.
-- **Sí:** aviso de hito persistido (`pendingMilestone`) hasta cerrarlo. La actividad ocurre en `/mision/[slug]` o `/review`; el aviso debe sobrevivir la navegación al mapa.
+- **Sí:** aviso de hito persistido (`pendingMilestone`) hasta cerrarlo. La actividad ocurre en `/mission/[slug]` o `/review`; el aviso debe sobrevivir la navegación al mapa.
 - **No:** toast efímero o modal con animación. Menos código y menos tests.
 - **Sí:** chip en el mapa junto al de monedas, visible también en cero ("Empieza hoy"). La feature se descubre sin ruido.
 - **No:** racha en Cuaderno y pantallas finales. Cada superficie extra es UI y tests que mantener.

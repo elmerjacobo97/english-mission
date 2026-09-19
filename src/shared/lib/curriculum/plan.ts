@@ -3,7 +3,7 @@ import type { MissionPlanEntry } from "@/shared/lib/game/types/mission"
 export const missionPlan: MissionPlanEntry[] = [
   {
     order: 1,
-    slug: "la-llegada",
+    slug: "arrival",
     title: "La llegada",
     subtitle: "Primer día en la ciudad, primera conversación",
     emoji: "🧳",
@@ -24,7 +24,7 @@ export const missionPlan: MissionPlanEntry[] = [
   },
   {
     order: 2,
-    slug: "supermercado",
+    slug: "supermarket",
     title: "El supermercado",
     subtitle: "El refrigerador está vacío y tienes hambre",
     emoji: "🍌",
@@ -45,7 +45,7 @@ export const missionPlan: MissionPlanEntry[] = [
   },
   {
     order: 3,
-    slug: "direcciones",
+    slug: "directions",
     title: "Preguntar direcciones",
     subtitle: "Encontrar la parada del bus",
     emoji: "🧭",
@@ -85,7 +85,7 @@ export const missionPlan: MissionPlanEntry[] = [
   },
   {
     order: 5,
-    slug: "el-bus",
+    slug: "bus",
     title: "El bus",
     subtitle: "Boletos, paradas y horarios",
     emoji: "🚌",
@@ -105,7 +105,7 @@ export const missionPlan: MissionPlanEntry[] = [
   },
   {
     order: 6,
-    slug: "lavanderia",
+    slug: "laundry",
     title: "La lavandería",
     subtitle: "Ropa sucia y máquinas",
     emoji: "🧺",
@@ -125,7 +125,7 @@ export const missionPlan: MissionPlanEntry[] = [
   },
   {
     order: 7,
-    slug: "ropa",
+    slug: "clothes",
     title: "Comprar ropa",
     subtitle: "Tallas, colores y precios",
     emoji: "👕",
@@ -145,7 +145,7 @@ export const missionPlan: MissionPlanEntry[] = [
   },
   {
     order: 8,
-    slug: "casero",
+    slug: "landlord",
     title: "Llamar al dueño",
     subtitle: "El alquiler y una avería",
     emoji: "☎️",
@@ -165,7 +165,7 @@ export const missionPlan: MissionPlanEntry[] = [
   },
   {
     order: 9,
-    slug: "entrevista",
+    slug: "interview",
     title: "La entrevista",
     subtitle: "Tu experiencia y tus ganas",
     emoji: "💼",
@@ -185,7 +185,7 @@ export const missionPlan: MissionPlanEntry[] = [
   },
   {
     order: 10,
-    slug: "primer-dia",
+    slug: "first-day",
     title: "El primer día",
     subtitle: "Compañeros, reuniones y café",
     emoji: "🖥️",
@@ -205,7 +205,7 @@ export const missionPlan: MissionPlanEntry[] = [
   },
   {
     order: 11,
-    slug: "amigos",
+    slug: "friends",
     title: "Hacer amigos",
     subtitle: "Planes para el fin de semana",
     emoji: "🎉",
@@ -225,7 +225,7 @@ export const missionPlan: MissionPlanEntry[] = [
   },
   {
     order: 12,
-    slug: "casa",
+    slug: "new-home",
     title: "La casa nueva",
     subtitle: "Mudanza y vecinos",
     emoji: "🏠",

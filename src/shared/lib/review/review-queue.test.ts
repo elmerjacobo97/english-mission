@@ -48,7 +48,7 @@ describe("reviewKey", () => {
 describe("buildReviewPool", () => {
   test("only collects words from completed missions", () => {
     const pool = buildReviewPool(
-      progress({ missions: { "la-llegada": { completed: false, stars: 0, bestCoins: 0 } } }),
+      progress({ missions: { arrival: { completed: false, stars: 0, bestCoins: 0 } } }),
     )
     expect(pool).toEqual([])
   })
@@ -56,7 +56,7 @@ describe("buildReviewPool", () => {
   test("collects the eight words of mission 1 once it is completed", () => {
     const pool = buildReviewPool(
       progress({
-        missions: { "la-llegada": { completed: true, stars: 1, bestCoins: 0 } },
+        missions: { arrival: { completed: true, stars: 1, bestCoins: 0 } },
       }),
     )
     expect(pool).toHaveLength(8)
@@ -95,7 +95,7 @@ describe("buildReviewPool", () => {
 
 describe("buildReviewQueue", () => {
   const completed = progress({
-    missions: { "la-llegada": { completed: true, stars: 1, bestCoins: 0 } },
+    missions: { arrival: { completed: true, stars: 1, bestCoins: 0 } },
   })
 
   test("words without a card are due now with box 1", () => {
@@ -138,8 +138,8 @@ describe("buildReviewQueue", () => {
     const queue = buildReviewQueue(
       progress({
         missions: {
-          "la-llegada": { completed: true, stars: 1, bestCoins: 0 },
-          supermercado: { completed: true, stars: 1, bestCoins: 0 },
+          arrival: { completed: true, stars: 1, bestCoins: 0 },
+          supermarket: { completed: true, stars: 1, bestCoins: 0 },
         },
       }),
       NOW,

@@ -54,7 +54,7 @@ describe("Notebook", () => {
   })
 
   test("lists the vocabulary of completed missions by chapter", () => {
-    recordMissionResult("la-llegada", { stars: 3, payout: 0, bestCoins: 45 })
+    recordMissionResult("arrival", { stars: 3, payout: 0, bestCoins: 45 })
 
     render(<Notebook />)
 
@@ -69,8 +69,8 @@ describe("Notebook", () => {
   })
 
   test("adds vocabulary from later missions as they are completed", () => {
-    recordMissionResult("la-llegada", { stars: 1, payout: 0, bestCoins: 0 })
-    recordMissionResult("supermercado", { stars: 1, payout: 0, bestCoins: 0 })
+    recordMissionResult("arrival", { stars: 1, payout: 0, bestCoins: 0 })
+    recordMissionResult("supermarket", { stars: 1, payout: 0, bestCoins: 0 })
 
     render(<Notebook />)
 
@@ -79,7 +79,7 @@ describe("Notebook", () => {
   })
 
   test("offers review with the due count after completing a mission", () => {
-    recordMissionResult("la-llegada", { stars: 3, payout: 0, bestCoins: 45 })
+    recordMissionResult("arrival", { stars: 3, payout: 0, bestCoins: 45 })
 
     render(<Notebook />)
 
@@ -91,7 +91,7 @@ describe("Notebook", () => {
   })
 
   test("hides review once every word is scheduled for later", () => {
-    recordMissionResult("la-llegada", { stars: 1, payout: 0, bestCoins: 0 })
+    recordMissionResult("arrival", { stars: 1, payout: 0, bestCoins: 0 })
     for (const word of MISSION_1_WORDS) {
       recordReviewResult(word, true)
     }
@@ -106,7 +106,7 @@ describe("Notebook", () => {
 
 describe("Notebook practice", () => {
   test("paints one mastery dot without a card and three with box 3", () => {
-    recordMissionResult("la-llegada", { stars: 1, payout: 0, bestCoins: 0 })
+    recordMissionResult("arrival", { stars: 1, payout: 0, bestCoins: 0 })
     seedBoxThree("hello")
 
     render(<Notebook />)
@@ -120,7 +120,7 @@ describe("Notebook practice", () => {
 
   test("opens the chosen word challenge and hides the list", async () => {
     const user = userEvent.setup()
-    recordMissionResult("la-llegada", { stars: 1, payout: 0, bestCoins: 0 })
+    recordMissionResult("arrival", { stars: 1, payout: 0, bestCoins: 0 })
     render(<Notebook />)
 
     await user.click(screen.getByRole("button", { name: "Practicar hello" }))
@@ -134,7 +134,7 @@ describe("Notebook practice", () => {
 
   test("solving shows Continuar and returns to the list without mutations", async () => {
     const user = userEvent.setup()
-    recordMissionResult("la-llegada", { stars: 1, payout: 0, bestCoins: 0 })
+    recordMissionResult("arrival", { stars: 1, payout: 0, bestCoins: 0 })
     render(<Notebook />)
 
     const before = getProgressSnapshot()
@@ -153,7 +153,7 @@ describe("Notebook practice", () => {
 
   test("revealing does not touch reviews, coins or streak", async () => {
     const user = userEvent.setup()
-    recordMissionResult("la-llegada", { stars: 1, payout: 0, bestCoins: 0 })
+    recordMissionResult("arrival", { stars: 1, payout: 0, bestCoins: 0 })
     render(<Notebook />)
 
     const before = getProgressSnapshot()
@@ -170,7 +170,7 @@ describe("Notebook practice", () => {
 
   test("solving an existing card keeps it untouched", async () => {
     const user = userEvent.setup()
-    recordMissionResult("la-llegada", { stars: 1, payout: 0, bestCoins: 0 })
+    recordMissionResult("arrival", { stars: 1, payout: 0, bestCoins: 0 })
     seedBoxThree("hello")
     render(<Notebook />)
 
@@ -193,7 +193,7 @@ describe("Notebook practice", () => {
   test("box 3 with speech plays the word from the Escuchar button", async () => {
     const user = userEvent.setup()
     withSpeech()
-    recordMissionResult("la-llegada", { stars: 1, payout: 0, bestCoins: 0 })
+    recordMissionResult("arrival", { stars: 1, payout: 0, bestCoins: 0 })
     seedBoxThree("hello")
     render(<Notebook />)
 
@@ -207,7 +207,7 @@ describe("Notebook practice", () => {
 
   test("box 3 without speech falls back to typing", async () => {
     const user = userEvent.setup()
-    recordMissionResult("la-llegada", { stars: 1, payout: 0, bestCoins: 0 })
+    recordMissionResult("arrival", { stars: 1, payout: 0, bestCoins: 0 })
     seedBoxThree("hello")
     render(<Notebook />)
 
@@ -223,7 +223,7 @@ describe("Notebook practice", () => {
 
   test("uses the profile of the word level", async () => {
     const user = userEvent.setup()
-    recordMissionResult("primer-dia", { stars: 1, payout: 0, bestCoins: 0 })
+    recordMissionResult("first-day", { stars: 1, payout: 0, bestCoins: 0 })
     render(<Notebook />)
 
     await user.click(screen.getByRole("button", { name: "Practicar computer" }))

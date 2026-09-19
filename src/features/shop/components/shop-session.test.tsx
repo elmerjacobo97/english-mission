@@ -10,7 +10,7 @@ import { localDayKey } from "@/shared/lib/progress/streak"
 import { ShopSession } from "./shop-session"
 
 function completeMissionOne() {
-  recordMissionResult("la-llegada", { stars: 1, payout: 0, bestCoins: 0 })
+  recordMissionResult("arrival", { stars: 1, payout: 0, bestCoins: 0 })
 }
 
 function today() {

@@ -106,7 +106,7 @@ export function MissionMap() {
           )}
         </span>
         <Link
-          href={`/mision/${entry.slug}`}
+          href={`/mission/${entry.slug}`}
           className={`flex min-w-0 flex-1 flex-col gap-3 rounded-3xl border-2 bg-surface p-4 transition hover:-translate-y-0.5 ${
             isNext ? "border-accent shadow-pop" : "border-ink/10 shadow-card"
           }`}

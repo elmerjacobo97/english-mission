@@ -72,7 +72,7 @@ describe("AppShell", () => {
   })
 
   test("badges the review tab with the due count", () => {
-    recordMissionResult("la-llegada", { stars: 1, payout: 0, bestCoins: 0 })
+    recordMissionResult("arrival", { stars: 1, payout: 0, bestCoins: 0 })
     render(<AppShell>contenido</AppShell>)
 
     const reviewLink = screen.getByRole("link", { name: /Repaso/ })
