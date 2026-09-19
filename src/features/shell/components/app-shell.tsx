@@ -36,7 +36,13 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`)
 }
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({
+  children,
+  account,
+}: {
+  children: ReactNode
+  account?: ReactNode
+}) {
   const pathname = usePathname()
   const dueCount = useDueReviews()
   const { progress } = useProgress()
@@ -58,6 +64,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           English Mission
         </Link>
         <div className="flex items-center gap-2">
+          {account}
           <span
             key={`coins-${progress.coins}`}
             aria-label={`Monedas: ${progress.coins}`}

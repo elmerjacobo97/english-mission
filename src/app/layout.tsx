@@ -1,5 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import { Fredoka, Nunito } from 'next/font/google';
+import { ProgressProvider } from '@/shared/components/progress-provider';
+import { emptyProgress } from '@/shared/lib/progress/progress-mappers';
+import { readProgress } from '@/shared/lib/progress/progress-repository.server';
+import { getCurrentUser } from '@/shared/lib/supabase/server';
 import './globals.css';
 
 const nunito = Nunito({
@@ -34,10 +38,20 @@ export const viewport: Viewport = {
   themeColor: '#f97316',
 };
 
-export default function RootLayout({ children }: LayoutProps<'/'>) {
+export default async function RootLayout({ children }: LayoutProps<'/'>) {
+  const user = await getCurrentUser();
+  const progress = user ? await readProgress(user.id) : emptyProgress;
+
   return (
     <html lang="es" className={`${nunito.variable} ${fredoka.variable} h-full antialiased`} suppressHydrationWarning>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ProgressProvider
+          initialProgress={progress}
+          userId={user?.id ?? ''}
+        >
+          {children}
+        </ProgressProvider>
+      </body>
     </html>
   );
 }

@@ -162,10 +162,6 @@ describe("ShopSession", () => {
       owned: ["ocean"],
       equipped: "ocean",
     })
-    const stored = JSON.parse(
-      window.localStorage.getItem("english-mission:progress:v6") ?? "{}",
-    ) as { looks?: unknown }
-    expect(stored.looks).toEqual({ owned: ["ocean"], equipped: "ocean" })
   })
 
   test("Usar in Coco clásico re-equips without changing the balance", async () => {

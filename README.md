@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# English Mission
 
-## Getting Started
+Narrative English-learning game. Spanish is the interface language; English is the learning material.
 
-First, run the development server:
+## Stack
+
+- Next.js 16.3.5 App Router
+- React 19 and TypeScript
+- Tailwind CSS v4
+- Supabase Auth and Postgres
+
+## Setup
+
+1. Copy `.env.example` to `.env.local`.
+2. Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in `.env.local`.
+3. Paste `supabase/schema.sql` into the Supabase SQL Editor and run it.
+4. Add `http://localhost:3000/**` to Supabase Auth Redirect URLs.
+5. Start development with `rtk pnpm dev`.
+
+Supabase Dashboard may label the client key as a publishable key. Use its value for `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Never commit `.env.local`.
+
+## Commands
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+rtk pnpm dev
+rtk pnpm lint
+rtk tsc --noEmit
+rtk pnpm test
+rtk pnpm build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Auth And Progress
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Auth uses magic links only. `src/proxy.ts` protects application routes and refreshes sessions. `/auth/confirm` exchanges the email callback code for a session.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The root layout reads the authenticated user and progress on the server. `ProgressProvider` hydrates the client store. Progress lives in six Supabase tables with RLS policies scoped to `auth.uid() = user_id`; no progress is stored in `localStorage`.
 
-## Learn More
+Mutations update the UI optimistically. `progress-sync.ts` sends absolute section payloads through a FIFO queue, retries failed writes, retries when the browser returns online, and shows `SyncBanner` when writes fail.
 
-To learn more about Next.js, take a look at the following resources:
+## Manual Verification
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Configure Auth Redirect URLs for local and production domains. Confirm the magic-link email template points to `/auth/confirm`.
+2. Open the app in Browser A. Request a magic link, sign in, complete a mission, and confirm coins, stars, streak, review cards, shop state, and Coco look changes remain after refresh.
+3. Open the app in Browser B with a different account. Confirm Browser B cannot see or change Browser A progress.
+4. Sign out from the account menu. Confirm protected routes return to `/login` and a signed-in `/login` request returns to `/`.
+5. In DevTools, set network to Offline. Trigger a progress mutation and confirm the optimistic UI plus `No pudimos guardar tu progreso.` and `Reintentar` banner.
+6. Restore network or click `Reintentar`. Confirm the banner disappears, refresh the page, and verify the mutation remains saved.
+7. Use `Reiniciar progreso`, confirm the dialog, and verify coins, missions, reviews, streak, shop, and looks reset.

@@ -152,7 +152,7 @@ describe("MissionPlayer", () => {
     })
   })
 
-  test("completing a mission raises the streak once per day and persists it", async () => {
+  test("completing a mission raises the streak once per day", async () => {
     const user = userEvent.setup()
     render(<MissionPlayer mission={mission} />)
     await screen.findByText(
@@ -174,9 +174,5 @@ describe("MissionPlayer", () => {
     ).toBeInTheDocument()
     expect(getProgressSnapshot().streak.current).toBe(1)
 
-    const stored = JSON.parse(
-      window.localStorage.getItem("english-mission:progress:v6") ?? "{}",
-    ) as { streak?: { current?: number } }
-    expect(stored.streak?.current).toBe(1)
   })
 })

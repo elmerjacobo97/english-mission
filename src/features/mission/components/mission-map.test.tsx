@@ -3,33 +3,22 @@ import userEvent from "@testing-library/user-event"
 import { describe, expect, test } from "vitest"
 import {
   addCoins,
+  emptyProgress,
   getProgressSnapshot,
+  initProgress,
   recordMissionResult,
-  reloadProgress,
 } from "@/shared/lib/progress/progress-store"
 import type { StreakState } from "@/shared/lib/progress/types"
 import { MissionMap } from "./mission-map"
 
 function seedStreak(streak: Partial<StreakState>) {
-  window.localStorage.setItem(
-    "english-mission:progress:v6",
-    JSON.stringify({
-      version: 6,
-      coins: 0,
-      missions: {},
-      reviews: {},
-      streak: {
-        current: 0,
-        best: 0,
-        lastDay: null,
-        pendingMilestone: null,
-        ...streak,
-      },
-      shop: { day: null, count: 0 },
-      looks: { owned: [], equipped: "classic" },
-    }),
+  initProgress(
+    {
+      ...emptyProgress,
+      streak: { ...emptyProgress.streak, ...streak },
+    },
+    "",
   )
-  reloadProgress()
 }
 
 describe("MissionMap", () => {
@@ -101,10 +90,6 @@ describe("MissionMap", () => {
 
     expect(screen.queryByText(/¡Racha de 7 días!/)).not.toBeInTheDocument()
     expect(getProgressSnapshot().streak.pendingMilestone).toBeNull()
-    const stored = JSON.parse(
-      window.localStorage.getItem("english-mission:progress:v6") ?? "{}",
-    ) as { streak?: { pendingMilestone?: unknown } }
-    expect(stored.streak?.pendingMilestone).toBeNull()
 
     unmount()
     render(<MissionMap />)
@@ -125,7 +110,7 @@ describe("MissionMap", () => {
     ).not.toBeInTheDocument()
   })
 
-  test("reset asks for confirmation in a dialog and clears stored progress", async () => {
+  test("reset asks for confirmation in a dialog and clears progress", async () => {
     const user = userEvent.setup()
     addCoins(20)
     render(<MissionMap />)
@@ -143,9 +128,7 @@ describe("MissionMap", () => {
     await user.click(screen.getByRole("button", { name: "Sí, borrar todo" }))
 
     expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
-    expect(
-      window.localStorage.getItem("english-mission:progress:v6"),
-    ).toBeNull()
+    expect(getProgressSnapshot()).toEqual(emptyProgress)
   })
 
   test("cancel keeps progress and closes the dialog", async () => {
@@ -159,9 +142,6 @@ describe("MissionMap", () => {
     await user.click(screen.getByRole("button", { name: "Cancelar" }))
 
     expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
-    expect(
-      window.localStorage.getItem("english-mission:progress:v6"),
-    ).not.toBeNull()
     expect(getProgressSnapshot().coins).toBe(20)
   })
 

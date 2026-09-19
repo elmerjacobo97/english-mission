@@ -63,6 +63,14 @@ describe("AppShell", () => {
     expect(screen.getByLabelText(/Récord: 0 días/)).toBeInTheDocument()
   })
 
+  test("renders the account slot in the header", () => {
+    render(
+      <AppShell account={<span>ana@example.com</span>}>contenido</AppShell>,
+    )
+
+    expect(screen.getByText("ana@example.com")).toBeInTheDocument()
+  })
+
   test("badges the review tab with the due count", () => {
     recordMissionResult("la-llegada", { stars: 1, payout: 0, bestCoins: 0 })
     render(<AppShell>contenido</AppShell>)
