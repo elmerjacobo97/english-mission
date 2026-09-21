@@ -1,0 +1,103 @@
+[
+  {
+    "kind": "story",
+    "es": "Sales del café y llegas a la parada. La entrevista es en otro barrio.",
+    "en": "I need a ticket, please.",
+    "speaker": "you",
+    "vocab": [["ticket", "boleto"]],
+    "character": "chofer",
+    "mood": "curious",
+    "note": {
+      "title": "A ticket, please",
+      "body": "Usa ticket para decir boleto. «A ticket, please» es una forma breve y educada de pedirlo."
+    }
+  },
+  {
+    "kind": "choice",
+    "prompt": "El chofer te pregunta qué boleto quieres. ¿Qué respondes?",
+    "options": ["A ticket, please", "A cup, please", "Goodbye"],
+    "correct": 0,
+    "character": "chofer",
+    "mood": "curious"
+  },
+  {
+    "kind": "story",
+    "es": "Miras el mapa y confirmas que estás en la parada correcta.",
+    "en": "Is this the right bus stop?",
+    "speaker": "you",
+    "vocab": [["stop", "parada"]],
+    "character": "chofer"
+  },
+  {
+    "kind": "order",
+    "prompt": "Pregunta a qué hora sale el bus.",
+    "tokens": ["bus", "time", "What", "is", "the"],
+    "solution": ["What", "time", "is", "the", "bus"],
+    "character": "chofer",
+    "note": {
+      "title": "What time…?",
+      "body": "Para preguntar la hora de un bus, usa «What time is the bus?». What time va al inicio."
+    }
+  },
+  {
+    "kind": "story",
+    "es": "El chofer señala un cartel con los horarios de salida.",
+    "en": "Check the schedule. The bus leaves at ten.",
+    "speaker": "chofer",
+    "vocab": [
+      ["schedule", "horario"],
+      ["time", "hora"]
+    ],
+    "character": "chofer",
+    "mood": "happy"
+  },
+  {
+    "kind": "fill",
+    "prompt": "Completa la indicación del chofer.",
+    "sentence": "Check the ___.",
+    "answer": "schedule",
+    "character": "chofer"
+  },
+  {
+    "kind": "story",
+    "es": "En la terminal, preguntas de qué plataforma sale el siguiente bus.",
+    "en": "Which platform is it?",
+    "speaker": "you",
+    "vocab": [["platform", "plataforma"]],
+    "character": "chofer",
+    "mood": "curious"
+  },
+  {
+    "kind": "choice",
+    "prompt": "Llegas al edificio, pero un aviso dice que la entrevista es mañana. ¿Qué boleto necesitas para volver?",
+    "options": ["A single ticket", "A return ticket", "A cup of tea"],
+    "correct": 1,
+    "character": "chofer"
+  },
+  {
+    "kind": "story",
+    "es": "Compras el boleto de ida y vuelta y regresas a casa. La entrevista será mañana.",
+    "en": "I need a return ticket, please.",
+    "speaker": "you",
+    "vocab": [
+      ["single", "solo ida"],
+      ["return", "ida y vuelta"]
+    ],
+    "character": "chofer"
+  },
+  {
+    "kind": "type",
+    "prompt": "Pide el boleto de ida y vuelta: «Un boleto de ida y vuelta, por favor.»",
+    "accepted": ["a return ticket please"],
+    "hint": "A r_____ t_____ p_____",
+    "character": "chofer"
+  },
+  {
+    "kind": "story",
+    "es": "Coco te espera cerca de casa. Ya conoces una nueva ruta por la ciudad.",
+    "en": "Thanks! The bus stop is near my home.",
+    "speaker": "you",
+    "character": "coco",
+    "mood": "happy"
+  }
+]

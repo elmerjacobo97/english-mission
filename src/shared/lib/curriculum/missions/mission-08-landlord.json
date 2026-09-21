@@ -1,0 +1,102 @@
+[
+  {
+    "kind": "story",
+    "es": "Regresas al departamento con tu ropa limpia y tu camisa nueva. Entonces ves agua en el suelo.",
+    "en": "I need to call my landlord.",
+    "speaker": "you",
+    "vocab": [["call", "llamar"]],
+    "character": "coco",
+    "note": {
+      "title": "I need to call…",
+      "body": "Usa I need to call para decir que necesitas llamar. Después de to va el verbo call."
+    }
+  },
+  {
+    "kind": "choice",
+    "prompt": "Sergio no responde. ¿Qué puedes dejarle?",
+    "options": ["A message", "A banana", "A ticket"],
+    "correct": 0,
+    "character": "sergio"
+  },
+  {
+    "kind": "story",
+    "es": "Sacas el teléfono y buscas el número de Sergio.",
+    "en": "My phone is here.",
+    "speaker": "you",
+    "vocab": [["phone", "teléfono"]],
+    "character": "coco"
+  },
+  {
+    "kind": "order",
+    "prompt": "Escribe la frase para explicar lo que harás.",
+    "tokens": ["call", "need", "I", "to"],
+    "solution": ["I", "need", "to", "call"],
+    "character": "coco",
+    "note": {
+      "title": "I need to + verbo",
+      "body": "Después de I need to va un verbo: I need to call. La palabra to conecta la necesidad con la acción."
+    }
+  },
+  {
+    "kind": "story",
+    "es": "Sergio devuelve la llamada y pregunta qué ocurre.",
+    "en": "There is a problem in the apartment.",
+    "speaker": "you",
+    "vocab": [["apartment", "departamento"]],
+    "character": "sergio",
+    "mood": "curious"
+  },
+  {
+    "kind": "fill",
+    "prompt": "Sergio te recuerda que debes pagar el alquiler.",
+    "sentence": "I need to pay the ___.",
+    "answer": "rent",
+    "character": "sergio"
+  },
+  {
+    "kind": "story",
+    "es": "Sergio promete ir al día siguiente para revisar la fuga.",
+    "en": "Can you come tomorrow?",
+    "speaker": "sergio",
+    "vocab": [["tomorrow", "mañana"]],
+    "character": "sergio"
+  },
+  {
+    "kind": "listen",
+    "prompt": "Escucha el mensaje de Sergio y elige la frase correcta.",
+    "phrase": "I will call later.",
+    "options": [
+      "I will call later.",
+      "I will call tomorrow.",
+      "I need a return ticket."
+    ],
+    "correct": 0,
+    "character": "sergio"
+  },
+  {
+    "kind": "story",
+    "es": "Sergio enviará un mensaje cuando salga hacia tu departamento.",
+    "en": "I will send a message later.",
+    "speaker": "sergio",
+    "vocab": [
+      ["message", "mensaje"],
+      ["later", "más tarde"]
+    ],
+    "character": "sergio"
+  },
+  {
+    "kind": "type",
+    "prompt": "Explica el problema: «Hay un problema en el departamento.»",
+    "accepted": ["there is a problem in the apartment"],
+    "hint": "There is a p_______ in the a________",
+    "character": "sergio"
+  },
+  {
+    "kind": "story",
+    "es": "Sergio repara la fuga. Tu departamento queda seguro, tu ropa está lista y mañana tienes la entrevista.",
+    "en": "I am ready for tomorrow.",
+    "speaker": "you",
+    "character": "coco",
+    "mood": "happy"
+  }
+]

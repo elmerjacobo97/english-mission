@@ -36,7 +36,7 @@ Feature work is planned in `specs/NN-slug.md` (spec-driven flow, config in `spec
 
 ## Content invariants
 
-Curriculum lives in `src/shared/lib/curriculum/`: `plan.ts` holds 12 mission entries (only 4 are `written: true`); beats live in `missions/mission-XX-*.ts`; `mission-catalog.ts` joins them by slug (`beatsBySlug`). Adding a mission means: plan entry, beats file, `beatsBySlug` entry, `written: true`.
+Curriculum lives in `src/shared/lib/curriculum/`: `plan.json` holds 12 mission entries; `plan.ts` exposes typed JSON data; beats live in `missions/mission-XX-*.json`; `mission-catalog.ts` joins them by slug (`beatsBySlug`). Adding a mission means: plan entry, beats JSON, `beatsBySlug` entry, `written: true`.
 
 `src/shared/lib/curriculum/curriculum.test.ts` enforces hard rules on every content edit — read it before writing mission material. Summary: 6–12 vocab words per mission; 8–16 beats with ≥3 challenges; challenge kinds must be allowed by that level's profile in `src/shared/lib/game/utils/difficulty.ts`; every declared vocab word must appear in the mission's English material (zero orphans); ≥3 words recycled from earlier missions; ≥2 grammar notes with body 20–280 chars; beat characters must be in the mission's `cast`.
 
@@ -59,4 +59,4 @@ The same test suite scans all of `src/` for Spain regionalisms (`SPAINISMS` in `
 
 ## Testing
 
-Vitest + jsdom + Testing Library; test files sit next to the code as `*.test.ts(x)`. `src/test/setup.ts` resets the DOM and progress store after every test, so tests start clean. Shared fixtures in `src/test/fixtures.ts`. `curriculum.test.ts` reads files from disk via `process.cwd()`, so run tests from the repo root.
+Vitest + jsdom + Testing Library; test files sit next to the code as `*.test.ts(x)`. `src/test/setup.ts` resets the DOM and progress store after every test, so tests start clean. Shared fixtures in `src/test/fixtures.ts`. `curriculum.test.ts` validates imported JSON and scans source files from disk via `process.cwd()`, so run tests from the repo root.

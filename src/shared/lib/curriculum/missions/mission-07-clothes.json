@@ -1,0 +1,105 @@
+[
+  {
+    "kind": "story",
+    "es": "La ropa ya está limpia, pero tu única camisa está gastada. Necesitas algo para la entrevista.",
+    "en": "I need a shirt for the interview.",
+    "speaker": "you",
+    "vocab": [["shirt", "camisa"]],
+    "character": "coco"
+  },
+  {
+    "kind": "story",
+    "es": "En el mercado, Nico también tiene un pequeño puesto de ropa.",
+    "en": "Hello! Can I help you?",
+    "speaker": "nico",
+    "character": "nico",
+    "mood": "happy"
+  },
+  {
+    "kind": "choice",
+    "prompt": "Nico te muestra dos piezas de ropa. ¿Cuál es una camisa?",
+    "options": ["A shirt", "A dress", "A bus ticket"],
+    "correct": 0,
+    "character": "nico"
+  },
+  {
+    "kind": "story",
+    "es": "Nico te pregunta qué talla necesitas.",
+    "en": "What size do you need?",
+    "speaker": "nico",
+    "vocab": [["size", "talla"]],
+    "character": "nico",
+    "mood": "curious"
+  },
+  {
+    "kind": "order",
+    "prompt": "Responde: «Necesito una talla pequeña.»",
+    "tokens": ["small", "I", "need", "a", "size"],
+    "solution": ["I", "need", "a", "small", "size"],
+    "character": "nico",
+    "note": {
+      "title": "What size do you need?",
+      "body": "What size do you need? pregunta qué talla buscas. Responde con I need y después la talla."
+    }
+  },
+  {
+    "kind": "story",
+    "es": "Encuentras una camisa y preguntas si puedes probártela.",
+    "en": "Can I try on this shirt?",
+    "speaker": "you",
+    "vocab": [["try on", "probarse"]],
+    "character": "nico"
+  },
+  {
+    "kind": "fill",
+    "prompt": "Nico te muestra el precio. Completa la frase.",
+    "sentence": "This shirt is ___.",
+    "answer": "cheap",
+    "character": "nico",
+    "note": {
+      "title": "Cheap y expensive",
+      "body": "Cheap significa barato y expensive significa caro. Usa cheap cuando algo cuesta poco y expensive cuando cuesta mucho."
+    }
+  },
+  {
+    "kind": "story",
+    "es": "Te pruebas la camisa. Es cómoda y te queda bien.",
+    "en": "This shirt is a good fit.",
+    "speaker": "you",
+    "vocab": [["fit", "quedar bien"]],
+    "character": "nico",
+    "mood": "happy"
+  },
+  {
+    "kind": "choice",
+    "prompt": "Nico te muestra un vestido muy caro. ¿Cómo dices «caro»?",
+    "options": ["Expensive", "Cheap", "Near"],
+    "correct": 0,
+    "character": "nico"
+  },
+  {
+    "kind": "listen",
+    "prompt": "Escucha a Nico y elige la frase correcta.",
+    "phrase": "This shirt is cheap.",
+    "options": [
+      "This shirt is cheap.",
+      "This dress is expensive.",
+      "The bus is near."
+    ],
+    "correct": 0,
+    "character": "nico"
+  },
+  {
+    "kind": "story",
+    "es": "La camisa te queda bien y no cuesta mucho. Decides comprarla.",
+    "en": "I want to buy this shirt, please.",
+    "speaker": "you",
+    "vocab": [
+      ["dress", "vestido"],
+      ["expensive", "caro"],
+      ["cheap", "barato"]
+    ],
+    "character": "nico",
+    "mood": "happy"
+  }
+]

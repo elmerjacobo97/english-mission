@@ -1,0 +1,244 @@
+[
+  {
+    "order": 1,
+    "slug": "arrival",
+    "title": "La llegada",
+    "subtitle": "Primer día en la ciudad, primera conversación",
+    "emoji": "🧳",
+    "chapter": 1,
+    "level": 1,
+    "cast": ["coco", "marta"],
+    "written": true,
+    "vocab": [
+      ["hello", "hola"],
+      ["goodbye", "adiós"],
+      ["please", "por favor"],
+      ["thanks", "gracias"],
+      ["yes", "sí"],
+      ["no", "no"],
+      ["name", "nombre"],
+      ["nice to meet you", "mucho gusto"]
+    ]
+  },
+  {
+    "order": 2,
+    "slug": "supermarket",
+    "title": "El supermercado",
+    "subtitle": "El refrigerador está vacío y tienes hambre",
+    "emoji": "🍌",
+    "chapter": 1,
+    "level": 2,
+    "cast": ["coco", "nico"],
+    "written": true,
+    "vocab": [
+      ["banana", "plátano"],
+      ["apple", "manzana"],
+      ["bread", "pan"],
+      ["milk", "leche"],
+      ["water", "agua"],
+      ["want", "querer"],
+      ["buy", "comprar"],
+      ["money", "dinero"]
+    ]
+  },
+  {
+    "order": 3,
+    "slug": "directions",
+    "title": "Pedir indicaciones",
+    "subtitle": "Encontrar la parada del bus",
+    "emoji": "🧭",
+    "chapter": 1,
+    "level": 3,
+    "cast": ["coco", "beto", "marta"],
+    "written": true,
+    "vocab": [
+      ["where", "dónde"],
+      ["bus stop", "parada del bus"],
+      ["left", "izquierda"],
+      ["right", "derecha"],
+      ["straight", "derecho"],
+      ["near", "cerca"],
+      ["far", "lejos"]
+    ]
+  },
+  {
+    "order": 4,
+    "slug": "cafe",
+    "title": "El café",
+    "subtitle": "Desayunar antes de la entrevista",
+    "emoji": "☕",
+    "chapter": 1,
+    "level": 3,
+    "cast": ["coco", "cami"],
+    "written": true,
+    "vocab": [
+      ["coffee", "café"],
+      ["tea", "té"],
+      ["cup", "taza"],
+      ["sugar", "azúcar"],
+      ["can I have", "¿me trae?"],
+      ["bill", "cuenta"],
+      ["breakfast", "desayuno"]
+    ]
+  },
+  {
+    "order": 5,
+    "slug": "bus",
+    "title": "El bus",
+    "subtitle": "Boletos, paradas y horarios",
+    "emoji": "🚌",
+    "chapter": 2,
+    "level": 3,
+    "cast": ["coco", "chofer"],
+    "written": true,
+    "vocab": [
+      ["ticket", "boleto"],
+      ["stop", "parada"],
+      ["time", "hora"],
+      ["schedule", "horario"],
+      ["single", "solo ida"],
+      ["return", "ida y vuelta"],
+      ["platform", "plataforma"]
+    ]
+  },
+  {
+    "order": 6,
+    "slug": "laundry",
+    "title": "La lavandería",
+    "subtitle": "Ropa sucia y máquinas",
+    "emoji": "🧺",
+    "chapter": 2,
+    "level": 4,
+    "cast": ["coco", "rosa"],
+    "written": true,
+    "vocab": [
+      ["wash", "lavar"],
+      ["dry", "secar"],
+      ["machine", "máquina"],
+      ["dirty", "sucio"],
+      ["clean", "limpio"],
+      ["coin", "moneda"],
+      ["soap", "jabón"]
+    ]
+  },
+  {
+    "order": 7,
+    "slug": "clothes",
+    "title": "Comprar ropa",
+    "subtitle": "Tallas, colores y precios",
+    "emoji": "👕",
+    "chapter": 2,
+    "level": 4,
+    "cast": ["coco", "nico"],
+    "written": true,
+    "vocab": [
+      ["shirt", "camisa"],
+      ["dress", "vestido"],
+      ["size", "talla"],
+      ["try on", "probarse"],
+      ["expensive", "caro"],
+      ["cheap", "barato"],
+      ["fit", "quedar bien"]
+    ]
+  },
+  {
+    "order": 8,
+    "slug": "landlord",
+    "title": "Llamar al dueño",
+    "subtitle": "El alquiler y una fuga",
+    "emoji": "☎️",
+    "chapter": 2,
+    "level": 4,
+    "cast": ["coco", "sergio"],
+    "written": true,
+    "vocab": [
+      ["call", "llamar"],
+      ["phone", "teléfono"],
+      ["message", "mensaje"],
+      ["rent", "alquiler"],
+      ["apartment", "departamento"],
+      ["tomorrow", "mañana"],
+      ["later", "más tarde"]
+    ]
+  },
+  {
+    "order": 9,
+    "slug": "interview",
+    "title": "La entrevista",
+    "subtitle": "Tu experiencia y tus ganas",
+    "emoji": "💼",
+    "chapter": 3,
+    "level": 4,
+    "cast": ["coco", "sofia"],
+    "written": false,
+    "vocab": [
+      ["job", "trabajo"],
+      ["interview", "entrevista"],
+      ["experience", "experiencia"],
+      ["work", "trabajar"],
+      ["team", "equipo"],
+      ["start", "empezar"],
+      ["skills", "habilidades"]
+    ]
+  },
+  {
+    "order": 10,
+    "slug": "first-day",
+    "title": "El primer día",
+    "subtitle": "Compañeros, reuniones y café",
+    "emoji": "🖥️",
+    "chapter": 3,
+    "level": 5,
+    "cast": ["coco", "sofia", "tere"],
+    "written": false,
+    "vocab": [
+      ["computer", "computadora"],
+      ["meeting", "reunión"],
+      ["break", "descanso"],
+      ["boss", "jefe"],
+      ["colleague", "compañero"],
+      ["lunch", "almuerzo"],
+      ["email", "correo"]
+    ]
+  },
+  {
+    "order": 11,
+    "slug": "friends",
+    "title": "Hacer amigos",
+    "subtitle": "Planes para el fin de semana",
+    "emoji": "🎉",
+    "chapter": 3,
+    "level": 5,
+    "cast": ["coco", "tere", "cami", "marta"],
+    "written": false,
+    "vocab": [
+      ["invite", "invitar"],
+      ["friend", "amigo"],
+      ["together", "juntos"],
+      ["weekend", "fin de semana"],
+      ["movie", "película"],
+      ["drink", "bebida"],
+      ["dance", "bailar"]
+    ]
+  },
+  {
+    "order": 12,
+    "slug": "new-home",
+    "title": "La casa nueva",
+    "subtitle": "Mudanza y vecinos",
+    "emoji": "🏠",
+    "chapter": 3,
+    "level": 5,
+    "cast": ["coco", "sergio", "marta"],
+    "written": false,
+    "vocab": [
+      ["move", "mudarse"],
+      ["furniture", "muebles"],
+      ["neighbour", "vecino"],
+      ["keys", "llaves"],
+      ["home", "hogar"],
+      ["future", "futuro"],
+      ["garden", "jardín"]
+    ]
+  }
+]

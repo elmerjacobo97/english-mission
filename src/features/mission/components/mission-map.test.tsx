@@ -33,8 +33,8 @@ describe("MissionMap", () => {
     expect(screen.getByRole("link", { name: /Jugar/ })).toBeInTheDocument()
     expect(
       screen.getAllByText("Completa la misión anterior para desbloquearla"),
-    ).toHaveLength(3)
-    expect(screen.getAllByText("Próximamente")).toHaveLength(8)
+    ).toHaveLength(7)
+    expect(screen.getAllByText("Próximamente")).toHaveLength(4)
     const nextCard = screen.getByRole("link", { name: /La llegada/ })
     expect(nextCard).toHaveAttribute("href", "/mission/arrival")
     expect(nextCard).toHaveTextContent("Siguiente")
@@ -56,7 +56,7 @@ describe("MissionMap", () => {
     expect(nextCard).not.toHaveTextContent("Siguiente")
     expect(
       screen.getAllByText("Completa la misión anterior para desbloquearla"),
-    ).toHaveLength(2)
+    ).toHaveLength(6)
   })
 
   test("points to the next mission once the first one is mastered", () => {

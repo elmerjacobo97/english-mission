@@ -1,0 +1,104 @@
+[
+  {
+    "kind": "story",
+    "es": "Regresas al departamento. Para la entrevista necesitas ropa limpia, pero toda tu ropa está sucia.",
+    "en": "My clothes are dirty. I need to wash them.",
+    "speaker": "you",
+    "vocab": [
+      ["dirty", "sucio"],
+      ["wash", "lavar"]
+    ],
+    "character": "coco"
+  },
+  {
+    "kind": "choice",
+    "prompt": "Rosa mira tu ropa. ¿Qué palabra significa «sucia»?",
+    "options": ["dirty", "clean", "cheap"],
+    "correct": 0,
+    "character": "rosa",
+    "mood": "curious"
+  },
+  {
+    "kind": "story",
+    "es": "Llegas a la lavandería y Rosa te muestra una máquina vacía.",
+    "en": "Put the clothes in the machine.",
+    "speaker": "rosa",
+    "vocab": [["machine", "máquina"]],
+    "character": "rosa"
+  },
+  {
+    "kind": "order",
+    "prompt": "Rosa te indica dónde poner la ropa.",
+    "tokens": ["the", "Put", "machine", "in", "clothes", "the"],
+    "solution": ["Put", "the", "clothes", "in", "the", "machine"],
+    "character": "rosa",
+    "note": {
+      "title": "Put … in …",
+      "body": "Put significa poner. «Put the clothes in the machine» indica qué objeto entra en la máquina."
+    }
+  },
+  {
+    "kind": "story",
+    "es": "Rosa te entrega jabón y te señala una llave de agua.",
+    "en": "Use soap and water.",
+    "speaker": "rosa",
+    "vocab": [["soap", "jabón"]],
+    "character": "rosa",
+    "mood": "happy"
+  },
+  {
+    "kind": "fill",
+    "prompt": "Completa la instrucción de Rosa.",
+    "sentence": "Use ___ and water.",
+    "answer": "soap",
+    "character": "rosa"
+  },
+  {
+    "kind": "story",
+    "es": "La máquina comienza a trabajar. Primero lava la ropa y después la seca.",
+    "en": "The machine can wash and dry.",
+    "speaker": "rosa",
+    "vocab": [["dry", "secar"]],
+    "character": "rosa"
+  },
+  {
+    "kind": "listen",
+    "prompt": "Escucha a Rosa y elige la frase correcta.",
+    "phrase": "The clothes are clean.",
+    "options": [
+      "The clothes are clean.",
+      "The clothes are dirty.",
+      "The bus is late."
+    ],
+    "correct": 0,
+    "character": "rosa",
+    "note": {
+      "title": "Clean y dirty",
+      "body": "Clean significa limpio y dirty significa sucio. Usa clean cuando la ropa ya salió de la máquina."
+    }
+  },
+  {
+    "kind": "story",
+    "es": "La ropa sale limpia. Solo falta pagar la máquina.",
+    "en": "My clothes are clean now.",
+    "speaker": "you",
+    "vocab": [["clean", "limpio"]],
+    "character": "rosa"
+  },
+  {
+    "kind": "choice",
+    "prompt": "Para usar la máquina necesitas una moneda. ¿Qué palabra eliges?",
+    "options": ["A coin", "A ticket", "A banana"],
+    "correct": 0,
+    "character": "rosa"
+  },
+  {
+    "kind": "story",
+    "es": "Pones una moneda, recoges tu ropa y vuelves a casa con Coco.",
+    "en": "Thanks, Rosa. See you tomorrow.",
+    "speaker": "you",
+    "vocab": [["coin", "moneda"]],
+    "character": "rosa",
+    "mood": "happy"
+  }
+]
