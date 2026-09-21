@@ -65,12 +65,12 @@ export function AppShell({ children, account }: { children: ReactNode; account?:
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col md:grid md:grid-cols-[16rem_minmax(0,1fr)] md:grid-rows-[auto_minmax(0,1fr)] md:border-x-2 md:border-ink/10">
-      <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b-2 border-ink/10 bg-paper/95 px-4 py-3 backdrop-blur md:col-start-2 md:row-start-1 md:px-8">
-        <Link href="/" className="flex items-center gap-2 font-display text-lg font-bold">
+      <header className="sticky top-0 z-30 flex min-w-0 items-center justify-between gap-2 border-b-2 border-ink/10 bg-paper/95 px-3 py-3 backdrop-blur sm:gap-3 sm:px-4 md:col-start-2 md:row-start-1 md:px-8">
+        <Link href="/" className="flex min-w-0 shrink-0 items-center gap-2 font-display text-lg font-bold">
           <MapTrifold weight="fill" size={24} className="text-accent-strong" aria-hidden />
-          English Mission
+          <span className="hidden sm:inline">English Mission</span>
         </Link>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
           <button
             type="button"
             onClick={handleAudioToggle}
@@ -84,18 +84,17 @@ export function AppShell({ children, account }: { children: ReactNode; account?:
               <SpeakerHigh weight="fill" size={19} aria-hidden />
             )}
           </button>
-          {account}
           <span
             key={`coins-${progress.coins}`}
             aria-label={`Monedas: ${progress.coins}`}
-            className="animate-pop flex items-center gap-1.5 rounded-full border-2 border-ink/10 bg-surface px-3 py-2 font-display text-sm font-semibold shadow-card"
+            className="animate-pop flex min-h-11 shrink-0 items-center gap-1 rounded-full border-2 border-ink/10 bg-surface px-2 font-display text-sm font-semibold shadow-card sm:gap-1.5 sm:px-3"
           >
             <Coins weight="duotone" size={18} className="text-accent-strong" aria-hidden />
             {progress.coins}
           </span>
           <span
             key={`streak-${streak.current}`}
-            className="animate-pop flex items-center gap-1.5 rounded-full border-2 border-ink/10 bg-surface px-3 py-2 font-display text-sm font-semibold shadow-card"
+            className="animate-pop flex min-h-11 shrink-0 items-center gap-1 rounded-full border-2 border-ink/10 bg-surface px-2 font-display text-sm font-semibold shadow-card sm:gap-1.5 sm:px-3"
             aria-label={`Racha de ${streak.current} días. Récord: ${streak.best} días`}
             title={`Récord: ${streak.best} días`}
           >
@@ -107,6 +106,7 @@ export function AppShell({ children, account }: { children: ReactNode; account?:
             />
             {streak.current}
           </span>
+          {account}
         </div>
       </header>
 

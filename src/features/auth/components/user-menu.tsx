@@ -1,14 +1,44 @@
 "use client"
 
 import { SignOut, UserCircle } from "@phosphor-icons/react"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { signOut } from "../services/auth.service"
 
 export function UserMenu({ email }: { email: string }) {
   const router = useRouter()
+  const menuRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const [open, setOpen] = useState(false)
   const [pending, setPending] = useState(false)
   const [error, setError] = useState(false)
+
+  useEffect(() => {
+    if (!open) {
+      return
+    }
+
+    function handlePointerDown(event: PointerEvent) {
+      if (!menuRef.current?.contains(event.target as Node)) {
+        setOpen(false)
+      }
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpen(false)
+        triggerRef.current?.focus()
+      }
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown)
+    document.addEventListener("keydown", handleKeyDown)
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown)
+      document.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [open])
 
   async function handleSignOut() {
     setPending(true)
@@ -31,29 +61,46 @@ export function UserMenu({ email }: { email: string }) {
   }
 
   return (
-    <div className="flex max-w-[min(48vw,16rem)] items-center gap-2">
-      <UserCircle
-        weight="duotone"
-        size={20}
-        className="hidden shrink-0 text-teal-strong sm:block"
-        aria-hidden
-      />
-      <span className="min-w-0 truncate text-xs font-semibold text-muted" title={email}>
-        {email}
-      </span>
+    <div ref={menuRef} className="relative shrink-0">
       <button
+        ref={triggerRef}
         type="button"
-        onClick={handleSignOut}
-        disabled={pending}
-        className="flex min-h-10 shrink-0 items-center gap-1 rounded-xl border-2 border-ink/10 bg-surface px-2.5 font-display text-xs font-semibold shadow-card transition hover:-translate-y-0.5 disabled:cursor-wait disabled:opacity-60"
+        onClick={() => setOpen((current) => !current)}
+        aria-label={open ? "Cerrar menú de usuario" : "Abrir menú de usuario"}
+        aria-expanded={open}
+        aria-controls="user-menu"
+        className="flex size-11 items-center justify-center rounded-full border-2 border-ink/10 bg-surface text-teal-strong shadow-card transition hover:-translate-y-0.5 hover:border-teal/30"
       >
-        <SignOut weight="bold" size={16} aria-hidden />
-        {pending ? "Saliendo..." : "Salir"}
+        <UserCircle weight={open ? "fill" : "duotone"} size={27} aria-hidden />
       </button>
-      {error && (
-        <span role="alert" className="sr-only">
-          No pudimos cerrar sesión. Intenta de nuevo.
-        </span>
+      {open && (
+        <div
+          id="user-menu"
+          className="absolute right-0 top-full z-50 mt-2 w-64 max-w-[calc(100vw-1.5rem)] rounded-2xl border-2 border-ink/10 bg-surface p-2 shadow-card"
+        >
+          <p className="px-2 pt-1 font-display text-xs font-semibold uppercase tracking-wide text-muted">
+            Cuenta
+          </p>
+          <p className="truncate px-2 pb-2 text-sm font-semibold text-ink" title={email}>
+            {email}
+          </p>
+          <div className="border-t-2 border-ink/10 pt-2">
+            <button
+              type="button"
+              onClick={handleSignOut}
+              disabled={pending}
+              className="flex min-h-11 w-full items-center gap-2 rounded-xl px-2.5 font-display text-sm font-semibold transition hover:bg-paper disabled:cursor-wait disabled:opacity-60"
+            >
+              <SignOut weight="bold" size={18} aria-hidden />
+              {pending ? "Saliendo..." : "Salir"}
+            </button>
+          </div>
+          {error && (
+            <span role="alert" className="block px-2 pb-1 pt-2 text-xs font-semibold text-error">
+              No pudimos cerrar sesión. Intenta de nuevo.
+            </span>
+          )}
+        </div>
       )}
     </div>
   )

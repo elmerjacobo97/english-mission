@@ -24,11 +24,17 @@ describe("UserMenu", () => {
     navigation.refresh.mockReset()
   })
 
-  test("shows email and signs out to login", async () => {
+  test("opens account dropdown and signs out to login", async () => {
     const user = userEvent.setup()
     render(<UserMenu email="ana@example.com" />)
 
+    const trigger = screen.getByRole("button", { name: "Abrir menú de usuario" })
+    expect(trigger).toHaveAttribute("aria-expanded", "false")
+
+    await user.click(trigger)
+
     expect(screen.getByText("ana@example.com")).toBeInTheDocument()
+    expect(trigger).toHaveAttribute("aria-expanded", "true")
     await user.click(screen.getByRole("button", { name: "Salir" }))
 
     expect(auth.signOut).toHaveBeenCalledOnce()
