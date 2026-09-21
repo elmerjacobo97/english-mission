@@ -30,6 +30,12 @@ Package manager is pnpm; the README's npm/yarn/bun instructions are stale boiler
 - Root layout reads the authenticated user and `readProgress(userId)` on the server. `ProgressProvider` hydrates `progress-store` before app UI renders.
 - Mutations update the store optimistically. `progress-sync.ts` writes absolute section payloads through a FIFO queue, retries failed writes, retries on `online`, and renders `SyncBanner` on errors.
 
+## AI gateway
+
+- `src/shared/lib/ai/gateway.server.ts` is a reusable server-only gateway for structured OpenRouter requests; it uses native `fetch` and validates responses before returning them.
+- `AI_BASE_URL`, `AI_API_KEY`, and `AI_MODEL` are server environment variables. The initial model is `qwen/qwen3.8-27b:free`; `AI_API_KEY` must never use a `NEXT_PUBLIC_` prefix.
+- Client Components must not import `gateway.server.ts` or `config.server.ts`. The gateway does not persist prompts, responses, progress, or personal data, and never returns provider secrets.
+
 ## Specs
 
 Feature work is planned in `specs/NN-slug.md` (spec-driven flow, config in `specs/.spec-config.yml`). `/spec-impl` creates the branch `spec-NN-slug` automatically. Specs 01 (spaced repetition), 02 (daily streak), 03 (coin shop), 04 (looks de Coco), 05 (notebook practice) and 06 (Supabase progress) are implemented — read the one you touch before changing its behavior. Closing is local-only: `/spec-close` commits and merges on `main`; `main` is ahead of `origin/main` and is never pushed.
