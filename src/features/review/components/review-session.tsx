@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowCounterClockwise, ArrowRight } from "@phosphor-icons/react"
+import { ArrowCounterClockwiseIcon, ArrowRightIcon } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useSyncExternalStore } from "react"
 import { ChoiceChallenge } from "@/shared/components/game/choice-challenge"
@@ -27,7 +27,7 @@ export function ReviewSession() {
     return (
       <main className="flex flex-1 flex-col gap-6">
         <PageHeader
-          icon={ArrowCounterClockwise}
+          icon={ArrowCounterClockwiseIcon}
           title="Repaso"
           description="Palabras que ya viste, justo cuando toca repasarlas."
         />
@@ -54,7 +54,7 @@ export function ReviewSession() {
     return (
       <main className="flex flex-1 flex-col gap-6">
         <PageHeader
-          icon={ArrowCounterClockwise}
+          icon={ArrowCounterClockwiseIcon}
           title="Repaso"
           description="Palabras que ya viste, justo cuando toca repasarlas."
         />
@@ -132,7 +132,7 @@ export function ReviewSession() {
                 className="animate-pop flex min-h-11 items-center gap-1.5 justify-self-end rounded-2xl bg-accent-strong px-4 font-display text-sm font-semibold text-white shadow-pop transition active:translate-y-0.5"
               >
                 {run.index + 1 === run.total ? "Ver resumen" : "Continuar"}
-                <ArrowRight weight="bold" size={16} aria-hidden />
+                <ArrowRightIcon weight="bold" size={16} aria-hidden />
               </button>
             ) : canSubmit ? (
               <button

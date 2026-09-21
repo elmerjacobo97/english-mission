@@ -1,9 +1,9 @@
 "use client"
 
 import {
-  ArrowCounterClockwise,
-  BookOpenText,
-  SpeakerHigh,
+  ArrowCounterClockwiseIcon,
+  BookOpenTextIcon,
+  SpeakerHighIcon,
 } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useState, useSyncExternalStore } from "react"
@@ -81,7 +81,7 @@ export function Notebook() {
   return (
     <main className="flex flex-1 flex-col gap-6">
       <PageHeader
-        icon={BookOpenText}
+        icon={BookOpenTextIcon}
         title="Cuaderno"
         description="Tu vocabulario, capítulo a capítulo. Toca una palabra para oírla."
       >
@@ -91,7 +91,7 @@ export function Notebook() {
             className="flex min-h-12 items-center justify-between gap-2.5 rounded-2xl border-2 border-accent/30 bg-paper px-5 font-display font-semibold text-accent-deep shadow-card transition hover:-translate-y-0.5"
           >
             <span className="flex items-center gap-2.5">
-              <ArrowCounterClockwise weight="bold" size={20} aria-hidden />
+              <ArrowCounterClockwiseIcon weight="bold" size={20} aria-hidden />
               Repasar
             </span>
             <span className="rounded-full bg-accent px-2.5 py-0.5 text-sm font-bold text-ink">
@@ -168,7 +168,7 @@ export function Notebook() {
                       aria-label={`Escuchar ${word.en}`}
                       className="flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-2xl border-2 border-ink/10 bg-paper text-teal transition hover:border-teal"
                     >
-                      <SpeakerHigh weight="fill" size={20} aria-hidden />
+                      <SpeakerHighIcon weight="fill" size={20} aria-hidden />
                     </button>
                   )}
                   <button

@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, ArrowRight, SpeakerHigh } from "@phosphor-icons/react"
+import { ArrowLeftIcon, ArrowRightIcon, SpeakerHighIcon } from "@phosphor-icons/react"
 import { useMemo, useState, useSyncExternalStore } from "react"
 import { ChoiceChallenge } from "@/shared/components/game/choice-challenge"
 import { TypeChallenge } from "@/shared/components/game/type-challenge"
@@ -50,7 +50,7 @@ export function NotebookPractice({ word, pool, onExit }: NotebookPracticeProps) 
           onClick={onExit}
           className="flex min-h-11 items-center gap-1.5 rounded-2xl border-2 border-ink/10 bg-surface px-3.5 font-display text-sm font-semibold text-muted shadow-card transition hover:text-ink"
         >
-          <ArrowLeft weight="bold" size={16} aria-hidden />
+          <ArrowLeftIcon weight="bold" size={16} aria-hidden />
           Volver
         </button>
         <p className="truncate font-display text-sm font-semibold text-muted">
@@ -64,7 +64,7 @@ export function NotebookPractice({ word, pool, onExit }: NotebookPracticeProps) 
           onClick={() => speak(speakText)}
           className="flex min-h-12 items-center justify-center gap-2 rounded-2xl border-2 border-teal/30 bg-paper px-5 font-display font-semibold text-teal-strong shadow-card transition hover:-translate-y-0.5"
         >
-          <SpeakerHigh weight="fill" size={20} aria-hidden />
+          <SpeakerHighIcon weight="fill" size={20} aria-hidden />
           Escuchar
         </button>
       )}
@@ -86,7 +86,7 @@ export function NotebookPractice({ word, pool, onExit }: NotebookPracticeProps) 
             className="animate-pop flex min-h-11 items-center gap-1.5 justify-self-end rounded-2xl bg-accent-strong px-4 font-display text-sm font-semibold text-white shadow-pop transition active:translate-y-0.5"
           >
             Continuar
-            <ArrowRight weight="bold" size={16} aria-hidden />
+            <ArrowRightIcon weight="bold" size={16} aria-hidden />
           </button>
         ) : challenge.kind === "type" ? (
           <button

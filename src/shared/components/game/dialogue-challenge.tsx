@@ -1,6 +1,6 @@
 "use client"
 
-import { SpeakerHigh } from "@phosphor-icons/react"
+import { SpeakerHighIcon } from "@phosphor-icons/react"
 import { useState } from "react"
 import { speak } from "@/shared/lib/speech"
 import { useChallengeRun } from "@/shared/hooks/use-challenge-run"
@@ -88,7 +88,7 @@ export function DialogueChallenge({
               disabled={!speechAvailable}
               className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-strong text-white shadow-pop transition active:translate-y-0.5 disabled:hidden"
             >
-              <SpeakerHigh weight="fill" size={22} aria-hidden />
+              <SpeakerHighIcon weight="fill" size={22} aria-hidden />
             </button>
             <p className="font-display text-lg font-semibold text-teal-strong">
               «{beat.line}»

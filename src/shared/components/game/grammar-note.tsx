@@ -1,6 +1,6 @@
 "use client"
 
-import { BookOpenText } from "@phosphor-icons/react"
+import { BookOpenTextIcon } from "@phosphor-icons/react"
 import type { GrammarNote as GrammarNoteData } from "@/shared/lib/game/types/beat"
 import { CharacterAvatar } from "./character-avatar"
 
@@ -16,7 +16,7 @@ export function GrammarNote({ note }: GrammarNoteProps) {
     >
       <summary className="cursor-pointer list-none font-display text-sm font-semibold text-teal-strong [&::-webkit-details-marker]:hidden">
         <span className="inline-flex items-center gap-2">
-          <BookOpenText weight="fill" size={18} aria-hidden />
+          <BookOpenTextIcon weight="fill" size={18} aria-hidden />
           {note.label ?? "Gramática"}: {note.title}
         </span>
       </summary>

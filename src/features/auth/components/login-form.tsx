@@ -1,6 +1,6 @@
 "use client"
 
-import { CheckCircle, EnvelopeSimple } from "@phosphor-icons/react"
+import { CheckCircleIcon, EnvelopeSimpleIcon } from "@phosphor-icons/react"
 import { FormEvent, useState } from "react"
 import { signInWithMagicLink } from "../services/auth.service"
 
@@ -52,7 +52,7 @@ export function LoginForm({ callbackError }: LoginFormProps) {
       <main className="flex min-h-dvh items-center justify-center p-4">
         <section className="flex w-full max-w-md flex-col gap-5 rounded-3xl border-2 border-ink/10 bg-surface p-6 text-center shadow-card sm:p-8">
           <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-success-soft text-success">
-            <CheckCircle weight="fill" size={36} aria-hidden />
+            <CheckCircleIcon weight="fill" size={36} aria-hidden />
           </span>
           <div className="flex flex-col gap-2">
             <h1 className="font-display text-2xl font-bold">Revisa tu correo</h1>
@@ -77,7 +77,7 @@ export function LoginForm({ callbackError }: LoginFormProps) {
       <section className="flex w-full max-w-md flex-col gap-6 rounded-3xl border-2 border-ink/10 bg-surface p-6 shadow-card sm:p-8">
         <div className="flex flex-col gap-4">
           <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent text-accent-deep shadow-pop">
-            <EnvelopeSimple weight="fill" size={30} aria-hidden />
+            <EnvelopeSimpleIcon weight="fill" size={30} aria-hidden />
           </span>
           <div className="flex flex-col gap-2">
             <h1 className="font-display text-3xl font-bold">Entra a tu misión</h1>

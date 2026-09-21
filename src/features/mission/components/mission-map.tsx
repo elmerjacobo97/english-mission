@@ -1,14 +1,14 @@
 "use client"
 
 import {
-  ArrowCounterClockwise,
-  CheckCircle,
-  Fire,
-  Lock,
-  MapTrifold,
-  Play,
-  Star,
-  X,
+  ArrowCounterClockwiseIcon,
+  CheckCircleIcon,
+  FireIcon,
+  LockIcon,
+  MapTrifoldIcon,
+  PlayIcon,
+  StarIcon,
+  XIcon,
 } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useState } from "react"
@@ -49,7 +49,7 @@ export function MissionMap() {
       return (
         <li key={entry.slug} className="relative flex items-start gap-3">
           <span className="z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-dashed border-ink/20 bg-white/70 text-muted">
-            <Lock weight="fill" size={16} aria-hidden />
+            <LockIcon weight="fill" size={16} aria-hidden />
           </span>
           <div className="flex min-w-0 flex-1 items-center gap-3 rounded-3xl border-2 border-dashed border-ink/15 bg-white/40 p-4 text-muted">
             <span className="text-2xl" aria-hidden>
@@ -73,7 +73,7 @@ export function MissionMap() {
       return (
         <li key={entry.slug} className="relative flex items-start gap-3">
           <span className="z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-ink/15 bg-surface font-display font-bold text-muted shadow-card">
-            <Lock weight="fill" size={18} aria-hidden />
+            <LockIcon weight="fill" size={18} aria-hidden />
           </span>
           <div className="flex min-w-0 flex-1 flex-col gap-1 rounded-3xl border-2 border-dashed border-ink/15 bg-white/60 p-4 opacity-80">
             <span className="font-display text-xs font-semibold uppercase tracking-widest text-muted">
@@ -100,7 +100,7 @@ export function MissionMap() {
           }`}
         >
           {completed ? (
-            <CheckCircle weight="fill" size={24} aria-hidden />
+            <CheckCircleIcon weight="fill" size={24} aria-hidden />
           ) : (
             entry.order
           )}
@@ -135,9 +135,9 @@ export function MissionMap() {
           <span className="flex flex-wrap items-center gap-2">
             <span className="flex shrink-0 items-center gap-1.5 rounded-2xl bg-accent-strong px-4 py-2 font-display text-sm font-semibold text-white shadow-pop">
               {completed ? (
-                <ArrowCounterClockwise weight="bold" size={18} aria-hidden />
+                <ArrowCounterClockwiseIcon weight="bold" size={18} aria-hidden />
               ) : (
-                <Play weight="fill" size={18} aria-hidden />
+                <PlayIcon weight="fill" size={18} aria-hidden />
               )}
               {completed ? "Repetir" : "Jugar"}
             </span>
@@ -148,7 +148,7 @@ export function MissionMap() {
                 aria-label={`${stars} de 3 estrellas`}
               >
                 {[1, 2, 3].map((position) => (
-                  <Star
+                  <StarIcon
                     key={position}
                     weight={position <= stars ? "fill" : "regular"}
                     size={18}
@@ -170,7 +170,7 @@ export function MissionMap() {
   return (
     <main className="flex flex-1 flex-col gap-6">
       <PageHeader
-        icon={MapTrifold}
+        icon={MapTrifoldIcon}
         title="Misiones"
         description="Una historia en 12 misiones: de tu primer día a sentirte en casa."
         aside={
@@ -182,7 +182,7 @@ export function MissionMap() {
               title="Reiniciar progreso"
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-ink/10 bg-surface text-muted shadow-card transition hover:text-error"
             >
-              <ArrowCounterClockwise weight="bold" size={18} aria-hidden />
+              <ArrowCounterClockwiseIcon weight="bold" size={18} aria-hidden />
             </button>
           )
         }
@@ -190,7 +190,7 @@ export function MissionMap() {
 
       {pendingMilestone !== null && (
         <div className="animate-slide-in flex items-center gap-3 rounded-3xl border-2 border-accent-deep/20 bg-accent px-5 py-4 shadow-card">
-          <Fire
+          <FireIcon
             weight="fill"
             size={22}
             className="shrink-0 text-error"
@@ -206,7 +206,7 @@ export function MissionMap() {
             aria-label="Cerrar aviso"
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-ink/10 bg-surface text-ink shadow-card transition hover:-translate-y-0.5"
           >
-            <X weight="bold" size={16} aria-hidden />
+            <XIcon weight="bold" size={16} aria-hidden />
           </button>
         </div>
       )}

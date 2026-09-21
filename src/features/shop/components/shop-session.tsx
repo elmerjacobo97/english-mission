@@ -1,6 +1,6 @@
 "use client"
 
-import { Coins, Storefront } from "@phosphor-icons/react"
+import { CoinsIcon, StorefrontIcon } from "@phosphor-icons/react"
 import Link from "next/link"
 import { CharacterAvatar } from "@/shared/components/game/character-avatar"
 import { ChoiceChallenge } from "@/shared/components/game/choice-challenge"
@@ -18,7 +18,7 @@ export function ShopSession() {
   return (
     <main className="flex flex-1 flex-col gap-6">
       <PageHeader
-        icon={Storefront}
+        icon={StorefrontIcon}
         title="Tienda"
         description="Resuelve una palabra que ya viste para ganar monedas y gástalas en looks para Coco."
       />
@@ -95,7 +95,7 @@ export function ShopSession() {
         <section className="flex flex-col gap-4 rounded-3xl border-2 border-ink/10 bg-surface p-6 shadow-card">
           <p className="font-display text-lg font-bold">{`Tu saldo: ${run.coins} monedas`}</p>
           <p className="flex items-center gap-2 font-semibold text-muted">
-            <Coins weight="fill" size={18} aria-hidden />
+            <CoinsIcon weight="fill" size={18} aria-hidden />
             {`Recargas hoy: ${run.usedToday}/${MAX_DAILY_RECHARGES}`}
           </p>
           <p className="text-sm font-semibold text-muted">

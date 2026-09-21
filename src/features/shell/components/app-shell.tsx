@@ -2,14 +2,14 @@
 
 import type { Icon } from '@phosphor-icons/react';
 import {
-  ArrowCounterClockwise,
-  BookOpenText,
-  Coins,
-  Fire,
-  MapTrifold,
-  SpeakerHigh,
-  SpeakerSlash,
-  Storefront,
+  ArrowCounterClockwiseIcon,
+  BookOpenTextIcon,
+  CoinsIcon,
+  FireIcon,
+  MapTrifoldIcon,
+  SpeakerHighIcon,
+  SpeakerSlashIcon,
+  StorefrontIcon,
 } from '@phosphor-icons/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -32,10 +32,10 @@ type ShellNavItem = {
 };
 
 const NAV_ITEMS: ShellNavItem[] = [
-  { href: '/', label: 'Mapa', icon: MapTrifold },
-  { href: '/notebook', label: 'Cuaderno', icon: BookOpenText },
-  { href: '/review', label: 'Repaso', icon: ArrowCounterClockwise },
-  { href: '/shop', label: 'Tienda', icon: Storefront },
+  { href: '/', label: 'Mapa', icon: MapTrifoldIcon },
+  { href: '/notebook', label: 'Cuaderno', icon: BookOpenTextIcon },
+  { href: '/review', label: 'Repaso', icon: ArrowCounterClockwiseIcon },
+  { href: '/shop', label: 'Tienda', icon: StorefrontIcon },
 ];
 
 function isActive(pathname: string, href: string) {
@@ -67,7 +67,7 @@ export function AppShell({ children, account }: { children: ReactNode; account?:
     <div className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col md:grid md:grid-cols-[16rem_minmax(0,1fr)] md:grid-rows-[auto_minmax(0,1fr)] md:border-x-2 md:border-ink/10">
       <header className="sticky top-0 z-30 flex min-w-0 items-center justify-between gap-2 border-b-2 border-ink/10 bg-paper/95 px-3 py-3 backdrop-blur sm:gap-3 sm:px-4 md:col-start-2 md:row-start-1 md:px-8">
         <Link href="/" className="flex min-w-0 shrink-0 items-center gap-2 font-display text-lg font-bold">
-          <MapTrifold weight="fill" size={24} className="text-accent-strong" aria-hidden />
+          <MapTrifoldIcon weight="fill" size={24} className="text-accent-strong" aria-hidden />
           <span className="hidden sm:inline">English Mission</span>
         </Link>
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
@@ -79,9 +79,9 @@ export function AppShell({ children, account }: { children: ReactNode; account?:
             className="flex min-h-11 min-w-11 items-center justify-center rounded-full border-2 border-ink/10 bg-surface text-muted shadow-card transition hover:text-ink"
           >
             {muted ? (
-              <SpeakerSlash weight="fill" size={19} aria-hidden />
+              <SpeakerSlashIcon weight="fill" size={19} aria-hidden />
             ) : (
-              <SpeakerHigh weight="fill" size={19} aria-hidden />
+              <SpeakerHighIcon weight="fill" size={19} aria-hidden />
             )}
           </button>
           <span
@@ -89,7 +89,7 @@ export function AppShell({ children, account }: { children: ReactNode; account?:
             aria-label={`Monedas: ${progress.coins}`}
             className="animate-pop flex min-h-11 shrink-0 items-center gap-1 rounded-full border-2 border-ink/10 bg-surface px-2 font-display text-sm font-semibold shadow-card sm:gap-1.5 sm:px-3"
           >
-            <Coins weight="duotone" size={18} className="text-accent-strong" aria-hidden />
+            <CoinsIcon weight="duotone" size={18} className="text-accent-strong" aria-hidden />
             {progress.coins}
           </span>
           <span
@@ -98,7 +98,7 @@ export function AppShell({ children, account }: { children: ReactNode; account?:
             aria-label={`Racha de ${streak.current} días. Récord: ${streak.best} días`}
             title={`Récord: ${streak.best} días`}
           >
-            <Fire
+            <FireIcon
               weight="duotone"
               size={18}
               className={streak.current > 0 ? 'text-error' : 'text-ink/30'}

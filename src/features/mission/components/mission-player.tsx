@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, ArrowRight } from "@phosphor-icons/react"
+import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react"
 import { useEffect, useSyncExternalStore } from "react"
 import {
   getSpeechSupportServerSnapshot,
@@ -119,7 +119,7 @@ export function MissionPlayer({ mission }: MissionPlayerProps) {
               disabled={run.index === 0}
               className="flex min-h-11 items-center gap-1.5 justify-self-start rounded-2xl border-2 border-ink/10 bg-surface px-3.5 font-display text-sm font-semibold text-muted shadow-card transition hover:text-ink disabled:opacity-40"
             >
-              <ArrowLeft weight="bold" size={16} aria-hidden />
+              <ArrowLeftIcon weight="bold" size={16} aria-hidden />
               Anterior
             </button>
             <span className="justify-self-center font-display text-xs font-semibold text-muted">
@@ -132,7 +132,7 @@ export function MissionPlayer({ mission }: MissionPlayerProps) {
                 className="animate-pop flex min-h-11 items-center gap-1.5 justify-self-end rounded-2xl bg-accent-strong px-4 font-display text-sm font-semibold text-white shadow-pop transition active:translate-y-0.5"
               >
                 Continuar
-                <ArrowRight weight="bold" size={16} aria-hidden />
+                <ArrowRightIcon weight="bold" size={16} aria-hidden />
               </button>
             ) : canSubmit ? (
               <button

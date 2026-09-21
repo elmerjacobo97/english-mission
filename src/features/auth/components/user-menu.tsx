@@ -1,6 +1,6 @@
 "use client"
 
-import { SignOut, UserCircle } from "@phosphor-icons/react"
+import { SignOutIcon, UserCircleIcon } from "@phosphor-icons/react"
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { signOut } from "../services/auth.service"
@@ -71,7 +71,7 @@ export function UserMenu({ email }: { email: string }) {
         aria-controls="user-menu"
         className="flex size-11 items-center justify-center rounded-full border-2 border-ink/10 bg-surface text-teal-strong shadow-card transition hover:-translate-y-0.5 hover:border-teal/30"
       >
-        <UserCircle weight={open ? "fill" : "duotone"} size={27} aria-hidden />
+        <UserCircleIcon weight={open ? "fill" : "duotone"} size={27} aria-hidden />
       </button>
       {open && (
         <div
@@ -91,7 +91,7 @@ export function UserMenu({ email }: { email: string }) {
               disabled={pending}
               className="flex min-h-11 w-full items-center gap-2 rounded-xl px-2.5 font-display text-sm font-semibold transition hover:bg-paper disabled:cursor-wait disabled:opacity-60"
             >
-              <SignOut weight="bold" size={18} aria-hidden />
+              <SignOutIcon weight="bold" size={18} aria-hidden />
               {pending ? "Saliendo..." : "Salir"}
             </button>
           </div>

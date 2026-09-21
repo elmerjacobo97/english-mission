@@ -1,6 +1,6 @@
 "use client"
 
-import { CheckCircle, Lightbulb, XCircle } from "@phosphor-icons/react"
+import { CheckCircleIcon, LightbulbIcon, XCircleIcon } from "@phosphor-icons/react"
 import type { ReactNode } from "react"
 import type { GrammarNote as GrammarNoteData } from "@/shared/lib/game/types/beat"
 import type { ChallengeFeedback } from "@/shared/lib/game/types/run"
@@ -74,7 +74,7 @@ export function ChallengeFrame({
 
       {hint ? (
         <p className="animate-slide-in flex items-start gap-2 rounded-2xl border-2 border-accent/25 bg-paper px-4 py-3 text-sm font-semibold text-accent-deep">
-          <Lightbulb
+          <LightbulbIcon
             weight="fill"
             size={18}
             className="mt-0.5 shrink-0"
@@ -91,7 +91,7 @@ export function ChallengeFrame({
               disabled={!canAffordHint}
               className="flex min-h-11 items-center gap-2 self-start rounded-2xl border-2 border-accent/30 bg-paper px-4 font-display text-sm font-semibold text-accent-deep transition hover:bg-accent/10 disabled:opacity-40"
             >
-              <Lightbulb weight="fill" size={18} aria-hidden />
+              <LightbulbIcon weight="fill" size={18} aria-hidden />
               {freeHints ? "Pista gratis" : `Pista · ${hintCost} monedas`}
             </button>
             {!canAffordHint && (
@@ -117,21 +117,21 @@ export function ChallengeFrame({
           >
             <p className="flex items-start gap-2 font-display font-semibold">
               {feedback.tone === "success" ? (
-                <CheckCircle
+                <CheckCircleIcon
                   weight="fill"
                   size={22}
                   className="mt-0.5 shrink-0"
                   aria-hidden
                 />
               ) : feedback.tone === "info" ? (
-                <Lightbulb
+                <LightbulbIcon
                   weight="fill"
                   size={22}
                   className="mt-0.5 shrink-0"
                   aria-hidden
                 />
               ) : (
-                <XCircle
+                <XCircleIcon
                   weight="fill"
                   size={22}
                   className="mt-0.5 shrink-0"

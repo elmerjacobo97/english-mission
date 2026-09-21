@@ -1,10 +1,10 @@
 "use client"
 
 import {
-  ArrowCounterClockwise,
-  Coins,
-  MapTrifold,
-  Star,
+  ArrowCounterClockwiseIcon,
+  CoinsIcon,
+  MapTrifoldIcon,
+  StarIcon,
 } from "@phosphor-icons/react"
 import Link from "next/link"
 import { useEffect, useRef } from "react"
@@ -62,7 +62,7 @@ export function MissionComplete({
           aria-label={`${stars} de 3 estrellas`}
         >
           {[1, 2, 3].map((position) => (
-            <Star
+            <StarIcon
               key={position}
               weight={position <= stars ? "fill" : "regular"}
               size={32}
@@ -95,7 +95,7 @@ export function MissionComplete({
             <dt>Pruebas superadas</dt>
             <dd className="flex items-center gap-1.5 font-display">
               +{earned}
-              <Coins
+              <CoinsIcon
                 weight="duotone"
                 size={18}
                 className="text-accent-strong"
@@ -108,7 +108,7 @@ export function MissionComplete({
               <dt>Bonus de misión</dt>
               <dd className="flex items-center gap-1.5 font-display">
                 +{completionBonus}
-                <Coins
+                  <CoinsIcon
                   weight="duotone"
                   size={18}
                   className="text-accent-strong"
@@ -122,7 +122,7 @@ export function MissionComplete({
               <dt>Bonus 3 estrellas</dt>
               <dd className="flex items-center gap-1.5 font-display">
                 +{threeStarBonus}
-                <Coins
+                <CoinsIcon
                   weight="duotone"
                   size={18}
                   className="text-accent-strong"
@@ -135,7 +135,7 @@ export function MissionComplete({
             <dt>Total ganado</dt>
             <dd className="flex items-center gap-1.5">
               +{totalPaid}
-              <Coins
+              <CoinsIcon
                 weight="fill"
                 size={18}
                 className="text-accent-strong"
@@ -152,14 +152,14 @@ export function MissionComplete({
           onClick={onRestart}
           className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-accent-strong px-5 font-display font-semibold text-white shadow-pop transition active:translate-y-0.5"
         >
-          <ArrowCounterClockwise weight="bold" size={18} aria-hidden />
+          <ArrowCounterClockwiseIcon weight="bold" size={18} aria-hidden />
           Jugar otra vez
         </button>
         <Link
           href="/"
           className="flex min-h-12 items-center justify-center gap-2 rounded-2xl border-2 border-ink/10 bg-surface px-5 font-display font-semibold shadow-card transition hover:border-accent hover:bg-paper"
         >
-          <MapTrifold weight="fill" size={18} aria-hidden />
+          <MapTrifoldIcon weight="fill" size={18} aria-hidden />
           Volver al mapa
         </Link>
       </div>

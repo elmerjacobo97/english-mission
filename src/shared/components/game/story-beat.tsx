@@ -1,6 +1,6 @@
 "use client"
 
-import { Eye, SpeakerHigh } from "@phosphor-icons/react"
+import { EyeIcon, SpeakerHighIcon } from "@phosphor-icons/react"
 import { useEffect, useState } from "react"
 import { speak, stopSpeaking } from "@/shared/lib/speech"
 import { CHARACTERS } from "@/shared/lib/game/content/characters"
@@ -68,7 +68,7 @@ export function StoryBeat({
                   aria-label="Reproducir en inglés"
                   className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-strong text-white shadow-pop transition active:translate-y-0.5"
                 >
-                  <SpeakerHigh weight="fill" size={22} aria-hidden />
+                  <SpeakerHighIcon weight="fill" size={22} aria-hidden />
                 </button>
               )}
               <span className="flex flex-col gap-1">
@@ -98,7 +98,7 @@ export function StoryBeat({
                     onClick={() => setRevealed(true)}
                     className="flex min-h-11 items-center gap-2 self-start rounded-2xl border-2 border-teal/30 bg-surface px-4 font-display text-sm font-semibold text-teal-strong"
                   >
-                    <Eye weight="bold" size={18} aria-hidden />
+                    <EyeIcon weight="bold" size={18} aria-hidden />
                     Ver texto
                   </button>
                 )}
@@ -121,7 +121,7 @@ export function StoryBeat({
                 >
                   <span className="font-display text-teal-strong">{en}</span>
                   <span className="text-muted">· {es}</span>
-                  <SpeakerHigh size={13} className="text-teal" aria-hidden />
+                  <SpeakerHighIcon size={13} className="text-teal" aria-hidden />
                 </button>
               ) : (
                 <span className="flex min-h-9 items-center gap-1.5 rounded-full border-2 border-teal/25 bg-white px-3 py-1.5 text-sm font-semibold">
