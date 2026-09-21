@@ -7,6 +7,8 @@ import {
   Star,
 } from "@phosphor-icons/react"
 import Link from "next/link"
+import { useEffect, useRef } from "react"
+import { playSound } from "@/shared/lib/audio"
 import type { Stars } from "@/shared/lib/progress/types"
 import type { Mission } from "@/shared/lib/game/types/mission"
 import { MissionStamp } from "./mission-stamp"
@@ -32,6 +34,16 @@ export function MissionComplete({
   isReplay,
   onRestart,
 }: MissionCompleteProps) {
+  const completionSoundPlayed = useRef(false)
+
+  useEffect(() => {
+    if (completionSoundPlayed.current) {
+      return
+    }
+    completionSoundPlayed.current = true
+    playSound("mission-complete")
+  }, [])
+
   return (
     <section className="animate-rise relative flex flex-col items-center gap-5 rounded-3xl border-2 border-ink/10 bg-surface p-6 text-center shadow-card">
       <MissionStamp

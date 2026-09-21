@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { playSound } from "@/shared/lib/audio"
 import type { ChallengeFeedback, ChallengeOutcome } from "@/shared/lib/game/types/run"
 import type { DifficultyProfile } from "@/shared/lib/game/utils/difficulty"
 import {
@@ -41,6 +42,7 @@ export function useChallengeRun({
   )
 
   function registerSuccess() {
+    playSound("correct")
     setSolved(true)
     onSolved({
       reward: coinsForAttempt(wrongAttempts, profile),
@@ -56,6 +58,7 @@ export function useChallengeRun({
   }
 
   function registerMistake(message: string) {
+    playSound("incorrect")
     const attempts = wrongAttempts + 1
     setWrongAttempts(attempts)
 

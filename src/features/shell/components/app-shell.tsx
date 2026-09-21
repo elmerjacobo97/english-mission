@@ -1,12 +1,28 @@
 'use client';
 
 import type { Icon } from '@phosphor-icons/react';
-import { ArrowCounterClockwise, BookOpenText, Coins, Fire, MapTrifold, Storefront } from '@phosphor-icons/react';
+import {
+  ArrowCounterClockwise,
+  BookOpenText,
+  Coins,
+  Fire,
+  MapTrifold,
+  SpeakerHigh,
+  SpeakerSlash,
+  Storefront,
+} from '@phosphor-icons/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type { ReactNode } from 'react';
+import { useSyncExternalStore, type ReactNode } from 'react';
 import { useDueReviews } from '@/shared/hooks/use-due-reviews';
 import { APP_VERSION } from '@/shared/lib/app-version';
+import {
+  getAudioServerSnapshot,
+  getAudioSnapshot,
+  subscribeAudio,
+  toggleMuted,
+} from '@/shared/lib/audio';
+import { stopSpeaking } from '@/shared/lib/speech';
 import { useProgress } from '@/shared/hooks/use-progress';
 
 type ShellNavItem = {
@@ -34,6 +50,18 @@ export function AppShell({ children, account }: { children: ReactNode; account?:
   const dueCount = useDueReviews();
   const { progress } = useProgress();
   const { streak } = progress;
+  const { muted } = useSyncExternalStore(
+    subscribeAudio,
+    getAudioSnapshot,
+    getAudioServerSnapshot,
+  );
+
+  function handleAudioToggle() {
+    const nextMuted = toggleMuted();
+    if (nextMuted) {
+      stopSpeaking();
+    }
+  }
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col md:grid md:grid-cols-[16rem_minmax(0,1fr)] md:grid-rows-[auto_minmax(0,1fr)] md:border-x-2 md:border-ink/10">
@@ -43,6 +71,19 @@ export function AppShell({ children, account }: { children: ReactNode; account?:
           English Mission
         </Link>
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleAudioToggle}
+            aria-label={muted ? 'Activar audio' : 'Silenciar audio'}
+            aria-pressed={muted}
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-full border-2 border-ink/10 bg-surface text-muted shadow-card transition hover:text-ink"
+          >
+            {muted ? (
+              <SpeakerSlash weight="fill" size={19} aria-hidden />
+            ) : (
+              <SpeakerHigh weight="fill" size={19} aria-hidden />
+            )}
+          </button>
           {account}
           <span
             key={`coins-${progress.coins}`}

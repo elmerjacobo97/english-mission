@@ -16,6 +16,12 @@ vi.mock("@/shared/lib/speech", async (importOriginal) => {
 })
 
 function withSpeech(): void {
+  vi.stubGlobal(
+    "SpeechSynthesisUtterance",
+    class {
+      constructor(readonly text: string) {}
+    },
+  )
   vi.stubGlobal("speechSynthesis", {
     cancel: vi.fn(),
     getVoices: () => [],

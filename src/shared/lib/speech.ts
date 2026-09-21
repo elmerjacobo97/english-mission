@@ -1,7 +1,16 @@
+import { isMuted } from "@/shared/lib/audio"
+
 let cachedVoice: SpeechSynthesisVoice | null = null
 
 export function isSpeechSupported(): boolean {
-  return typeof window !== "undefined" && "speechSynthesis" in window
+  return (
+    typeof window !== "undefined" &&
+    typeof window.speechSynthesis !== "undefined" &&
+    typeof window.speechSynthesis.cancel === "function" &&
+    typeof window.speechSynthesis.getVoices === "function" &&
+    typeof window.speechSynthesis.speak === "function" &&
+    typeof SpeechSynthesisUtterance !== "undefined"
+  )
 }
 
 function pickVoice(): SpeechSynthesisVoice | null {
@@ -23,7 +32,7 @@ function pickVoice(): SpeechSynthesisVoice | null {
 }
 
 export function speak(text: string, rate = 0.9): void {
-  if (!isSpeechSupported()) {
+  if (isMuted() || !isSpeechSupported()) {
     return
   }
   window.speechSynthesis.cancel()
