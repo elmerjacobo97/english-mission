@@ -10,60 +10,42 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # English Mission
 
-Narrative English-learning game. Next.js 16.3.5 App Router + React 19 + Tailwind v4 + TypeScript. Supabase Auth + Postgres store progress; runtime needs public Supabase environment variables.
+Narrative English-learning game. Spanish is UI and narration; English is learning material. Stack: Next.js 16.3.5 App Router, React 19, Tailwind CSS 4, TypeScript, Supabase.
 
 ## Commands
 
-Package manager is pnpm; the README's npm/yarn/bun instructions are stale boilerplate. The user runs everything through `rtk` (CLI output proxy that compresses command output), so keep the `rtk` prefix when running and reporting commands.
+- Use `pnpm@11.21.0`; README npm/yarn/bun snippets are stale. Run repo commands through `rtk`.
+- Setup: copy `.env.example` to `.env.local`, fill required values, then run `rtk pnpm dev`.
+- Main checks: `rtk pnpm lint`, `rtk tsc --noEmit`, `rtk pnpm test`, `rtk pnpm build`.
+- Focused test: `rtk pnpm test path/to/file.test.tsx`. `rtk vitest run <file>` hides stdout and writes `.vitest/json/output.json`.
+- Run `rtk pnpm dev` or `rtk pnpm build` once before typecheck when `.next/types` is missing; Next generates typed-route files and ignored `next-env.d.ts`.
+- Before finishing: `rtk pnpm lint && rtk tsc --noEmit && rtk pnpm test`.
 
-- `rtk pnpm dev` / `rtk pnpm build` / `rtk pnpm test` / `rtk pnpm lint`
-- Single test file: `rtk pnpm test src/shared/components/game/choice-challenge.test.tsx`
-- Typecheck has no script: `rtk tsc --noEmit` (equivalent to `pnpm exec tsc --noEmit`). Run `rtk pnpm dev` or `rtk pnpm build` at least once so `next-env.d.ts` can resolve the generated `.next/types/*` typed-route files.
-- Verify before finishing: `rtk pnpm lint && rtk tsc --noEmit && rtk pnpm test`.
-- `rtk vitest run <file>` also works but hides stdout; read results from the JSON report it writes to `.vitest/json/output.json`.
+## Runtime
 
-## Supabase
+- Required Supabase variables: `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Keep secrets in `.env.local`; `.env*` is ignored except `.env.example`.
+- Optional provider variables are listed in `.env.example`: `AI_*` for the server-only OpenRouter gateway and `TRANSCRIPT_*` for the server-only Supadata provider. Keep `AI_API_KEY` and `TRANSCRIPT_API_KEY` out of client code and never use `NEXT_PUBLIC_` prefixes. Transcript mode is `native`.
+- Versioned files in `supabase/migrations/` are database source of truth; link a project, then apply with `rtk supabase db push`. Do not create a competing `schema.sql`.
+- Auth is magic-link only. `src/proxy.ts` refreshes sessions and protects pages; `src/app/auth/confirm/route.ts` exchanges callback codes. Configure Supabase Auth redirect URLs for local and deployed hosts.
 
-- Required variables: `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Keep values in `.env.local`; never commit secrets.
-- Supabase schema uses versioned migrations in `supabase/migrations/`; after linking a project, apply them with `rtk supabase db push`. Migrations define six Progress v6 tables and video tables with RLS; `schema.sql` is not a source of truth.
-- Auth uses Supabase magic links only. `src/proxy.ts` refreshes sessions and protects app routes; `src/app/auth/confirm/route.ts` exchanges callback codes.
-- Root layout reads the authenticated user and `readProgress(userId)` on the server. `ProgressProvider` hydrates `progress-store` before app UI renders.
-- Mutations update the store optimistically. `progress-sync.ts` writes absolute section payloads through a FIFO queue, retries failed writes, retries on `online`, and renders `SyncBanner` on errors.
+## Structure
 
-## AI gateway
+- Dependency direction: `src/app` routes compose `src/features/*`; features use `src/shared/*`; shared code must not import features and features must not import each other. Current feature slices: `auth`, `mission`, `review`, `shell`, `shop`, `videos`.
+- `(app)` routes are wrapped by `AppShell`. Use global Next route types such as `PageProps<'/mission/[slug]'>` and `LayoutProps<'/'>`; do not define imported page-prop types. Use `PageHeader` for new pages.
+- Put server-only work in files marked with `import "server-only"`; client components must not import server gateways, repositories, or config. AI gateway: `src/shared/lib/ai/gateway.server.ts`. Video provider/repository: `src/features/videos/server/`.
+- Progress is module state, version 6: `{ coins, missions, reviews, streak, shop, looks }`. Root layout reads it on the server; `ProgressProvider` hydrates the store. Mutations are optimistic and sync absolute section payloads through a FIFO queue with retry and `online` recovery. Do not add progress to `localStorage`.
 
-- `src/shared/lib/ai/gateway.server.ts` is a reusable server-only gateway for structured OpenRouter requests; it uses native `fetch` and validates responses before returning them.
-- `AI_BASE_URL`, `AI_API_KEY`, and `AI_MODEL` are server environment variables. The initial model is `qwen/qwen3.8-27b:free`; `AI_API_KEY` must never use a `NEXT_PUBLIC_` prefix.
-- Client Components must not import `gateway.server.ts` or `config.server.ts`. The gateway does not persist prompts, responses, progress, or personal data, and never returns provider secrets.
+## Content And Specs
 
-## Specs
+- Curriculum source: `src/shared/lib/curriculum/`. `plan.json` has 12 ordered entries; written beats live in `missions/` and are joined by `mission-catalog.ts`. Adding a mission requires the plan entry, beats JSON, catalog entry, and `written: true`.
+- Read `src/shared/lib/curriculum/curriculum.test.ts` before content edits. It enforces 6-12 vocab words, 8-16 beats, at least 3 challenges, level-allowed challenge kinds, zero orphan vocab, at least 3 recycled words after mission 1, at least 2 grammar notes with 21-280 character bodies, and cast consistency.
+- That test also scans non-test `src/**/*.ts(x)` for Spain regionalisms. Keep UI, narration, comments, and curriculum Spanish neutral for Latin America.
+- Feature behavior belongs in `specs/NN-slug.md`; read the relevant spec first. `specs/.spec-config.yml` enables automatic `spec-NN-slug` branches. `/spec-close` is local-only: merge on `main`, never push.
 
-Feature work is planned in `specs/NN-slug.md` (spec-driven flow, config in `specs/.spec-config.yml`). `/spec-impl` creates the branch `spec-NN-slug` automatically. Specs 01 (spaced repetition), 02 (daily streak), 03 (coin shop), 04 (looks de Coco), 05 (notebook practice), 06 (Supabase progress) and 09 (YouTube videos) are implemented — read the one you touch before changing its behavior. Closing is local-only: `/spec-close` commits and merges on `main`; `main` is ahead of `origin/main` and is never pushed.
+## Tests
 
-## Content invariants
+- Vitest uses jsdom and Testing Library. Tests are colocated as `*.test.ts(x)`. `src/test/setup.ts` cleans the DOM and resets progress after every test; shared fixtures live in `src/test/fixtures.ts`.
+- Challenge submit control is outside its form and targets `form="challenge-form"`; use `src/test/submit-challenge.ts` in challenge tests.
+- Run tests from repository root because curriculum validation reads `src/` from `process.cwd()`.
 
-Curriculum lives in `src/shared/lib/curriculum/`: `plan.json` holds 12 mission entries; `plan.ts` exposes typed JSON data; beats live in `missions/mission-XX-*.json`; `mission-catalog.ts` joins them by slug (`beatsBySlug`). Adding a mission means: plan entry, beats JSON, `beatsBySlug` entry, `written: true`.
-
-`src/shared/lib/curriculum/curriculum.test.ts` enforces hard rules on every content edit — read it before writing mission material. Summary: 6–12 vocab words per mission; 8–16 beats with ≥3 challenges; challenge kinds must be allowed by that level's profile in `src/shared/lib/game/utils/difficulty.ts`; every declared vocab word must appear in the mission's English material (zero orphans); ≥3 words recycled from earlier missions; ≥2 grammar notes with body 20–280 chars; beat characters must be in the mission's `cast`.
-
-The same test suite scans all of `src/` for Spain regionalisms (`SPAINISMS` in `src/shared/lib/curriculum/curriculum.ts`), skipping `curriculum.ts` itself and test files. Keep every string — content, UI copy, comments — in neutral Latin American Spanish. Spanish is the UI/narration language; English is the learning material.
-
-## Architecture
-
-- `src/app` — thin routes only. The `(app)` route group wraps `/` map, `/notebook`, `/review`, `/shop`, `/mission/[slug]` and `/videos` in `AppShell`. Route pages use Next 16 global types (`PageProps<'/mission/[slug]'>`, `LayoutProps<'/'>`), not imported prop types.
-- Structure: `src/app` (routes) → `src/features/*` (domain slices) → `src/shared/{components,hooks,lib}` (reusable code). Dependency direction `app -> features -> shared`; `src/features/*` never import each other and `src/shared/*` never imports features. Each feature slice keeps `components/` and `hooks/` (shop adds `utils/`); put new slice code there.
-- Boundaries: shared game code lives in `src/shared/`: `lib/game` (`types/`, `utils/` with `difficulty`/`rewards`/`answer-check`, `content/` with `characters`/`coco-looks`), `lib/curriculum` (plan, catalog, missions, validation utils), `lib/review` (spaced repetition: `schedule`, `review-queue`, `review-exercise`), `hooks/` (`use-challenge-run`, `use-due-reviews`, `use-progress`), `components/game` (challenge UI) and `components/page-header.tsx`.
-- `src/features/shell` — `app-shell.tsx` (desktop sidebar / mobile bottom bar, coins + streak header). Reuse `PageHeader` from `src/shared/components/page-header.tsx` for any new page so titles and descriptions stay homologated.
-- `src/features/videos` — `/videos` transcript library: server-only Supadata client and Supabase repository under `server/`; URL and transcript rules under `utils/`; player, transcript, library and session UI under `components/`, with library/session hooks under `hooks/`. Provider config uses server-only `TRANSCRIPT_BASE_URL`, `TRANSCRIPT_API_KEY`, and `TRANSCRIPT_MODE=native`.
-- `src/features/mission` — mission-facing UI in `components/`: `mission-map.tsx`, `mission-player.tsx`, `mission-complete.tsx`, `mission-stamp.tsx`, `notebook.tsx` (inline solo challenge via `notebook-practice.tsx`); hook in `hooks/use-mission-run.ts`. Beats are `story` or one of six challenge kinds (`choice`, `order`, `type`, `fill`, `listen`, `dialogue`); `mission-player.tsx` builds the shared challenge props and renders one component per `beat.kind` from `src/shared/components/game`. The submit button lives outside the form and targets `form="challenge-form"` (tests submit via `src/test/submit-challenge.ts`). Coin/star math is pure in `src/shared/lib/game/utils/rewards.ts`; per-level rules (allowed kinds, hints, narration style) in `src/shared/lib/game/utils/difficulty.ts`.
-- `src/shared/lib/progress` — module-level v6 store hydrated from server data and synced to Supabase; no localStorage. Shape `{ coins, missions, reviews, streak, shop, looks }`; pure rules in `streak.ts`, `shop.ts` and `looks.ts` (looks de Coco: `isOwned`, `canBuy`, `nextLooks`, `LOOK_PRICES`). `progress-mappers.ts` maps six database rows; `progress-repository.server.ts` reads and initializes progress; `progress-sync.ts` owns FIFO writes and retry state. Consumed through `useSyncExternalStore` (`src/shared/hooks/use-progress.ts`), with stable server snapshots for hydration safety.
-- `src/features/review` — Leitner spaced repetition behind `/review`: 1/3/7-day boxes, cards keyed by the lowercase trimmed English word, only completed-mission vocab enters the pool, due queue capped at 10 (`components/review-session.tsx`, `components/review-summary.tsx`, `hooks/use-review-run.ts`). `src/shared/lib/review/` is pure logic; components reuse `ChoiceChallenge`/`TypeChallenge`/`ListenChallenge` from `src/shared/components/game` with `rewardsEnabled: false` and free hints that still count as failures.
-- `src/features/shop` — recharge mini-quiz behind `/shop` (`components/shop-session.tsx`, `hooks/use-shop-run.ts`, `utils/shop-exercise.ts`): max 3 paid recharges per local day (`src/shared/lib/progress/shop.ts`), level-1 profile payout through `coinsForAttempt`. Below it, the always-visible Coco look catalog (`src/shared/lib/game/content/coco-looks.ts`); buying equips via `selectLook`.
-- `src/shared/lib/audio.ts` — session-only mute state and local MP3 effects (`correct`, `incorrect`, `mission-complete`); playback failures are silent and muting stops active effects.
-- `src/shared/lib/speech.ts` — browser SpeechSynthesis only; playback is user-triggered (🔊 buttons), no autoplay, and it shares the audio mute state.
-- `src/shared/lib/app-version.ts` — `APP_VERSION` string shown in `AppShell`; bump together with `package.json` on releases.
-- Styling: Tailwind v4 tokens declared in `src/app/globals.css` `@theme` (`bg-surface`, `text-ink`, `shadow-card`, `font-display`). Fonts via `next/font` (Fredoka display, Nunito body). Phosphor icons for chrome; emoji stay in narrative content.
-
-## Testing
-
-Vitest + jsdom + Testing Library; test files sit next to the code as `*.test.ts(x)`. `src/test/setup.ts` resets the DOM and progress store after every test, so tests start clean. Shared fixtures in `src/test/fixtures.ts`. `curriculum.test.ts` validates imported JSON and scans source files from disk via `process.cwd()`, so run tests from the repo root.
+`CLAUDE.md` delegates to this file; keep repository guidance in `AGENTS.md`.
