@@ -10,6 +10,7 @@ import {
   SpeakerHighIcon,
   SpeakerSlashIcon,
   StorefrontIcon,
+  VideoCameraIcon,
 } from '@phosphor-icons/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -36,6 +37,7 @@ const NAV_ITEMS: ShellNavItem[] = [
   { href: '/notebook', label: 'Cuaderno', icon: BookOpenTextIcon },
   { href: '/review', label: 'Repaso', icon: ArrowCounterClockwiseIcon },
   { href: '/shop', label: 'Tienda', icon: StorefrontIcon },
+  { href: '/videos', label: 'Videos', icon: VideoCameraIcon },
 ];
 
 function isActive(pathname: string, href: string) {

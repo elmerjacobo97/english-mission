@@ -13,7 +13,7 @@ Narrative English-learning game. Spanish is the interface language; English is t
 
 1. Copy `.env.example` to `.env.local`.
 2. Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in `.env.local`.
-3. Paste `supabase/schema.sql` into the Supabase SQL Editor and run it.
+3. Link Supabase CLI with your project using `rtk supabase link --project-ref <project-ref>`, then apply versioned migrations with `rtk supabase db push`.
 4. Add `http://localhost:3000/**` to Supabase Auth Redirect URLs.
 5. Start development with `rtk pnpm dev`.
 

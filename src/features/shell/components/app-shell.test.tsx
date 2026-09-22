@@ -24,11 +24,11 @@ describe("AppShell", () => {
     vi.mocked(stopSpeaking).mockClear()
   })
 
-  test("renders the four destinations and the content", () => {
+  test("renders the five destinations and the content", () => {
     render(<AppShell>contenido de la página</AppShell>)
 
     const nav = screen.getByRole("navigation", { name: "Navegación" })
-    expect(within(nav).getAllByRole("link")).toHaveLength(4)
+    expect(within(nav).getAllByRole("link")).toHaveLength(5)
     expect(within(nav).getByRole("link", { name: "Mapa" })).toHaveAttribute(
       "href",
       "/",
@@ -44,6 +44,10 @@ describe("AppShell", () => {
     expect(within(nav).getByRole("link", { name: "Tienda" })).toHaveAttribute(
       "href",
       "/shop",
+    )
+    expect(within(nav).getByRole("link", { name: "Videos" })).toHaveAttribute(
+      "href",
+      "/videos",
     )
     expect(screen.getByText("contenido de la página")).toBeInTheDocument()
   })
