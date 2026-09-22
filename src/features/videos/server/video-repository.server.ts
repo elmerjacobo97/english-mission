@@ -189,7 +189,7 @@ async function findVideo(
 export type VideoProcessingClaim =
   | { status: "claimed"; claimToken: string }
   | {
-      status: "existing" | "processing" | "library-full" | "daily-limit"
+      status: "existing" | "processing" | "library-full"
       claimToken: null
     }
 
@@ -225,8 +225,7 @@ async function claimProcessing(
   if (
     result.data.status === "existing" ||
     result.data.status === "processing" ||
-    result.data.status === "library-full" ||
-    result.data.status === "daily-limit"
+    result.data.status === "library-full"
   ) {
     return { status: result.data.status, claimToken: null }
   }

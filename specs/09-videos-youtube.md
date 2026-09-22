@@ -19,13 +19,12 @@
 - Mostrar título y thumbnail del video.
 - Guardar automáticamente video procesado y segmentos completos en una fila JSONB de Supabase.
 - Mantener biblioteca máxima de 20 videos por usuario.
-- Reabrir videos duplicados sin consumir nueva cuota.
+- Reabrir videos duplicados sin pedir otro transcript.
 - Listar, abrir y eliminar videos guardados.
 - Guardar posición al pausar o salir y reanudar desde esa posición.
-- Limitar procesamiento a 10 videos nuevos por usuario y día.
-- Mostrar estados claros para URL inválida, transcript no disponible, idioma no inglés, video no reproducible, límite alcanzado y proveedor no disponible.
+- Mostrar estados claros para URL inválida, transcript no disponible, idioma no inglés, video no reproducible, biblioteca llena y proveedor no disponible.
 - Mantener API key de Supadata exclusivamente en servidor.
-- Agregar pruebas para validación, proveedor, persistencia, sincronización, cuota y estados de error.
+- Agregar pruebas para validación, proveedor, persistencia, sincronización, límite de biblioteca y estados de error.
 - Mantener `Progress` versión 6 sin mezclar biblioteca de videos con monedas, misiones, racha o repaso.
 
 **Fuera de alcance (para specs futuras):**
@@ -83,25 +82,14 @@ updated_at timestamptz
 primary key (user_id, video_id)
 ```
 
-Tabla `public.video_processing_usage`:
-
-```sql
-user_id uuid
-day date
-count smallint
-primary key (user_id, day)
-```
-
 Convenciones:
 
 - `video_id` es identidad canónica. URL duplicada reabre registro existente.
 - `segments` guarda segmentos completos con tiempos en milisegundos.
 - `position_ms` guarda última posición válida del video.
 - Biblioteca aplica RLS con `auth.uid() = user_id`.
-- Cuota se incrementa mediante operación atómica en DB.
-- Cada solicitud nueva enviada a Supadata consume una unidad.
-- Video ya guardado no consume cuota.
-- Cuota usa día UTC y máximo 10 solicitudes.
+- El único tope es 20 videos guardados por usuario. Borrar uno libera un lugar.
+- Video ya guardado se reabre sin pedir otro transcript.
 - Segmentos solo se guardan después de respuesta válida de Supadata.
 - Transcript solo acepta idioma `en`.
 - Respuesta cruda del proveedor no se persiste.
@@ -122,15 +110,15 @@ TRANSCRIPT_MODE=native
 
 - [x] 1.1 Crear tipos `TranscriptSegment` y `VideoLibraryItem`, parser de URL de YouTube y normalizador de segmentos en `src/features/videos/utils/`; cubrir URLs válidas, URLs rechazadas, idioma `en`, offsets y duraciones.
 - [x] 1.2 Crear cliente server-only de Supadata en `src/features/videos/server/transcript-provider.server.ts`; usar `fetch` nativo, `mode: "native"`, timeout, validación runtime y errores controlados; agregar configuración a `.env.example` y pruebas con `fetch` simulado.
-- [x] 1.3 Definir `video_library`, `video_processing_usage`, RLS, grants y operación atómica de cuota; mantener `Progress` versión 6.
+- [x] 1.3 Definir `video_library`, RLS y grants; el único tope es 20 videos guardados. Mantener `Progress` versión 6.
 - [x] 1.4 Crear migración inicial versionada con las 6 tablas actuales de Progress y tablas de videos; eliminar `schema.sql`; documentar aplicación mediante Supabase CLI.
 
 ### Grupo 2 — Persistencia y API autenticada
 
 - [x] 2.1 Crear repositorio server-only de biblioteca para listar, encontrar por `video_id`, guardar, eliminar y actualizar `position_ms`; bloquear nuevos registros cuando existan 20 videos.
-- [x] 2.2 Crear `POST /api/videos/process`; validar usuario y URL, reabrir duplicados, verificar cuota y límite de biblioteca, pedir transcript a Supadata, obtener metadata, validar segmentos y guardar resultado.
+- [x] 2.2 Crear `POST /api/videos/process`; validar usuario y URL, reabrir duplicados, verificar límite de biblioteca, pedir transcript a Supadata, obtener metadata, validar segmentos y guardar resultado.
 - [x] 2.3 Crear `GET /api/videos`, `DELETE /api/videos/[videoId]` y `PATCH /api/videos/[videoId]/position`; no devolver claves, errores internos ni respuesta cruda del proveedor.
-- [x] 2.4 Agregar pruebas de rutas para autenticación, duplicados, cuota, límite de 20, errores del proveedor, guardado y actualización de posición.
+- [x] 2.4 Agregar pruebas de rutas para autenticación, duplicados, límite de 20, errores del proveedor, guardado y actualización de posición.
 
 ### Grupo 3 — Player y transcript sincronizado
 
@@ -162,19 +150,17 @@ TRANSCRIPT_MODE=native
 - [x] Biblioteca persiste después de cerrar sesión y volver a iniciar sesión con la misma cuenta.
 - [x] RLS impide que un usuario lea, actualice o elimine videos de otra cuenta.
 - [x] Esquema completo de Supabase queda en migraciones versionadas y puede aplicarse a una base nueva con Supabase CLI.
-- [x] URL ya guardada reabre el registro sin llamar nuevamente a Supadata ni consumir cuota.
+- [x] URL ya guardada reabre el registro sin llamar nuevamente a Supadata.
 - [x] Usuario puede abrir y eliminar cualquier video propio desde biblioteca.
 - [x] Posición se guarda al pausar o salir y el video vuelve cerca de esa posición al abrirse.
 - [x] Usuario no puede guardar un video nuevo cuando biblioteca ya contiene 20; se le pide eliminar uno.
-- [x] Cada usuario puede procesar como máximo 10 videos nuevos por día UTC.
-- [x] Solicitudes duplicadas no consumen cuota.
-- [x] Operación de cuota es atómica y no permite superar el límite con solicitudes simultáneas.
+- [x] El límite de 20 es atómico y solicitudes simultáneas no lo superan.
 - [x] Errores 401, 402, 404, 429, 5xx, timeout y red se convierten en mensajes controlados.
 - [x] Supabase no guarda respuesta cruda del proveedor.
 - [x] SPEC 09 no llama al gateway IA ni genera traducciones, ejemplos o ejercicios.
 - [x] No se descarga, importa ni almacena audio o video de YouTube.
 - [x] No se usan APIs no documentadas ni scraping de YouTube.
-- [x] Pruebas cubren parser, proveedor, normalización, rutas, RLS representativo, cuota, biblioteca, player y sincronización.
+- [x] Pruebas cubren parser, proveedor, normalización, rutas, RLS representativo, biblioteca, player y sincronización.
 - [x] `rtk pnpm lint`, `rtk tsc --noEmit`, `rtk pnpm test` y `rtk pnpm build` pasan.
 
 ## Decisiones
@@ -197,8 +183,8 @@ TRANSCRIPT_MODE=native
 - **Sí:** URL duplicada reabre registro existente. Evita llamadas y cobros repetidos.
 - **Sí:** Límite de 20 videos. Al alcanzar límite, se bloquea nuevo guardado y se pide eliminar uno.
 - **No:** Eliminación automática del video más antiguo o menos usado.
-- **Sí:** Límite de 10 procesamientos nuevos por usuario y día UTC. Protege cuota externa.
-- **Sí:** Cada solicitud nueva enviada al proveedor consume cuota. Videos duplicados no consumen cuota.
+- **No:** Límite diario de procesamientos. La única regla es el máximo de 20 videos guardados.
+- **No:** Contador de solicitudes al proveedor. Una URL ya guardada no vuelve a pedir transcript.
 - **Sí:** Inglés como único idioma. Encaja con objetivo actual de English Mission.
 - **No:** Traducciones, ejemplos, explicaciones gramaticales y ejercicios. Van en una spec futura.
 - **No:** Fallback de transcript pegado manualmente. Mantiene URL automática como valor central.
@@ -214,12 +200,11 @@ TRANSCRIPT_MODE=native
 | Transcript automático contiene errores, especialmente en canciones     | Sincronizar por segmentos recibidos, indicar que transcript puede contener errores y dejar correcciones para otra spec. |
 | Video no permite embed, tiene restricciones regionales o requiere edad | Mantener transcript guardado si ya existe y mostrar error del player sin romper biblioteca.                             |
 | Respuesta del proveedor contiene demasiados segmentos                  | Validar tamaño, cantidad y campos antes de guardar; rechazar payload inválido.                                          |
-| Dos solicitudes simultáneas superan cuota o límite de biblioteca       | Usar operación atómica para cuota y clave primaria `(user_id, video_id)` para duplicados.                               |
+| Dos solicitudes simultáneas superan el límite de biblioteca            | El claim usa un lock por usuario y la clave primaria `(user_id, video_id)` evita duplicados.                            |
 | Posición se pierde al cerrar pestaña abruptamente                      | Guardar al pausar y salir; no prometer recuperación después de cierre forzado.                                          |
 | RLS permite acceso cruzado entre usuarios                              | Aplicar políticas por `auth.uid()` y probar lecturas, escrituras y eliminaciones con usuarios distintos.                |
 | Player externo comparte datos con YouTube                              | Desactivar autoplay, usar embed oficial y documentar dependencia en privacidad futura.                                  |
 | Metadata no está disponible                                            | Guardar `videoId`, usar título de fallback y permitir abrir video aunque thumbnail falte.                               |
-| Cambios de zona horaria confunden cuota diaria                         | Mostrar que límite usa UTC y devolver hora de próximo reinicio cuando se alcance.                                       |
 | Base existente tiene esquema creado manualmente                         | Migración inicial usa sentencias idempotentes y se aplica con `supabase db push`; revisar historial remoto antes de producción. |
 
 ## Lo que **no** está en esta spec

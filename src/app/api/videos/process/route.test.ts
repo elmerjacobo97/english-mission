@@ -118,7 +118,7 @@ describe("POST /api/videos/process", () => {
     expect(repository.createVideoRepository.mock.results[0]).toBeDefined()
   })
 
-  test("blocks full library before claiming quota", async () => {
+  test("blocks a full library before calling the provider", async () => {
     const repo = mockRepository({
       claimProcessing: vi.fn().mockResolvedValue({
         status: "library-full",
@@ -130,21 +130,6 @@ describe("POST /api/videos/process", () => {
 
     expect(response.status).toBe(409)
     expect(repo.claimProcessing).toHaveBeenCalledWith("user-1", savedVideo.videoId)
-  })
-
-  test("returns daily limit without calling provider", async () => {
-    const repo = mockRepository({
-      claimProcessing: vi.fn().mockResolvedValue({
-        status: "daily-limit",
-        claimToken: null,
-      }),
-    })
-
-    const response = await POST(request({ url: savedVideo.url }))
-
-    expect(response.status).toBe(429)
-    expect(repo.claimProcessing).toHaveBeenCalledWith("user-1", savedVideo.videoId)
-    expect(transcript.fetchTranscript).not.toHaveBeenCalled()
   })
 
   test("does not process a video already being claimed", async () => {

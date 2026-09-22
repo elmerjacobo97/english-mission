@@ -104,9 +104,14 @@ export function VideoLibrary({
             Videos guardados vuelven sin pedir otro transcript.
           </p>
         </div>
-        <span className="shrink-0 rounded-full border-2 border-ink/10 bg-surface px-3 py-1.5 font-display text-sm font-bold shadow-card">
-          {videos.length}/{MAX_VIDEO_LIBRARY_ITEMS}
-        </span>
+        <p className="shrink-0 text-right">
+          <span className="inline-block rounded-full border-2 border-ink/10 bg-surface px-3 py-1.5 font-display text-sm font-bold shadow-card">
+            {videos.length} de {MAX_VIDEO_LIBRARY_ITEMS}
+          </span>
+          <span className="mt-1 block text-xs font-semibold text-muted">
+            videos guardados
+          </span>
+        </p>
       </header>
 
       {videos.length === 0 ? (

@@ -180,14 +180,6 @@ export async function POST(request: Request) {
       )
     }
 
-    if (claim.status === "daily-limit") {
-      return videoErrorResponse(
-        429,
-        "daily-limit",
-        "Alcanzaste el límite diario de 10 videos nuevos.",
-      )
-    }
-
     if (claim.status !== "claimed") {
       return videoInternalErrorResponse()
     }

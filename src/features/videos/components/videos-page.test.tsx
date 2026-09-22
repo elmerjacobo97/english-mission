@@ -117,6 +117,7 @@ describe("VideosPage", () => {
     render(<VideosPage initialVideos={videos} />)
 
     expect(screen.getByText(/Biblioteca llena/)).toBeInTheDocument()
-    expect(screen.getByText("20/20")).toBeInTheDocument()
+    expect(screen.getByText("20 de 20")).toBeInTheDocument()
+    expect(screen.getByText("videos guardados")).toBeInTheDocument()
   })
 })
