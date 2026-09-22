@@ -42,7 +42,7 @@
   {
     "kind": "story",
     "es": "El chofer señala un cartel con los horarios de salida.",
-    "en": "Check the schedule. The bus leaves at ten.",
+    "en": "Check the schedule. What time does the bus leave?",
     "speaker": "chofer",
     "vocab": [
       ["schedule", "horario"],
@@ -77,7 +77,7 @@
   {
     "kind": "story",
     "es": "Compras el boleto de ida y vuelta y regresas a casa. La entrevista será mañana.",
-    "en": "I need a return ticket, please.",
+    "en": "I need a return ticket, not a single, please.",
     "speaker": "you",
     "vocab": [
       ["single", "solo ida"],

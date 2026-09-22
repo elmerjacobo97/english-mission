@@ -30,7 +30,7 @@
   {
     "kind": "story",
     "es": "Entras al mercado. El vendedor se llama Nico y te saluda.",
-    "en": "Hello! Can I help you?",
+    "en": "Hello! Can I help you buy something?",
     "speaker": "nico",
     "vocab": [["buy", "comprar"]],
     "character": "nico",
@@ -50,7 +50,7 @@
   {
     "kind": "story",
     "es": "Señalas lo que quieres y pides por favor.",
-    "en": "Bananas, apples, bread and water, please.",
+    "en": "A banana, an apple, bread and water, please.",
     "speaker": "you",
     "vocab": [
       ["banana", "plátano"],

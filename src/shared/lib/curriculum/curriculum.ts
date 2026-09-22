@@ -1,5 +1,7 @@
 import type { Beat, Vocabulary } from "@/shared/lib/game/types/beat"
+import type { CharacterId } from "@/shared/lib/game/types/character"
 import type { Mission } from "@/shared/lib/game/types/mission"
+import { vocabularyTermAppears } from "@/shared/lib/game/utils/interactive-vocabulary"
 
 export const SPAINISMS = [
   "dependiente",
@@ -164,6 +166,17 @@ export function orphanVocab(mission: Mission): string[] {
     .map(({ en }) => en)
 }
 
+export function orphanStoryVocab(mission: Mission): string[] {
+  return mission.beats.flatMap((beat) => {
+    if (beat.kind !== "story" || !beat.en || !beat.vocab) {
+      return []
+    }
+    return beat.vocab
+      .filter(([en]) => !vocabularyTermAppears(beat.en, en))
+      .map(([en]) => `${mission.slug}:${en}`)
+  })
+}
+
 function normalizeForSearch(text: string): string {
   return text
     .toLowerCase()
@@ -209,7 +222,7 @@ export function missionNotes(mission: Mission) {
   return mission.beats.flatMap((beat) => (beat.note ? [beat.note] : []))
 }
 
-export function missionCharacters(mission: Mission): string[] {
+export function missionCharacters(mission: Mission): CharacterId[] {
   return [
     ...new Set(
       mission.beats.flatMap((beat) => (beat.character ? [beat.character] : [])),

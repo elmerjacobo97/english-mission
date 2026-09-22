@@ -19,8 +19,8 @@ describe("COCO_LOOKS", () => {
 
   test("classic paints the same hex as CHARACTERS.coco", () => {
     const classic = COCO_LOOKS.find((look) => look.id === "classic")
-    expect(classic?.shirt).toBe(CHARACTERS.coco.shirt)
-    expect(classic?.hair).toBe(CHARACTERS.coco.hair)
-    expect(classic?.background).toBe(CHARACTERS.coco.background)
+    expect(classic?.shirt).toBe(CHARACTERS.coco.visual.shirt)
+    expect(classic?.hair).toBe(CHARACTERS.coco.visual.hair)
+    expect(classic?.background).toBe(CHARACTERS.coco.visual.background)
   })
 })

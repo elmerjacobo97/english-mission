@@ -5,84 +5,101 @@ import { COCO_LOOKS } from "@/shared/lib/game/content/coco-looks"
 import { useProgress } from "@/shared/hooks/use-progress"
 import type { CocoLookId } from "@/shared/lib/progress/types"
 import { CHARACTERS } from "@/shared/lib/game/content/characters"
-import type { CharacterConfig, CharacterId, Mood } from "@/shared/lib/game/types/character"
+import type { CharacterId, CharacterProfile, CharacterVisual, Mood } from "@/shared/lib/game/types/character"
 
 const INK = "#2a1d14"
 
-type CharacterAvatarProps = {
+export type AvatarVariant = "compact" | "portrait"
+
+export type CharacterAvatarProps = {
   character: CharacterId
   mood?: Mood
+  variant?: AvatarVariant
   size?: number
   lookId?: CocoLookId
   className?: string
 }
 
-function cocoConfig(lookId: CocoLookId): CharacterConfig {
+function cocoConfig(lookId: CocoLookId): CharacterProfile {
   const look = COCO_LOOKS.find((entry) => entry.id === lookId)
   if (!look) {
     return CHARACTERS.coco
   }
   return {
     ...CHARACTERS.coco,
-    shirt: look.shirt,
-    hair: look.hair,
-    background: look.background,
+    visual: {
+      ...CHARACTERS.coco.visual,
+      shirt: look.shirt,
+      hair: look.hair,
+      background: look.background,
+    },
   }
 }
 
 export function CharacterAvatar({
   character,
   mood = "neutral",
+  variant = "compact",
   size = 56,
   lookId,
   className = "",
 }: CharacterAvatarProps) {
   const { progress } = useProgress()
-  const config =
+  const profile =
     character === "coco"
       ? cocoConfig(lookId ?? progress.looks.equipped)
       : CHARACTERS[character]
+  const config = profile.visual
   const clipId = useId()
   const isParrot = config.species === "parrot"
   const eyesClosed = mood === "happy"
+  const isPortrait = variant === "portrait"
+  const width = size
+  const height = isPortrait ? Math.round(size * 1.14) : size
 
   return (
     <svg
-      viewBox="0 0 96 96"
-      width={size}
-      height={size}
+      viewBox={isPortrait ? "0 0 112 128" : "0 0 96 96"}
+      width={width}
+      height={height}
       role="img"
-      aria-label={config.name}
+      aria-label={profile.name}
+      data-mood={mood}
+      data-variant={variant}
       className={className}
     >
       <defs>
         <clipPath id={clipId}>
-          <circle cx="48" cy="48" r="46" />
+          {isPortrait ? (
+            <rect x="2" y="2" width="108" height="124" rx="28" />
+          ) : (
+            <circle cx="48" cy="48" r="46" />
+          )}
         </clipPath>
       </defs>
-      <circle cx="48" cy="48" r="46" fill={config.background} />
-      <g clipPath={`url(#${clipId})`}>
+      {isPortrait ? (
+        <rect x="2" y="2" width="108" height="124" rx="28" fill={config.background} />
+      ) : (
+        <circle cx="48" cy="48" r="46" fill={config.background} />
+      )}
+      <g clipPath={`url(#${clipId})`} transform={isPortrait ? "translate(8 18) scale(1.1)" : undefined}>
         {isParrot ? (
-          <ParrotBody config={config} eyesClosed={eyesClosed} />
+          <ParrotBody config={config} mood={mood} eyesClosed={eyesClosed} />
         ) : (
           <HumanBody config={config} mood={mood} eyesClosed={eyesClosed} />
         )}
       </g>
-      <circle
-        cx="48"
-        cy="48"
-        r="46"
-        fill="none"
-        stroke={INK}
-        strokeOpacity="0.12"
-        strokeWidth="2"
-      />
+      {isPortrait ? (
+        <rect x="2" y="2" width="108" height="124" rx="28" fill="none" stroke={INK} strokeOpacity="0.12" strokeWidth="2" />
+      ) : (
+        <circle cx="48" cy="48" r="46" fill="none" stroke={INK} strokeOpacity="0.12" strokeWidth="2" />
+      )}
     </svg>
   )
 }
 
 type BodyProps = {
-  config: (typeof CHARACTERS)[CharacterId]
+  config: CharacterVisual
   mood: Mood
   eyesClosed: boolean
 }
@@ -185,7 +202,7 @@ function HumanBody({ config, mood, eyesClosed }: BodyProps) {
   )
 }
 
-function ParrotBody({ config, eyesClosed }: Omit<BodyProps, "mood">) {
+function ParrotBody({ config, mood, eyesClosed }: BodyProps) {
   return (
     <>
       <ellipse cx="48" cy="98" rx="32" ry="26" fill={config.skin} />
@@ -198,8 +215,8 @@ function ParrotBody({ config, eyesClosed }: Omit<BodyProps, "mood">) {
         d="M44 24 q0 -14 10 -20 q-1 10 7 13 q6 3 1 8 q-9 5 -18 -1 z"
         fill={config.hair}
       />
-      <circle cx="39" cy="41" r="8.5" fill="#f8fafc" />
-      <circle cx="58" cy="41" r="7.5" fill="#f8fafc" />
+      <circle cx="39" cy="41" r={mood === "surprised" ? 9.5 : 8.5} fill="#f8fafc" />
+      <circle cx="58" cy="41" r={mood === "surprised" ? 8.5 : 7.5} fill="#f8fafc" />
       {eyesClosed ? (
         <>
           <path
@@ -231,6 +248,8 @@ function ParrotBody({ config, eyesClosed }: Omit<BodyProps, "mood">) {
         fill="none"
         strokeLinecap="round"
       />
+      {mood === "sad" && <path d="M48 70 q-5 -4 -10 0" stroke={INK} strokeWidth="2" fill="none" strokeLinecap="round" />}
+      {mood === "curious" && <circle cx="72" cy="30" r="2.5" fill={INK} opacity="0.5" />}
     </>
   )
 }

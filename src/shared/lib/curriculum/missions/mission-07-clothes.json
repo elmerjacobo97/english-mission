@@ -92,7 +92,7 @@
   {
     "kind": "story",
     "es": "La camisa te queda bien y no cuesta mucho. Decides comprarla.",
-    "en": "I want to buy this shirt, please.",
+    "en": "I want to buy this shirt, please. It is cheap, and the dress is expensive.",
     "speaker": "you",
     "vocab": [
       ["dress", "vestido"],

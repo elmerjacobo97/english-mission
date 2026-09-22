@@ -4,6 +4,14 @@ import type { CharacterId } from "./character"
 export type Level = 1 | 2 | 3 | 4 | 5
 export type Chapter = 1 | 2 | 3
 
+export type MissionCharacterFunction = "tutor" | "primary" | "support"
+
+export type MissionCastMember = {
+  character: CharacterId
+  function: MissionCharacterFunction
+  objective: string
+}
+
 export type MissionPlanEntry = {
   order: number
   slug: string
@@ -12,7 +20,7 @@ export type MissionPlanEntry = {
   emoji: string
   chapter: Chapter
   level: Level
-  cast: CharacterId[]
+  cast: MissionCastMember[]
   vocab: Vocabulary[]
   written: boolean
 }

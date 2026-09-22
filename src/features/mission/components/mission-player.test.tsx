@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react"
+import { render, screen, waitFor, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, test } from "vitest"
 import { getMissionProgress, getProgressSnapshot } from "@/shared/lib/progress/progress-store"
@@ -7,6 +7,10 @@ import { MissionPlayer } from "./mission-player"
 
 const mission = findMission("arrival") ?? (() => {
   throw new Error("la misión arrival no existe en el catálogo")
+})()
+
+const busMission = findMission("bus") ?? (() => {
+  throw new Error("la misión bus no existe en el catálogo")
 })()
 
 async function next(user: ReturnType<typeof userEvent.setup>) {
@@ -97,6 +101,46 @@ describe("MissionPlayer", () => {
     expect(screen.getByText("Paso 1 de 9")).toBeInTheDocument()
   })
 
+  test("introduces a character once, keeps it seen when going back, and skips beats without one", async () => {
+    const user = userEvent.setup()
+    const before = getProgressSnapshot()
+    render(<MissionPlayer mission={mission} />)
+
+    await screen.findByText(
+      "Llegas a la ciudad en autobús. Es tu primer día: llevas una maleta y un papel con una dirección.",
+    )
+    expect(screen.queryByRole("complementary", { name: "Presentación de Marta" })).not.toBeInTheDocument()
+
+    await next(user)
+    const introduction = screen.getByRole("complementary", { name: "Presentación de Marta" })
+    expect(introduction).toBeInTheDocument()
+    expect(
+      screen.getAllByRole("img", { name: "Marta" }).filter(
+        (avatar) => avatar.getAttribute("data-variant") === "portrait",
+      ),
+    ).toHaveLength(1)
+    expect(within(introduction).getByText("Vecina y primera aliada del estudiante.")).toBeInTheDocument()
+    expect(within(introduction).getByText("Acogedora")).toBeInTheDocument()
+
+    await next(user)
+    expect(screen.queryByRole("complementary", { name: "Presentación de Marta" })).not.toBeInTheDocument()
+    await user.click(screen.getByRole("button", { name: "Anterior" }))
+    expect(screen.queryByRole("complementary", { name: "Presentación de Marta" })).not.toBeInTheDocument()
+    expect(getProgressSnapshot()).toEqual(before)
+  })
+
+  test("clears introductions when replaying the mission", async () => {
+    const user = userEvent.setup()
+    render(<MissionPlayer mission={mission} />)
+    await screen.findByText(
+      "Llegas a la ciudad en autobús. Es tu primer día: llevas una maleta y un papel con una dirección.",
+    )
+    await playPerfect(user)
+    await user.click(await screen.findByRole("button", { name: "Jugar otra vez" }))
+    await next(user)
+    expect(screen.getByRole("complementary", { name: "Presentación de Marta" })).toBeInTheDocument()
+  })
+
   test("reviewing a solved step pays nothing twice", async () => {
     const user = userEvent.setup()
     render(<MissionPlayer mission={mission} />)
@@ -174,5 +218,16 @@ describe("MissionPlayer", () => {
     ).toBeInTheDocument()
     expect(getProgressSnapshot().streak.current).toBe(1)
 
+  })
+
+  test("introduces the bus driver with the opening scene", async () => {
+    render(<MissionPlayer mission={busMission} />)
+
+    await screen.findByText(
+      "Sales del café y llegas a la parada. La entrevista es en otro barrio.",
+    )
+    expect(
+      screen.getByRole("complementary", { name: "Presentación de El chofer" }),
+    ).toBeInTheDocument()
   })
 })

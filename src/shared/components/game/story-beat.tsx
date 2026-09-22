@@ -7,6 +7,7 @@ import { CHARACTERS } from "@/shared/lib/game/content/characters"
 import type { StoryBeat as StoryBeatData } from "@/shared/lib/game/types/beat"
 import { CharacterAvatar } from "./character-avatar"
 import { GrammarNote } from "./grammar-note"
+import { InteractiveVocabulary } from "./interactive-vocabulary"
 
 type StoryBeatProps = {
   beat: StoryBeatData
@@ -24,31 +25,12 @@ export function StoryBeat({
 
   const showText = englishVisible || revealed
   const isYou = beat.speaker === "you"
-  const scene = beat.character ? CHARACTERS[beat.character] : null
   const speakerId =
     beat.speaker && beat.speaker !== "you" ? beat.speaker : null
   const speaker = speakerId ? CHARACTERS[speakerId] : null
 
   return (
     <section className="flex flex-col gap-5 rounded-3xl border-2 border-ink/10 bg-surface p-6 shadow-card">
-      {beat.character && scene && (
-        <div className="flex items-center gap-2.5">
-          <CharacterAvatar
-            character={beat.character}
-            mood={beat.mood}
-            size={46}
-          />
-          <span className="flex flex-col">
-            <span className="font-display text-sm font-semibold">
-              {scene.name}
-            </span>
-            <span className="text-xs font-semibold text-muted">
-              {scene.role}
-            </span>
-          </span>
-        </div>
-      )}
-
       <p className="text-lg font-semibold leading-relaxed">{beat.es}</p>
 
       {beat.en && (
@@ -90,7 +72,13 @@ export function StoryBeat({
                       isYou ? "text-ink" : "text-teal-strong"
                     }`}
                   >
-                    «{beat.en}»
+                    «
+                    <InteractiveVocabulary
+                      text={beat.en}
+                      vocabulary={beat.vocab ?? []}
+                      speechAvailable={speechAvailable}
+                    />
+                    »
                   </p>
                 ) : (
                   <button
@@ -106,32 +94,6 @@ export function StoryBeat({
             </div>
           </div>
         </div>
-      )}
-
-      {beat.vocab && beat.vocab.length > 0 && (
-        <ul className="flex flex-wrap gap-2">
-          {beat.vocab.map(([en, es]) => (
-            <li key={en}>
-              {speechAvailable ? (
-                <button
-                  type="button"
-                  onClick={() => speak(en)}
-                  aria-label={`Escuchar ${en}`}
-                  className="flex min-h-9 items-center gap-1.5 rounded-full border-2 border-teal/25 bg-white px-3 py-1.5 text-sm font-semibold transition hover:border-teal"
-                >
-                  <span className="font-display text-teal-strong">{en}</span>
-                  <span className="text-muted">· {es}</span>
-                  <SpeakerHighIcon size={13} className="text-teal" aria-hidden />
-                </button>
-              ) : (
-                <span className="flex min-h-9 items-center gap-1.5 rounded-full border-2 border-teal/25 bg-white px-3 py-1.5 text-sm font-semibold">
-                  <span className="font-display text-teal-strong">{en}</span>
-                  <span className="text-muted">· {es}</span>
-                </span>
-              )}
-            </li>
-          ))}
-        </ul>
       )}
 
       {beat.note && <GrammarNote note={beat.note} />}

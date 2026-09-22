@@ -11,9 +11,11 @@ import {
   missionNotes,
   missionSpanishText,
   orphanVocab,
+  orphanStoryVocab,
   recycledWords,
 } from "./curriculum"
 import { profileFor } from "@/shared/lib/game/utils/difficulty"
+import type { Mission } from "@/shared/lib/game/types/mission"
 
 const MIN_RECYCLED_WORDS = 3
 
@@ -89,6 +91,41 @@ describe("written missions", () => {
     }
   })
 
+  test("keeps each story vocabulary entry inside its own English dialogue", () => {
+    for (const mission of missions) {
+      expect(orphanStoryVocab(mission), mission.slug).toEqual([])
+    }
+  })
+
+  test("rejects a story term that only appears inside another word", () => {
+    const mission = {
+      slug: "fixture",
+      order: 1,
+      title: "Prueba",
+      subtitle: "Prueba",
+      emoji: "🧪",
+      chapter: 1,
+      level: 1,
+      cast: [],
+      vocab: [],
+      written: true,
+      beats: [
+        {
+          kind: "story",
+          es: "Pides fruta.",
+          en: "Bananas and apples, please.",
+          speaker: "you",
+          vocab: [
+            ["banana", "plátano"],
+            ["apple", "manzana"],
+          ],
+        },
+      ],
+    } satisfies Mission
+
+    expect(orphanStoryVocab(mission)).toEqual(["fixture:banana", "fixture:apple"])
+  })
+
   test("recycles vocabulary from earlier missions", () => {
     for (const mission of missions) {
       if (mission.order === 1) {
@@ -146,12 +183,35 @@ describe("written missions", () => {
 })
 
 describe("cast and notes", () => {
+  test("declares one Coco tutor and one or two mission characters", () => {
+    for (const entry of missionPlan) {
+      const tutors = entry.cast.filter((member) => member.function === "tutor")
+      const additional = entry.cast.filter((member) => member.function !== "tutor")
+
+      expect(tutors, `${entry.slug} tutors`).toHaveLength(1)
+      expect(tutors[0]?.character, entry.slug).toBe("coco")
+      expect(additional.length, entry.slug).toBeGreaterThanOrEqual(1)
+      expect(additional.length, entry.slug).toBeLessThanOrEqual(2)
+      for (const member of entry.cast) {
+        expect(["tutor", "primary", "support"], `${entry.slug}:${member.character}`).toContain(member.function)
+        expect(member.objective.length, `${entry.slug}:${member.character}`).toBeGreaterThan(0)
+      }
+    }
+  })
+
+  test("keeps chapters three missions unwritten", () => {
+    expect(missionPlan.filter((entry) => entry.order >= 9).every((entry) => !entry.written)).toBe(true)
+  })
+
   test("uses only cast characters and at least two per written mission", () => {
     for (const mission of missions) {
       const used = missionCharacters(mission)
       expect(used.length, mission.slug).toBeGreaterThanOrEqual(2)
       for (const character of used) {
-        expect(mission.cast, `${mission.slug}:${character}`).toContain(character)
+        expect(
+          mission.cast.some((member) => member.character === character),
+          `${mission.slug}:${character}`,
+        ).toBe(true)
       }
     }
   })

@@ -7,7 +7,18 @@
     "emoji": "🧳",
     "chapter": 1,
     "level": 1,
-    "cast": ["coco", "marta"],
+    "cast": [
+      {
+        "character": "coco",
+        "function": "tutor",
+        "objective": "Acompañarte a saludar y presentarte con confianza."
+      },
+      {
+        "character": "marta",
+        "function": "primary",
+        "objective": "Recibirte en el barrio y ayudarte a iniciar tu nueva vida."
+      }
+    ],
     "written": true,
     "vocab": [
       ["hello", "hola"],
@@ -28,7 +39,18 @@
     "emoji": "🍌",
     "chapter": 1,
     "level": 2,
-    "cast": ["coco", "nico"],
+    "cast": [
+      {
+        "character": "coco",
+        "function": "tutor",
+        "objective": "Ayudarte a pedir productos y tomar decisiones en la tienda."
+      },
+      {
+        "character": "nico",
+        "function": "primary",
+        "objective": "Atender tu compra y ayudarte a elegir lo que necesitas."
+      }
+    ],
     "written": true,
     "vocab": [
       ["banana", "plátano"],
@@ -49,7 +71,23 @@
     "emoji": "🧭",
     "chapter": 1,
     "level": 3,
-    "cast": ["coco", "beto", "marta"],
+    "cast": [
+      {
+        "character": "coco",
+        "function": "tutor",
+        "objective": "Ayudarte a preparar y recordar la pregunta principal."
+      },
+      {
+        "character": "beto",
+        "function": "primary",
+        "objective": "Darte indicaciones claras para encontrar la parada."
+      },
+      {
+        "character": "marta",
+        "function": "support",
+        "objective": "Conectar la búsqueda de la parada con la oportunidad de trabajo."
+      }
+    ],
     "written": true,
     "vocab": [
       ["where", "dónde"],
@@ -69,7 +107,18 @@
     "emoji": "☕",
     "chapter": 1,
     "level": 3,
-    "cast": ["coco", "cami"],
+    "cast": [
+      {
+        "character": "coco",
+        "function": "tutor",
+        "objective": "Ayudarte a pedir el desayuno antes de tu entrevista."
+      },
+      {
+        "character": "cami",
+        "function": "primary",
+        "objective": "Recibir tu pedido y facilitar una conversación natural."
+      }
+    ],
     "written": true,
     "vocab": [
       ["coffee", "café"],
@@ -89,7 +138,18 @@
     "emoji": "🚌",
     "chapter": 2,
     "level": 3,
-    "cast": ["coco", "chofer"],
+    "cast": [
+      {
+        "character": "coco",
+        "function": "tutor",
+        "objective": "Ayudarte a preguntar por el boleto, la ruta y el horario."
+      },
+      {
+        "character": "chofer",
+        "function": "primary",
+        "objective": "Explicarte la ruta y orientarte sobre el boleto correcto."
+      }
+    ],
     "written": true,
     "vocab": [
       ["ticket", "boleto"],
@@ -109,7 +169,18 @@
     "emoji": "🧺",
     "chapter": 2,
     "level": 4,
-    "cast": ["coco", "rosa"],
+    "cast": [
+      {
+        "character": "coco",
+        "function": "tutor",
+        "objective": "Ayudarte a seguir las instrucciones de la lavandería."
+      },
+      {
+        "character": "rosa",
+        "function": "primary",
+        "objective": "Explicarte el proceso para lavar y secar tu ropa."
+      }
+    ],
     "written": true,
     "vocab": [
       ["wash", "lavar"],
@@ -129,7 +200,18 @@
     "emoji": "👕",
     "chapter": 2,
     "level": 4,
-    "cast": ["coco", "nico"],
+    "cast": [
+      {
+        "character": "coco",
+        "function": "tutor",
+        "objective": "Ayudarte a comparar tallas, prendas y precios."
+      },
+      {
+        "character": "nico",
+        "function": "primary",
+        "objective": "Mostrarte opciones de ropa y ayudarte a elegir."
+      }
+    ],
     "written": true,
     "vocab": [
       ["shirt", "camisa"],
@@ -149,7 +231,18 @@
     "emoji": "☎️",
     "chapter": 2,
     "level": 4,
-    "cast": ["coco", "sergio"],
+    "cast": [
+      {
+        "character": "coco",
+        "function": "tutor",
+        "objective": "Ayudarte a preparar una llamada clara sobre el departamento."
+      },
+      {
+        "character": "sergio",
+        "function": "primary",
+        "objective": "Escuchar el problema y acordar una solución para el departamento."
+      }
+    ],
     "written": true,
     "vocab": [
       ["call", "llamar"],
@@ -169,7 +262,18 @@
     "emoji": "💼",
     "chapter": 3,
     "level": 4,
-    "cast": ["coco", "sofia"],
+    "cast": [
+      {
+        "character": "coco",
+        "function": "tutor",
+        "objective": "Ayudarte a preparar respuestas para tu entrevista."
+      },
+      {
+        "character": "sofia",
+        "function": "primary",
+        "objective": "Conocer tu experiencia y explicar las expectativas del trabajo."
+      }
+    ],
     "written": false,
     "vocab": [
       ["job", "trabajo"],
@@ -189,7 +293,23 @@
     "emoji": "🖥️",
     "chapter": 3,
     "level": 5,
-    "cast": ["coco", "sofia", "tere"],
+    "cast": [
+      {
+        "character": "coco",
+        "function": "tutor",
+        "objective": "Ayudarte a participar en tus primeras conversaciones laborales."
+      },
+      {
+        "character": "sofia",
+        "function": "primary",
+        "objective": "Orientarte sobre las responsabilidades y expectativas del equipo."
+      },
+      {
+        "character": "tere",
+        "function": "support",
+        "objective": "Integrarte con naturalidad a la rutina del trabajo."
+      }
+    ],
     "written": false,
     "vocab": [
       ["computer", "computadora"],
@@ -209,7 +329,23 @@
     "emoji": "🎉",
     "chapter": 3,
     "level": 5,
-    "cast": ["coco", "tere", "cami", "marta"],
+    "cast": [
+      {
+        "character": "coco",
+        "function": "tutor",
+        "objective": "Ayudarte a invitar y responder en planes sociales."
+      },
+      {
+        "character": "tere",
+        "function": "primary",
+        "objective": "Integrarte al grupo y proponer un plan para el fin de semana."
+      },
+      {
+        "character": "cami",
+        "function": "support",
+        "objective": "Sumar una conversación amistosa al plan del grupo."
+      }
+    ],
     "written": false,
     "vocab": [
       ["invite", "invitar"],
@@ -229,7 +365,23 @@
     "emoji": "🏠",
     "chapter": 3,
     "level": 5,
-    "cast": ["coco", "sergio", "marta"],
+    "cast": [
+      {
+        "character": "coco",
+        "function": "tutor",
+        "objective": "Ayudarte a conversar sobre tu mudanza y tu nuevo hogar."
+      },
+      {
+        "character": "sergio",
+        "function": "primary",
+        "objective": "Coordinar contigo los detalles prácticos del departamento."
+      },
+      {
+        "character": "marta",
+        "function": "support",
+        "objective": "Darte la bienvenida y conectarte con tus nuevos vecinos."
+      }
+    ],
     "written": false,
     "vocab": [
       ["move", "mudarse"],

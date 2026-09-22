@@ -30,6 +30,39 @@ describe("CharacterAvatar", () => {
     }
   })
 
+  test("renders every character in compact and portrait variants", () => {
+    for (const id of Object.keys(CHARACTERS)) {
+      for (const variant of ["compact", "portrait"] as const) {
+        const { unmount } = render(
+          <CharacterAvatar character={id as keyof typeof CHARACTERS} variant={variant} />,
+        )
+        expect(screen.getByRole("img", { name: CHARACTERS[id as keyof typeof CHARACTERS].name })).toHaveAttribute(
+          "data-variant",
+          variant,
+        )
+        unmount()
+      }
+    }
+  })
+
+  test("supports every mood in both variants", () => {
+    for (const variant of ["compact", "portrait"] as const) {
+      for (const mood of ["neutral", "happy", "surprised", "sad", "curious"] as const) {
+        const { unmount } = render(
+          <CharacterAvatar character="marta" variant={variant} mood={mood} />,
+        )
+        expect(screen.getByRole("img", { name: "Marta" })).toHaveAttribute("data-mood", mood)
+        unmount()
+      }
+    }
+  })
+
+  test("portrait size keeps a taller bust frame", () => {
+    render(<CharacterAvatar character="coco" variant="portrait" size={96} />)
+    expect(screen.getByRole("img", { name: "Coco" })).toHaveAttribute("width", "96")
+    expect(screen.getByRole("img", { name: "Coco" })).toHaveAttribute("height", "109")
+  })
+
   test("accepts a custom size", () => {
     render(<CharacterAvatar character="coco" size={96} />)
     expect(screen.getByRole("img", { name: "Coco" })).toHaveAttribute(
@@ -65,8 +98,8 @@ describe("CharacterAvatar", () => {
 
     const { container } = render(<CharacterAvatar character="marta" />)
 
-    expect(painted(container, CHARACTERS.marta.shirt)).not.toBeNull()
-    expect(painted(container, CHARACTERS.marta.hair)).not.toBeNull()
+    expect(painted(container, CHARACTERS.marta.visual.shirt)).not.toBeNull()
+    expect(painted(container, CHARACTERS.marta.visual.hair)).not.toBeNull()
     expect(painted(container, "#db2777")).toBeNull()
     expect(painted(container, "#06b6d4")).toBeNull()
   })

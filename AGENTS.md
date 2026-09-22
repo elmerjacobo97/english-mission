@@ -38,7 +38,7 @@ Narrative English-learning game. Spanish is UI and narration; English is learnin
 ## Content And Specs
 
 - Curriculum source: `src/shared/lib/curriculum/`. `plan.json` has 12 ordered entries; written beats live in `missions/` and are joined by `mission-catalog.ts`. Adding a mission requires the plan entry, beats JSON, catalog entry, and `written: true`.
-- Read `src/shared/lib/curriculum/curriculum.test.ts` before content edits. It enforces 6-12 vocab words, 8-16 beats, at least 3 challenges, level-allowed challenge kinds, zero orphan vocab, at least 3 recycled words after mission 1, at least 2 grammar notes with 21-280 character bodies, and cast consistency.
+- Read `src/shared/lib/curriculum/curriculum.test.ts` before content edits. It enforces 6-12 vocab words, 8-16 beats, at least 3 challenges, level-allowed challenge kinds, zero orphan vocab, each story vocab term inside that beat's English line, at least 3 recycled words after mission 1, at least 2 grammar notes with 21-280 character bodies, and one Coco tutor plus one or two other cast members (`character`, `function`, `objective`).
 - That test also scans non-test `src/**/*.ts(x)` for Spain regionalisms. Keep UI, narration, comments, and curriculum Spanish neutral for Latin America.
 - Feature behavior belongs in `specs/NN-slug.md`; read the relevant spec first. `specs/.spec-config.yml` enables automatic `spec-NN-slug` branches. `/spec-close` is local-only: merge on `main`, never push.
 

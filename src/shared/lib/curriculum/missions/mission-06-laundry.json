@@ -95,7 +95,7 @@
   {
     "kind": "story",
     "es": "Pones una moneda, recoges tu ropa y vuelves a casa con Coco.",
-    "en": "Thanks, Rosa. See you tomorrow.",
+    "en": "Thanks, Rosa. I have a coin for the machine. See you tomorrow.",
     "speaker": "you",
     "vocab": [["coin", "moneda"]],
     "character": "rosa",
