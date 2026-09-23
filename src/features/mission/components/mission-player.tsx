@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react"
+import { ArrowLeftIcon, ArrowRightIcon, ChatCircleDotsIcon } from "@phosphor-icons/react"
 import { useEffect, useRef, useState, useSyncExternalStore } from "react"
 import {
   getSpeechSupportServerSnapshot,
@@ -20,6 +20,7 @@ import { OrderChallenge } from "@/shared/components/game/order-challenge"
 import { StoryBeat } from "@/shared/components/game/story-beat"
 import { CharacterIntroduction } from "@/shared/components/game/character-introduction"
 import { TypeChallenge } from "@/shared/components/game/type-challenge"
+import { TutorPanel } from "./tutor-panel"
 
 type MissionPlayerProps = {
   mission: Mission
@@ -32,6 +33,7 @@ export function MissionPlayer({ mission }: MissionPlayerProps) {
   const [introducedCharacters, setIntroducedCharacters] = useState<Set<CharacterId>>(
     () => new Set(),
   )
+  const [tutorOpen, setTutorOpen] = useState(false)
   const speechAvailable = useSyncExternalStore(
     subscribeSpeechSupport,
     getSpeechSupportSnapshot,
@@ -95,18 +97,33 @@ export function MissionPlayer({ mission }: MissionPlayerProps) {
 
   return (
     <main className="flex w-full flex-1 flex-col gap-4 py-5">
-      <div
-        role="progressbar"
-        aria-label="Progreso de la misión"
-        aria-valuenow={progressPercent}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        className="h-2.5 w-full overflow-hidden rounded-full border-2 border-ink/10 bg-surface"
-      >
+      <div className="flex items-center gap-3">
         <div
-          className="h-full rounded-full bg-accent transition-all duration-300"
-          style={{ width: `${progressPercent}%` }}
-        />
+          role="progressbar"
+          aria-label="Progreso de la misión"
+          aria-valuenow={progressPercent}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          className="h-2.5 min-w-0 flex-1 overflow-hidden rounded-full border-2 border-ink/10 bg-surface"
+        >
+          <div
+            className="h-full rounded-full bg-accent transition-all duration-300"
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
+        {run.phase !== "complete" && beat && (
+          <button
+            type="button"
+            aria-label="Pregúntale a Coco"
+            aria-haspopup="dialog"
+            aria-expanded={tutorOpen}
+            onClick={() => setTutorOpen(true)}
+            className="ui-button ui-button-quiet shrink-0 px-3"
+          >
+            <ChatCircleDotsIcon size={18} weight="fill" aria-hidden />
+            Coco
+          </button>
+        )}
       </div>
 
       {run.phase === "complete" ? (
@@ -120,8 +137,14 @@ export function MissionPlayer({ mission }: MissionPlayerProps) {
           isReplay={run.isReplay}
           onRestart={restart}
         />
-      ) : beat ? (
+        ) : beat ? (
         <>
+          {tutorOpen && (
+            <TutorPanel
+              missionSlug={mission.slug}
+              onClose={() => setTutorOpen(false)}
+            />
+          )}
           <div
             key={run.index}
             ref={beatRef}

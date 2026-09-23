@@ -1,6 +1,6 @@
 import { render, screen, waitFor, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { describe, expect, test } from "vitest"
+import { afterEach, describe, expect, test, vi } from "vitest"
 import { getMissionProgress, getProgressSnapshot } from "@/shared/lib/progress/progress-store"
 import { findMission } from "@/shared/lib/curriculum/mission-catalog"
 import { MissionPlayer } from "./mission-player"
@@ -38,6 +38,8 @@ async function playPerfect(user: ReturnType<typeof userEvent.setup>) {
 }
 
 describe("MissionPlayer", () => {
+  afterEach(() => vi.unstubAllGlobals())
+
   test("awards three stars and the full payout for a flawless run", async () => {
     const user = userEvent.setup()
     render(<MissionPlayer mission={mission} />)
@@ -111,6 +113,55 @@ describe("MissionPlayer", () => {
     await next(user)
 
     expect(screen.getByRole("group", { name: "Paso 2 de 9" })).toHaveFocus()
+  })
+
+  test("Coco conversation closes and resets without changing the active challenge", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: vi.fn().mockResolvedValue({
+          reply: {
+            explanation: "Usamos do para preguntas.",
+            correction: null,
+            example: { english: "Do you like tea?", spanish: "¿Te gusta el té?" },
+            curiosity: null,
+          },
+        }),
+      }),
+    )
+    const user = userEvent.setup()
+    const before = getProgressSnapshot()
+    render(<MissionPlayer mission={mission} />)
+    await screen.findByText(
+      "Llegas a la ciudad en autobús. Es tu primer día: llevas una maleta y un papel con una dirección.",
+    )
+    await next(user)
+    await next(user)
+    expect(screen.getByText("Paso 3 de 9")).toBeInTheDocument()
+
+    const progressRow = screen.getByRole("progressbar").parentElement
+    expect(
+      within(progressRow!).getByRole("button", { name: "Pregúntale a Coco" }),
+    ).toBeInTheDocument()
+    await user.click(screen.getByRole("button", { name: "Pregúntale a Coco" }))
+    await user.type(
+      screen.getByRole("textbox", { name: "Tu pregunta para Coco" }),
+      "How do I ask a question?",
+    )
+    await user.click(screen.getByRole("button", { name: "Preguntar" }))
+    expect(await screen.findByText("Usamos do para preguntas.")).toBeInTheDocument()
+    expect(screen.getByText("Paso 3 de 9")).toBeInTheDocument()
+
+    await user.click(screen.getByRole("button", { name: "Cerrar tutor" }))
+    expect(screen.queryByRole("log", { name: "Conversación con Coco" })).not.toBeInTheDocument()
+    await user.click(screen.getByRole("button", { name: "Pregúntale a Coco" }))
+    expect(
+      screen.queryByText("How do I ask a question?"),
+    ).not.toBeInTheDocument()
+    expect(screen.getByText("Paso 3 de 9")).toBeInTheDocument()
+    expect(getProgressSnapshot()).toEqual(before)
   })
 
   test("introduces a character once, keeps it seen when going back, and skips beats without one", async () => {
