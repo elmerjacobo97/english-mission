@@ -24,7 +24,7 @@ Narrative English-learning game. Spanish is UI and narration; English is learnin
 
 - Required variables: `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Keep secrets in `.env.local`; `.env*` is ignored except `.env.example`.
 - Optional `AI_*` and `TRANSCRIPT_*` variables are in `.env.example`. Provider keys are server-only; never expose `AI_API_KEY` or `TRANSCRIPT_API_KEY` with `NEXT_PUBLIC_`.
-- `supabase/migrations/` is database source of truth. Link with `rtk supabase link --project-ref <project-ref>` before `rtk supabase db push`; do not create a competing `schema.sql`.
+- Supabase CLI targets linked remote project; local Supabase and Docker are not required. Verify project link before remote operations, and run `rtk supabase link --project-ref <project-ref>` if missing. `supabase/migrations/` is database source of truth; apply with `rtk supabase db push` only when requested. Do not create a competing `schema.sql`.
 - Auth is magic-link only. `src/proxy.ts` refreshes sessions and protects pages; `/auth/confirm` exchanges callback codes. Configure Supabase Auth redirect URLs for local and deployed hosts.
 
 ## Structure
