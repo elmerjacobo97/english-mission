@@ -8,11 +8,13 @@ import type {
   Stars,
   StreakState,
 } from "./types"
+import type { CourseBand } from "../game/types/mission"
 import { PAID_LOOK_IDS } from "./looks"
 
 export type CoreRow = {
   user_id?: string
   coins: number
+  course_band?: CourseBand | null
   updated_at?: string | null
 }
 
@@ -61,10 +63,11 @@ export type ProgressRows = {
   reviews: ReviewRow[] | null
 }
 
-export const CORE_ROW_DEFAULTS = { coins: 0 }
+export const CORE_ROW_DEFAULTS: CoreRow = { coins: 0, course_band: null }
 
 export const emptyProgress: Progress = {
-  version: 6,
+  version: 7,
+  courseBand: null,
   coins: 0,
   missions: {},
   reviews: {},
@@ -90,6 +93,10 @@ function isNonNegativeInteger(value: unknown): value is number {
 
 function isDateKey(value: unknown): value is string {
   return typeof value === "string" && DATE_PATTERN.test(value)
+}
+
+function isCourseBand(value: unknown): value is CourseBand {
+  return value === "basic" || value === "intermediate" || value === "advanced"
 }
 
 function isPaidLookId(value: unknown): value is (typeof PAID_LOOK_IDS)[number] {
@@ -232,7 +239,8 @@ export function toProgress(rows: ProgressRows): Progress {
   }
 
   return {
-    version: 6,
+    version: 7,
+    courseBand: isCourseBand(core.course_band) ? core.course_band : null,
     coins: core.coins,
     missions,
     reviews,
@@ -247,9 +255,10 @@ export function toProgress(rows: ProgressRows): Progress {
 
 export function corePayload(
   coins: number,
+  courseBand: CourseBand | null,
   updatedAt: string = new Date().toISOString(),
 ): CoreRow {
-  return { coins, updated_at: updatedAt }
+  return { coins, course_band: courseBand, updated_at: updatedAt }
 }
 
 export function streakPayload(streak: StreakState): StreakRow {

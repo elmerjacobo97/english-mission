@@ -6,6 +6,8 @@
     "subtitle": "Primer día en la ciudad, primera conversación",
     "emoji": "🧳",
     "chapter": 1,
+    "band": "basic",
+    "cefrLevel": "A1",
     "level": 1,
     "cast": [
       {
@@ -38,6 +40,8 @@
     "subtitle": "El refrigerador está vacío y tienes hambre",
     "emoji": "🍌",
     "chapter": 1,
+    "band": "basic",
+    "cefrLevel": "A1",
     "level": 2,
     "cast": [
       {
@@ -70,6 +74,8 @@
     "subtitle": "Encontrar la parada del bus",
     "emoji": "🧭",
     "chapter": 1,
+    "band": "basic",
+    "cefrLevel": "A1",
     "level": 3,
     "cast": [
       {
@@ -106,6 +112,8 @@
     "subtitle": "Desayunar antes de la entrevista",
     "emoji": "☕",
     "chapter": 1,
+    "band": "basic",
+    "cefrLevel": "A1",
     "level": 3,
     "cast": [
       {
@@ -137,6 +145,8 @@
     "subtitle": "Boletos, paradas y horarios",
     "emoji": "🚌",
     "chapter": 2,
+    "band": "basic",
+    "cefrLevel": "A2",
     "level": 3,
     "cast": [
       {
@@ -168,6 +178,8 @@
     "subtitle": "Ropa sucia y máquinas",
     "emoji": "🧺",
     "chapter": 2,
+    "band": "basic",
+    "cefrLevel": "A2",
     "level": 4,
     "cast": [
       {
@@ -199,6 +211,8 @@
     "subtitle": "Tallas, colores y precios",
     "emoji": "👕",
     "chapter": 2,
+    "band": "basic",
+    "cefrLevel": "A2",
     "level": 4,
     "cast": [
       {
@@ -230,6 +244,8 @@
     "subtitle": "El alquiler y una fuga",
     "emoji": "☎️",
     "chapter": 2,
+    "band": "basic",
+    "cefrLevel": "A2",
     "level": 4,
     "cast": [
       {
@@ -261,6 +277,8 @@
     "subtitle": "Tu experiencia y tus ganas",
     "emoji": "💼",
     "chapter": 3,
+    "band": "intermediate",
+    "cefrLevel": "B1",
     "level": 4,
     "cast": [
       {
@@ -274,7 +292,7 @@
         "objective": "Conocer tu experiencia y explicar las expectativas del trabajo."
       }
     ],
-    "written": false,
+    "written": true,
     "vocab": [
       ["job", "trabajo"],
       ["interview", "entrevista"],
@@ -282,7 +300,8 @@
       ["work", "trabajar"],
       ["team", "equipo"],
       ["start", "empezar"],
-      ["skills", "habilidades"]
+      ["skills", "habilidades"],
+      ["available", "disponible"]
     ]
   },
   {
@@ -292,6 +311,8 @@
     "subtitle": "Compañeros, reuniones y café",
     "emoji": "🖥️",
     "chapter": 3,
+    "band": "advanced",
+    "cefrLevel": "C1",
     "level": 5,
     "cast": [
       {
@@ -310,15 +331,20 @@
         "objective": "Integrarte con naturalidad a la rutina del trabajo."
       }
     ],
-    "written": false,
+    "written": true,
     "vocab": [
       ["computer", "computadora"],
-      ["meeting", "reunión"],
       ["break", "descanso"],
-      ["boss", "jefe"],
-      ["colleague", "compañero"],
-      ["lunch", "almuerzo"],
-      ["email", "correo"]
+      ["agenda", "orden del día"],
+      ["clarify", "aclarar"],
+      ["deadline", "fecha límite"],
+      ["workload", "carga de trabajo"],
+      ["priority", "prioridad"],
+      ["feedback", "comentarios"],
+      ["follow-up", "seguimiento"],
+      ["concise", "conciso"],
+      ["colleague", "compañero de trabajo"],
+      ["lunch", "almuerzo"]
     ]
   },
   {
@@ -328,6 +354,8 @@
     "subtitle": "Planes para el fin de semana",
     "emoji": "🎉",
     "chapter": 3,
+    "band": "advanced",
+    "cefrLevel": "C1",
     "level": 5,
     "cast": [
       {
@@ -364,6 +392,8 @@
     "subtitle": "Mudanza y vecinos",
     "emoji": "🏠",
     "chapter": 3,
+    "band": "advanced",
+    "cefrLevel": "C1",
     "level": 5,
     "cast": [
       {

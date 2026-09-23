@@ -15,16 +15,10 @@ import { useState } from "react"
 import { PageHeader } from "@/shared/components/page-header"
 import { STREAK_MILESTONES } from "@/shared/lib/progress/streak"
 import { useProgress } from "@/shared/hooks/use-progress"
-import {
-  CHAPTER_TITLES,
-  chapterEntries,
-  isUnlocked,
-  nextMissionSlug,
-} from "@/shared/lib/curriculum/mission-catalog"
-import type { Chapter, MissionPlanEntry } from "@/shared/lib/game/types/mission"
+import { courseEntries, isUnlocked, nextMissionSlug } from "@/shared/lib/curriculum/mission-catalog"
+import { COURSE_BANDS } from "@/shared/lib/curriculum/course-bands"
+import type { MissionPlanEntry } from "@/shared/lib/game/types/mission"
 import { MissionStamp } from "./mission-stamp"
-
-const CHAPTERS: Chapter[] = [1, 2, 3]
 
 export function MissionMap() {
   const { progress, clearPendingMilestone, reset } = useProgress()
@@ -33,7 +27,8 @@ export function MissionMap() {
   const { streak } = progress
   const { pendingMilestone } = streak
 
-  const continueSlug = nextMissionSlug(progress)
+  const selectedBand = progress.courseBand
+  const continueSlug = selectedBand ? nextMissionSlug(progress, selectedBand) : null
 
   const hasProgress =
     Object.keys(progress.missions).length > 0 || progress.coins > 0
@@ -77,7 +72,7 @@ export function MissionMap() {
           </span>
           <div className="flex min-w-0 flex-1 flex-col gap-1 rounded-3xl border-2 border-dashed border-ink/15 bg-white/60 p-4 opacity-80">
             <span className="font-display text-xs font-semibold uppercase tracking-widest text-muted">
-              Misión {entry.order} · Nivel {entry.level}
+              Misión {entry.order} · {entry.cefrLevel} · Reto {entry.level}
             </span>
             <span className="font-display text-lg leading-tight font-bold text-muted">
               {entry.title}
@@ -117,7 +112,7 @@ export function MissionMap() {
             </span>
             <span className="flex min-w-0 flex-1 flex-col">
               <span className="flex items-center gap-2 font-display text-xs font-semibold uppercase tracking-widest text-muted">
-                Misión {entry.order} · Nivel {entry.level}
+                Misión {entry.order} · {entry.cefrLevel} · Reto {entry.level}
                 {isNext && !completed && (
                   <span className="rounded-full bg-accent px-2 py-0.5 text-[11px] font-bold tracking-normal text-ink normal-case">
                     Siguiente
@@ -172,7 +167,7 @@ export function MissionMap() {
       <PageHeader
         icon={MapTrifoldIcon}
         title="Misiones"
-        description="Una historia en 12 misiones: de tu primer día a sentirte en casa."
+        description="Tres rutas en inglés con historias, práctica guiada y repaso."
         aside={
           hasProgress && (
             <button
@@ -211,16 +206,16 @@ export function MissionMap() {
         </div>
       )}
 
-      {CHAPTERS.map((chapter) => {
-        const entries = chapterEntries(chapter)
+      {selectedBand && (() => {
+        const entries = courseEntries(selectedBand)
         const completedCount = entries.filter(
           (entry) => progress.missions[entry.slug]?.completed,
         ).length
         return (
-          <section key={chapter} className="flex flex-col gap-3">
+          <section key={selectedBand} className="flex flex-col gap-3">
             <header className="flex items-baseline justify-between gap-2 px-1">
               <h2 className="font-display text-sm font-semibold uppercase tracking-widest text-muted">
-                Capítulo {chapter} · {CHAPTER_TITLES[chapter]}
+                Ruta {COURSE_BANDS[selectedBand].title} · {COURSE_BANDS[selectedBand].range}
               </h2>
               <span className="font-display text-xs font-semibold text-muted">
                 {completedCount}/{entries.length}
@@ -237,7 +232,7 @@ export function MissionMap() {
             </div>
           </section>
         )
-      })}
+      })()}
 
       {confirmingReset && (
         <div
@@ -264,8 +259,8 @@ export function MissionMap() {
               ¿Reiniciar progreso?
             </p>
             <p id="reset-body" className="text-sm font-semibold text-muted">
-              Esto borra tus monedas, estrellas y misiones completadas. No se
-              puede deshacer.
+              Esto borra tus monedas, estrellas y misiones completadas. Se
+              conservará la ruta elegida. No se puede deshacer.
             </p>
             <div className="flex justify-end gap-2.5">
               <button

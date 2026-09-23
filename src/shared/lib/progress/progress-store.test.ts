@@ -14,6 +14,7 @@ import {
   registerDailyActivity,
   resetProgress,
   selectLook,
+  setCourseBand,
   spendCoins,
 } from "./progress-store"
 
@@ -72,6 +73,21 @@ describe("coins", () => {
     expect(getProgressSnapshot().coins).toBe(15)
     expect(spendCoins(50)).toBe(false)
     expect(getProgressSnapshot().coins).toBe(15)
+  })
+})
+
+describe("course band", () => {
+  test("selects a route and saves it in the core row", () => {
+    startWithProgress()
+
+    setCourseBand("intermediate")
+
+    expect(getProgressSnapshot().courseBand).toBe("intermediate")
+    expect(mockedEnqueue.mock.calls[0][0]).toMatchObject({
+      action: "upsert",
+      table: "progress_core",
+      payload: { user_id: "user-1", coins: 0, course_band: "intermediate" },
+    })
   })
 })
 
@@ -257,26 +273,27 @@ describe("registerDailyActivity", () => {
 })
 
 describe("resetProgress", () => {
-  test("clears local snapshot and enqueues deletion of all six tables", () => {
+  test("clears game data, keeps the chosen route and saves a zeroed core row", () => {
     startWithProgress()
+    setCourseBand("advanced")
     addCoins(25)
     mockedEnqueue.mockClear()
 
     resetProgress()
 
-    expect(getProgressSnapshot()).toEqual(emptyProgress)
+    expect(getProgressSnapshot()).toEqual({ ...emptyProgress, courseBand: "advanced" })
     expect(queuedTables()).toEqual([
-      "progress_core",
       "streak_state",
       "shop_state",
       "looks_state",
       "mission_progress",
       "review_cards",
+      "progress_core",
     ])
-    expect(mockedEnqueue.mock.calls[0][0]).toEqual({
-      action: "delete",
+    expect(mockedEnqueue.mock.calls[5]?.[0]).toEqual({
+      action: "upsert",
       table: "progress_core",
-      userId: "user-1",
+      payload: { user_id: "user-1", coins: 0, course_band: "advanced", updated_at: expect.any(String) },
     })
   })
 })

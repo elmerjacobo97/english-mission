@@ -8,6 +8,7 @@ import {
   getProgressSnapshot,
   resetProgress,
   selectLook,
+  setCourseBand,
   spendCoins,
   subscribeProgress,
 } from "@/shared/lib/progress/progress-store"
@@ -24,6 +25,7 @@ export function useProgress() {
     addCoins,
     spendCoins,
     selectLook,
+    setCourseBand,
     clearPendingMilestone,
     reset: resetProgress,
   }

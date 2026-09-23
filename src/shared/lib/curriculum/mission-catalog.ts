@@ -1,6 +1,11 @@
 import type { Progress } from "@/shared/lib/progress/types"
 import type { Beat } from "@/shared/lib/game/types/beat"
-import type { Chapter, Mission, MissionPlanEntry } from "@/shared/lib/game/types/mission"
+import type {
+  Chapter,
+  CourseBand,
+  Mission,
+  MissionPlanEntry,
+} from "@/shared/lib/game/types/mission"
 import mission01Data from "./missions/mission-01-arrival.json"
 import mission02Data from "./missions/mission-02-supermarket.json"
 import mission03Data from "./missions/mission-03-directions.json"
@@ -9,6 +14,8 @@ import mission05Data from "./missions/mission-05-bus.json"
 import mission06Data from "./missions/mission-06-laundry.json"
 import mission07Data from "./missions/mission-07-clothes.json"
 import mission08Data from "./missions/mission-08-landlord.json"
+import mission09Data from "./missions/mission-09-interview.json"
+import mission10Data from "./missions/mission-10-first-day.json"
 import { missionPlan } from "./plan"
 
 export const CHAPTER_TITLES: Record<Chapter, string> = {
@@ -26,6 +33,8 @@ const beatsBySlug: Record<string, Beat[]> = {
   laundry: mission06Data as unknown as Beat[],
   clothes: mission07Data as unknown as Beat[],
   landlord: mission08Data as unknown as Beat[],
+  interview: mission09Data as unknown as Beat[],
+  "first-day": mission10Data as unknown as Beat[],
 }
 
 export const missions: Mission[] = missionPlan
@@ -44,21 +53,35 @@ export function chapterEntries(chapter: Chapter): MissionPlanEntry[] {
   return missionPlan.filter((entry) => entry.chapter === chapter)
 }
 
+export function courseEntries(band: CourseBand): MissionPlanEntry[] {
+  return missionPlan
+    .filter((entry) => entry.band === band)
+    .sort((left, right) => left.order - right.order)
+}
+
 export function isUnlocked(entry: MissionPlanEntry, progress: Progress): boolean {
-  if (entry.order === 1) {
+  const entries = courseEntries(entry.band)
+  if (entries[0]?.slug === entry.slug) {
     return true
   }
-  const previous = missionPlan.find((item) => item.order === entry.order - 1)
+  const previous = [...entries]
+    .reverse()
+    .find((item) => item.order < entry.order)
   if (!previous) {
     return false
   }
   return progress.missions[previous.slug]?.completed === true
 }
 
-export function nextMissionSlug(progress: Progress): string | null {
-  const candidate = missions.find((mission) => {
-    const stars = progress.missions[mission.slug]?.stars ?? 0
-    return stars < 3 && isUnlocked(mission, progress)
-  })
+export function nextMissionSlug(
+  progress: Progress,
+  band: CourseBand = progress.courseBand ?? "basic",
+): string | null {
+  const candidate = missions
+    .filter((mission) => mission.band === band)
+    .find((mission) => {
+      const stars = progress.missions[mission.slug]?.stars ?? 0
+      return stars < 3 && isUnlocked(mission, progress)
+    })
   return candidate?.slug ?? null
 }

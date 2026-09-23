@@ -1,0 +1,103 @@
+[
+  {
+    "kind": "story",
+    "es": "Llegas a la oficina a tiempo. Coco te recuerda que puedes tomarte un momento para respirar.",
+    "en": "My job interview is tomorrow.",
+    "speaker": "you",
+    "vocab": [["job", "trabajo"], ["interview", "entrevista"], ["tomorrow", "mañana"]],
+    "character": "coco",
+    "note": {
+      "title": "My job interview",
+      "body": "En inglés, interview nombra la entrevista. Job interview es la expresión común para una entrevista de trabajo."
+    }
+  },
+  {
+    "kind": "story",
+    "es": "Sofía te saluda y te invita a sentarte.",
+    "en": "Thanks for coming. Could you tell me about your experience?",
+    "speaker": "sofia",
+    "vocab": [["experience", "experiencia"]],
+    "character": "sofia",
+    "mood": "happy"
+  },
+  {
+    "kind": "choice",
+    "prompt": "Sofía pregunta por tu experiencia. Elige una respuesta clara.",
+    "options": ["I have experience in customer service.", "I experience the bus stop.", "I am yesterday at home."],
+    "correct": 0,
+    "character": "sofia"
+  },
+  {
+    "kind": "story",
+    "es": "Le cuentas que trabajabas con un equipo y que te gustaba colaborar.",
+    "en": "I work well with a team, and I worked with one at my last job.",
+    "speaker": "you",
+    "vocab": [["work", "trabajar"], ["team", "equipo"]],
+    "character": "coco",
+    "note": {
+      "title": "I worked with a team",
+      "body": "I worked describe una experiencia terminada. Usa worked para el pasado regular y with para decir con quién trabajaste."
+    }
+  },
+  {
+    "kind": "type",
+    "prompt": "Di: «Trabajé con un equipo».",
+    "accepted": ["I worked with a team"],
+    "hint": "I w______ with a t____",
+    "character": "coco"
+  },
+  {
+    "kind": "story",
+    "es": "Sofía quiere saber qué tareas hacías en ese empleo.",
+    "en": "What did you do in your last role?",
+    "speaker": "sofia",
+    "character": "sofia"
+  },
+  {
+    "kind": "choice",
+    "prompt": "¿Qué respuesta explica mejor tus habilidades?",
+    "options": ["I helped customers and solved small problems.", "I help customers next yesterday.", "I was a customer yesterday all days."],
+    "correct": 0,
+    "character": "sofia"
+  },
+  {
+    "kind": "story",
+    "es": "Explicas que organizabas pedidos y atendías consultas.",
+    "en": "I used my communication skills every day.",
+    "speaker": "you",
+    "vocab": [["skills", "habilidades"]],
+    "character": "coco"
+  },
+  {
+    "kind": "fill",
+    "prompt": "Completa la frase para hablar de una experiencia pasada.",
+    "sentence": "I ___ with customers every day.",
+    "answer": "worked",
+    "character": "coco"
+  },
+  {
+    "kind": "story",
+    "es": "Sofía te pregunta cuándo podrías comenzar.",
+    "en": "When are you available to start?",
+    "speaker": "sofia",
+    "vocab": [["available", "disponible"], ["start", "empezar"]],
+    "character": "sofia"
+  },
+  {
+    "kind": "listen",
+    "prompt": "Escucha y elige cuándo puedes trabajar.",
+    "phrase": "I am available on weekdays and can start next week.",
+    "options": ["Entre semana y puedo empezar la próxima semana.", "Solo estoy disponible los domingos.", "Ya no busco trabajo."],
+    "correct": 0,
+    "character": "sofia"
+  },
+  {
+    "kind": "story",
+    "es": "Sofía agradece tu tiempo y te dice que te llamará mañana. Coco celebra que respondiste con claridad.",
+    "en": "Thank you for your time. I will call you tomorrow.",
+    "speaker": "sofia",
+    "vocab": [["time", "tiempo"], ["call", "llamar"], ["tomorrow", "mañana"]],
+    "character": "coco",
+    "mood": "happy"
+  }
+]

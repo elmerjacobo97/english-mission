@@ -1,0 +1,104 @@
+[
+  {
+    "kind": "story",
+    "es": "En tu primer día, Tere te recibe y menciona que el equipo ya te envió un mensaje.",
+    "en": "Your colleague sent a message about our first meeting.",
+    "speaker": "tere",
+    "vocab": [["colleague", "compañero de trabajo"], ["message", "mensaje"], ["meeting", "reunión"]],
+    "character": "tere",
+    "note": {
+      "title": "Although the day is busy…",
+      "body": "Although introduce una idea que contrasta con la principal. Although the day is busy, you can still ask questions."
+    }
+  },
+  {
+    "kind": "story",
+    "es": "Sofía te comparte la agenda antes de que empiece la reunión.",
+    "en": "I have reviewed the agenda on my computer before the meeting, but I need to clarify one item.",
+    "speaker": "sofia",
+    "vocab": [["agenda", "orden del día"], ["computer", "computadora"], ["clarify", "aclarar"]],
+    "character": "sofia"
+  },
+  {
+    "kind": "dialogue",
+    "prompt": "Responde de manera profesional y directa.",
+    "line": "Could you clarify which item should take priority?",
+    "options": ["Certainly. The client update is the top priority.", "I had lunch in the garden yesterday.", "No, because the computer is blue."],
+    "correct": 0,
+    "character": "sofia"
+  },
+  {
+    "kind": "story",
+    "es": "Sofía explica que la fecha límite está cerca, así que el equipo ajustará la carga de trabajo.",
+    "en": "The deadline is tight, but the first priority is to adjust the workload.",
+    "speaker": "sofia",
+    "vocab": [["deadline", "fecha límite"], ["workload", "carga de trabajo"], ["priority", "prioridad"]],
+    "character": "sofia",
+    "note": {
+      "title": "Although / even though",
+      "body": "Aunque la frase principal expresa un resultado distinto de lo esperado, usa although o even though para presentar el contraste."
+    }
+  },
+  {
+    "kind": "choice",
+    "prompt": "¿Qué quiere decir Sofía sobre la carga de trabajo?",
+    "options": ["Podemos reorganizar las tareas aunque la fecha esté cerca.", "La fecha límite ya pasó y debemos cancelar todo.", "El equipo no tiene ninguna tarea pendiente."],
+    "correct": 0,
+    "character": "sofia"
+  },
+  {
+    "kind": "story",
+    "es": "Tere te pide enviar un breve seguimiento antes del almuerzo.",
+    "en": "Please send a concise follow-up message to your colleague before lunch.",
+    "speaker": "tere",
+    "vocab": [["concise", "conciso"], ["follow-up", "seguimiento"], ["message", "mensaje"], ["colleague", "compañero de trabajo"], ["lunch", "almuerzo"]],
+    "character": "tere"
+  },
+  {
+    "kind": "order",
+    "prompt": "Ordena la frase para pedir comentarios de forma amable.",
+    "tokens": ["your", "I", "feedback", "would", "appreciate"],
+    "solution": ["I", "would", "appreciate", "your", "feedback"],
+    "character": "coco"
+  },
+  {
+    "kind": "story",
+    "es": "El equipo te da comentarios específicos sobre el primer borrador.",
+    "en": "The feedback helped me make the summary more concise.",
+    "speaker": "you",
+    "vocab": [["feedback", "comentarios"], ["concise", "conciso"]],
+    "character": "coco"
+  },
+  {
+    "kind": "fill",
+    "prompt": "Completa una pregunta para que el equipo explique mejor el plan.",
+    "sentence": "Could you ___ the timeline before we proceed?",
+    "answer": "clarify",
+    "character": "coco"
+  },
+  {
+    "kind": "dialogue",
+    "prompt": "Elige una respuesta que mantenga un tono colaborativo.",
+    "line": "I've drafted a concise summary for the client.",
+    "options": ["Thanks. I will review it and share feedback before the deadline.", "I don't know what a summary is and I won't look.", "The team meeting was lunch yesterday."],
+    "correct": 0,
+    "character": "sofia"
+  },
+  {
+    "kind": "story",
+    "es": "Antes de cerrar el día, confirmas la prioridad y acuerdas la próxima acción.",
+    "en": "Although we had little time, we scheduled a short break and agreed on a clear priority.",
+    "speaker": "you",
+    "vocab": [["time", "tiempo"], ["break", "descanso"], ["priority", "prioridad"]],
+    "character": "tere"
+  },
+  {
+    "kind": "story",
+    "es": "Tu primer día termina bien: pediste comentarios, aclaraste dudas y ya sabes cuál es el siguiente paso.",
+    "en": "Your follow-up is ready, and the whole team is on the same page.",
+    "speaker": "coco",
+    "vocab": [["follow-up", "seguimiento"], ["team", "equipo"]],
+    "character": "coco",
+    "mood": "happy"
+  }
+]

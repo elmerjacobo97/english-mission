@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { VideosPage } from "@/features/videos/components/videos-page"
 import { createVideoRepository } from "@/features/videos/server/video-repository.server"
-import { getCurrentUser } from "@/shared/lib/supabase/server"
+import { requireCourseBand } from "@/shared/lib/progress/require-course-band.server"
 import type { VideoLibraryItem } from "@/features/videos/utils/video"
 
 export const metadata: Metadata = {
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 }
 
 export default async function VideosRoute() {
-  const user = await getCurrentUser()
+  const { user } = await requireCourseBand()
   let initialVideos: VideoLibraryItem[] = []
   let initialError: string | null = null
 

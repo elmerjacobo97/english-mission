@@ -35,6 +35,10 @@ describe("UserMenu", () => {
 
     expect(screen.getByText("ana@example.com")).toBeInTheDocument()
     expect(trigger).toHaveAttribute("aria-expanded", "true")
+    expect(screen.getByRole("link", { name: "Configuración" })).toHaveAttribute(
+      "href",
+      "/settings",
+    )
     await user.click(screen.getByRole("button", { name: "Salir" }))
 
     expect(auth.signOut).toHaveBeenCalledOnce()

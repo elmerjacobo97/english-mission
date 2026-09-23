@@ -11,7 +11,7 @@ import {
 } from "./progress-mappers"
 
 const completeRows = {
-  core: { coins: 42, updated_at: "2026-09-18T12:00:00.000Z" },
+  core: { coins: 42, course_band: "intermediate" as const, updated_at: "2026-09-18T12:00:00.000Z" },
   streak: {
     current: 4,
     best: 8,
@@ -36,7 +36,8 @@ const completeRows = {
 describe("toProgress", () => {
   test("reconstructs complete progress from database rows", () => {
     expect(toProgress(completeRows)).toEqual({
-      version: 6,
+      version: 7,
+      courseBand: "intermediate",
       coins: 42,
       missions: {
         arrival: { completed: true, stars: 3, bestCoins: 45 },
@@ -66,6 +67,13 @@ describe("toProgress", () => {
         reviews: null,
       }),
     ).toEqual(emptyProgress)
+  })
+
+  test("keeps legacy core rows without a course band and rejects unknown bands", () => {
+    expect(toProgress({ ...completeRows, core: { coins: 12 } }).courseBand).toBeNull()
+    expect(
+      toProgress({ ...completeRows, core: { coins: 12, course_band: "expert" as never } }),
+    ).toMatchObject({ coins: 12, courseBand: null })
   })
 
   test("drops corrupt rows and keeps valid sections", () => {
@@ -111,8 +119,9 @@ describe("payload mappers", () => {
     const mission = completeRows.missions[0]
     const review = completeRows.reviews[0]
 
-    expect(corePayload(42, "fixed")).toEqual({
+    expect(corePayload(42, "intermediate", "fixed")).toEqual({
       coins: 42,
+      course_band: "intermediate",
       updated_at: "fixed",
     })
     expect(streakPayload({

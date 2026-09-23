@@ -8,7 +8,8 @@ const NOW = 1_700_000_000_000
 
 function progress(overrides: Partial<Progress> = {}): Progress {
   return {
-    version: 6,
+    version: 7,
+    courseBand: null,
     coins: 0,
     missions: {},
     reviews: {},
@@ -32,6 +33,8 @@ function entry(
     subtitle: slug,
     emoji: "🧪",
     chapter,
+    band: "basic",
+    cefrLevel: "A1",
     level: 1,
     cast: [],
     vocab,

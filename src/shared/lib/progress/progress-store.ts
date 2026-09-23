@@ -4,6 +4,7 @@ import type { ProgressTable, SyncOperation } from "./progress-sync"
 import { canBuy, isOwned, LOOK_PRICES, nextLooks } from "./looks"
 import { canRecharge, nextShop } from "./shop"
 import { localDayKey, nextStreak } from "./streak"
+import type { CourseBand } from "../game/types/mission"
 import {
   corePayload,
   emptyProgress,
@@ -89,7 +90,7 @@ export function addCoins(amount: number): void {
   const progress = getProgressSnapshot()
   mutation(
     { ...progress, coins: progress.coins + amount },
-    [upsert("progress_core", corePayload(progress.coins + amount))],
+    [upsert("progress_core", corePayload(progress.coins + amount, progress.courseBand))],
   )
 }
 
@@ -100,7 +101,7 @@ export function spendCoins(amount: number): boolean {
   }
   mutation(
     { ...progress, coins: progress.coins - amount },
-    [upsert("progress_core", corePayload(progress.coins - amount))],
+    [upsert("progress_core", corePayload(progress.coins - amount, progress.courseBand))],
   )
   return true
 }
@@ -127,7 +128,7 @@ export function selectLook(id: CocoLookId): boolean {
     { ...progress, coins, looks },
     [
       upsert("looks_state", looksPayload(looks)),
-      upsert("progress_core", corePayload(coins)),
+      upsert("progress_core", corePayload(coins, progress.courseBand)),
     ],
   )
   return true
@@ -148,7 +149,7 @@ export function recordRecharge(
     { ...progress, coins, shop },
     [
       upsert("shop_state", shopPayload(shop)),
-      upsert("progress_core", corePayload(coins)),
+      upsert("progress_core", corePayload(coins, progress.courseBand)),
     ],
   )
   return true
@@ -173,7 +174,7 @@ export function recordMissionResult(
       missions: { ...progress.missions, [slug]: mission },
     },
     [
-      upsert("progress_core", corePayload(coins)),
+      upsert("progress_core", corePayload(coins, progress.courseBand)),
       upsert("mission_progress", missionPayload(slug, mission)),
     ],
   )
@@ -209,7 +210,7 @@ export function registerDailyActivity(now: number = Date.now()): void {
     { ...progress, coins, streak },
     [
       upsert("streak_state", streakPayload(streak)),
-      upsert("progress_core", corePayload(coins)),
+      upsert("progress_core", corePayload(coins, progress.courseBand)),
     ],
   )
 }
@@ -226,8 +227,20 @@ export function clearPendingMilestone(): void {
   )
 }
 
+export function setCourseBand(courseBand: CourseBand): void {
+  const progress = getProgressSnapshot()
+  if (progress.courseBand === courseBand) {
+    return
+  }
+  mutation(
+    { ...progress, courseBand },
+    [upsert("progress_core", corePayload(progress.coins, courseBand))],
+  )
+}
+
 export function resetProgress(): void {
-  current = emptyProgress
+  const courseBand = getProgressSnapshot().courseBand
+  current = { ...emptyProgress, courseBand }
   notify()
 
   if (!currentUserId) {
@@ -235,7 +248,6 @@ export function resetProgress(): void {
   }
 
   const tables: ProgressTable[] = [
-    "progress_core",
     "streak_state",
     "shop_state",
     "looks_state",
@@ -244,5 +256,10 @@ export function resetProgress(): void {
   ]
   tables.forEach((table) => {
     progressSync.enqueue({ action: "delete", table, userId: currentUserId })
+  })
+  progressSync.enqueue({
+    action: "upsert",
+    table: "progress_core",
+    payload: userPayload(corePayload(0, courseBand)),
   })
 }

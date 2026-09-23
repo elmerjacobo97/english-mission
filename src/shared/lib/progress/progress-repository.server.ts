@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { cache } from "react"
 
 import { createSupabaseServerClient } from "../supabase/server"
 import {
@@ -20,7 +21,7 @@ async function ensureRootRows(
 ): Promise<void> {
   const [coreResult, streakResult, shopResult, looksResult] = await Promise.all([
     supabase.from("progress_core").upsert(
-      { user_id: userId, coins: 0 },
+      { user_id: userId, coins: 0, course_band: null },
       { onConflict: "user_id", ignoreDuplicates: true },
     ),
     supabase.from("streak_state").upsert(
@@ -91,7 +92,7 @@ async function readCollection<T>(
   return result.data ?? []
 }
 
-export async function readProgress(userId: string) {
+async function readProgressForUser(userId: string) {
   const supabase = await createSupabaseServerClient()
   await ensureRootRows(supabase, userId)
 
@@ -115,3 +116,5 @@ export async function readProgress(userId: string) {
 
   return toProgress(rows)
 }
+
+export const readProgress = cache(readProgressForUser)

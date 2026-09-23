@@ -68,7 +68,7 @@ describe("readProgress", () => {
 
     expect(client.from).toHaveBeenCalledTimes(10)
     expect(tables.progress_core.upsert).toHaveBeenCalledWith(
-      { user_id: "user-1", coins: 0 },
+      { user_id: "user-1", coins: 0, course_band: null },
       { onConflict: "user_id", ignoreDuplicates: true },
     )
     expect(tables.streak_state.upsert).toHaveBeenCalled()
@@ -88,7 +88,8 @@ describe("readProgress", () => {
     mockClient(tables)
 
     await expect(readProgress("user-2")).resolves.toMatchObject({
-      version: 6,
+      version: 7,
+      courseBand: null,
       coins: 0,
       missions: {},
       reviews: {},

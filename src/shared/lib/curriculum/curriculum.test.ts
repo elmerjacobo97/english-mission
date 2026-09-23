@@ -105,6 +105,8 @@ describe("written missions", () => {
       subtitle: "Prueba",
       emoji: "🧪",
       chapter: 1,
+      band: "basic",
+      cefrLevel: "A1",
       level: 1,
       cast: [],
       vocab: [],
@@ -199,8 +201,11 @@ describe("cast and notes", () => {
     }
   })
 
-  test("keeps chapters three missions unwritten", () => {
-    expect(missionPlan.filter((entry) => entry.order >= 9).every((entry) => !entry.written)).toBe(true)
+  test("includes a playable first mission in every CEFR band", () => {
+    expect(missionPlan.filter((entry) => entry.written).map((entry) => entry.slug)).toContain("arrival")
+    expect(missionPlan.some((entry) => entry.band === "intermediate" && entry.written)).toBe(true)
+    expect(missionPlan.some((entry) => entry.band === "advanced" && entry.written)).toBe(true)
+    expect(missionPlan.filter((entry) => !entry.written).map((entry) => entry.order)).toEqual([11, 12])
   })
 
   test("uses only cast characters and at least two per written mission", () => {

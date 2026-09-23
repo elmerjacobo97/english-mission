@@ -1,7 +1,8 @@
 "use client"
 
-import { SignOutIcon, UserCircleIcon } from "@phosphor-icons/react"
+import { GearSixIcon, SignOutIcon, UserCircleIcon } from "@phosphor-icons/react"
 import { useEffect, useRef, useState } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { signOut } from "../services/auth.service"
 
@@ -85,6 +86,14 @@ export function UserMenu({ email }: { email: string }) {
             {email}
           </p>
           <div className="border-t-2 border-ink/10 pt-2">
+            <Link
+              href="/settings"
+              onClick={() => setOpen(false)}
+              className="flex min-h-11 w-full items-center gap-2 rounded-xl px-2.5 font-display text-sm font-semibold transition hover:bg-paper"
+            >
+              <GearSixIcon weight="bold" size={18} aria-hidden />
+              Configuración
+            </Link>
             <button
               type="button"
               onClick={handleSignOut}

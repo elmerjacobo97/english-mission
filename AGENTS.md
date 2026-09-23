@@ -33,7 +33,8 @@ Narrative English-learning game. Spanish is UI and narration; English is learnin
 - Dependency direction: `src/app` routes compose `src/features/*`; features use `src/shared/*`; shared code must not import features and features must not import each other. Current feature slices: `auth`, `mission`, `review`, `shell`, `shop`, `videos`.
 - `(app)` routes are wrapped by `AppShell`. Use global Next route types such as `PageProps<'/mission/[slug]'>` and `LayoutProps<'/'>`; do not define imported page-prop types. Use `PageHeader` for new pages.
 - Put server-only work in files marked with `import "server-only"`; client components must not import server gateways, repositories, or config. AI gateway: `src/shared/lib/ai/gateway.server.ts`. Video provider/repository: `src/features/videos/server/`.
-- Progress is module state, version 6: `{ coins, missions, reviews, streak, shop, looks }`. Root layout reads it on the server; `ProgressProvider` hydrates the store. Mutations are optimistic and sync absolute section payloads through a FIFO queue with retry and `online` recovery. Do not add progress to `localStorage`.
+- Progress is module state, version 7: `{ courseBand, coins, missions, reviews, streak, shop, looks }`. `courseBand` is nullable for existing accounts until the learner chooses a route. Root layout reads progress on the server; `ProgressProvider` hydrates the store. Mutations are optimistic and sync absolute section payloads through a FIFO queue with retry and `online` recovery. Do not add progress to `localStorage`.
+- CEFR course bands are separate from the five numeric challenge difficulty profiles: Basic A1–A2, Intermediate B1–B2 and Advanced C1. The optional placement quiz recommends a starting band but stores only the learner's selection. Changing bands never erases mission progress; resetting game progress keeps the selected band.
 
 ## Content And Specs
 

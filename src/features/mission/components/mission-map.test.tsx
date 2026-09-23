@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { describe, expect, test } from "vitest"
+import { beforeEach, describe, expect, test } from "vitest"
 import {
   addCoins,
   emptyProgress,
@@ -10,6 +10,10 @@ import {
 } from "@/shared/lib/progress/progress-store"
 import type { StreakState } from "@/shared/lib/progress/types"
 import { MissionMap } from "./mission-map"
+
+beforeEach(() => {
+  initProgress({ ...emptyProgress, courseBand: "basic" }, "")
+})
 
 function seedStreak(streak: Partial<StreakState>) {
   initProgress(
@@ -22,19 +26,15 @@ function seedStreak(streak: Partial<StreakState>) {
 }
 
 describe("MissionMap", () => {
-  test("groups missions by chapter and points to the next one", () => {
+  test("shows only the chosen CEFR route and points to its next mission", () => {
     render(<MissionMap />)
 
-    expect(
-      screen.getByText(/Capítulo 1 · Primeros pasos/),
-    ).toBeInTheDocument()
-    expect(screen.getByText(/Capítulo 2 · La ciudad/)).toBeInTheDocument()
-    expect(screen.getByText(/Capítulo 3 · La vida/)).toBeInTheDocument()
+    expect(screen.getByText(/Ruta Básico · A1–A2/)).toBeInTheDocument()
     expect(screen.getByRole("link", { name: /Jugar/ })).toBeInTheDocument()
     expect(
       screen.getAllByText("Completa la misión anterior para desbloquearla"),
     ).toHaveLength(7)
-    expect(screen.getAllByText("Próximamente")).toHaveLength(4)
+    expect(screen.queryByText("Próximamente")).not.toBeInTheDocument()
     const nextCard = screen.getByRole("link", { name: /La llegada/ })
     expect(nextCard).toHaveAttribute("href", "/mission/arrival")
     expect(nextCard).toHaveTextContent("Siguiente")
@@ -128,7 +128,7 @@ describe("MissionMap", () => {
     await user.click(screen.getByRole("button", { name: "Sí, borrar todo" }))
 
     expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
-    expect(getProgressSnapshot()).toEqual(emptyProgress)
+    expect(getProgressSnapshot()).toEqual({ ...emptyProgress, courseBand: "basic" })
   })
 
   test("cancel keeps progress and closes the dialog", async () => {
@@ -158,4 +158,5 @@ describe("MissionMap", () => {
     expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
     expect(getProgressSnapshot().coins).toBe(20)
   })
+
 })

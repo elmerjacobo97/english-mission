@@ -1,3 +1,5 @@
+import type { CourseBand } from "../game/types/mission"
+
 export type Stars = 0 | 1 | 2 | 3
 
 export type MissionProgress = {
@@ -36,7 +38,8 @@ export type LooksState = {
 }
 
 export type Progress = {
-  version: 6
+  version: 7
+  courseBand: CourseBand | null
   coins: number
   missions: Record<string, MissionProgress>
   reviews: Record<string, ReviewCard>
