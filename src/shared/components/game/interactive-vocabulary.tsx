@@ -121,6 +121,7 @@ function VocabularySegment({
           if (open) activatorRef.current = element
         }}
         type="button"
+        lang="en"
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-controls={popoverId}
@@ -155,7 +156,7 @@ function VocabularySegment({
                 type="button"
                 onClick={() => speak(segment.en)}
                 aria-label={`Escuchar ${segment.en}`}
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-teal-soft text-teal-strong transition hover:bg-teal/15"
+                className="ui-icon-button ui-icon-button-quiet"
               >
                 <SpeakerHighIcon size={20} weight="fill" aria-hidden />
               </button>

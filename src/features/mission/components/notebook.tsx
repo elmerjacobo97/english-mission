@@ -88,7 +88,7 @@ export function Notebook() {
         {dueCount > 0 && (
           <Link
             href="/review"
-            className="flex min-h-12 items-center justify-between gap-2.5 rounded-2xl border-2 border-accent/30 bg-paper px-5 font-display font-semibold text-accent-deep shadow-card transition hover:-translate-y-0.5"
+            className="ui-button ui-button-subtle justify-between px-5"
           >
             <span className="flex items-center gap-2.5">
               <ArrowCounterClockwiseIcon weight="bold" size={20} aria-hidden />
@@ -108,7 +108,7 @@ export function Notebook() {
           onExit={() => setPractice(null)}
         />
       ) : sections.length === 0 ? (
-        <section className="flex flex-col items-center gap-4 rounded-3xl border-2 border-dashed border-ink/15 bg-white/60 p-6 text-center">
+        <section className="ui-card-empty flex flex-col items-center gap-4 p-6 text-center">
           <span className="text-4xl" aria-hidden>
             📖
           </span>
@@ -121,7 +121,7 @@ export function Notebook() {
           </p>
           <Link
             href="/"
-            className="flex min-h-12 items-center rounded-2xl bg-accent-strong px-5 font-display font-semibold text-white shadow-pop transition active:translate-y-0.5"
+            className="ui-button ui-button-primary-large"
           >
             Ir al mapa
           </Link>
@@ -136,10 +136,10 @@ export function Notebook() {
               {section.words.map((word) => (
                 <li
                   key={word.en}
-                  className="flex w-full items-center gap-3 rounded-2xl border-2 border-ink/10 bg-surface px-4 py-3 shadow-card"
+                  className="ui-card-compact flex w-full items-center gap-3 px-4 py-3"
                 >
                   <span className="flex min-w-0 flex-1 flex-col gap-1">
-                    <span className="font-display text-lg font-semibold text-teal-strong">
+                    <span lang="en" className="font-display text-lg font-semibold text-teal-strong">
                       {word.en}
                     </span>
                     <span className="text-sm font-semibold text-muted">
@@ -166,7 +166,7 @@ export function Notebook() {
                       type="button"
                       onClick={() => speak(word.en)}
                       aria-label={`Escuchar ${word.en}`}
-                      className="flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-2xl border-2 border-ink/10 bg-paper text-teal transition hover:border-teal"
+                      className="ui-icon-button ui-icon-button-quiet"
                     >
                       <SpeakerHighIcon weight="fill" size={20} aria-hidden />
                     </button>
@@ -175,7 +175,7 @@ export function Notebook() {
                     type="button"
                     onClick={() => startPractice(word.key, word.box)}
                     aria-label={`Practicar ${word.en}`}
-                    className="flex min-h-11 shrink-0 items-center rounded-2xl border-2 border-accent/30 bg-paper px-4 font-display text-sm font-semibold text-accent-deep shadow-card transition hover:bg-accent/10"
+                    className="ui-button ui-button-subtle shrink-0"
                   >
                     Practicar
                   </button>

@@ -70,14 +70,14 @@ export function UserMenu({ email }: { email: string }) {
         aria-label={open ? "Cerrar menú de usuario" : "Abrir menú de usuario"}
         aria-expanded={open}
         aria-controls="user-menu"
-        className="flex size-11 items-center justify-center rounded-full border-2 border-ink/10 bg-surface text-teal-strong shadow-card transition hover:-translate-y-0.5 hover:border-teal/30"
+        className="ui-icon-button text-teal-strong hover:-translate-y-0.5 hover:border-teal/30"
       >
         <UserCircleIcon weight={open ? "fill" : "duotone"} size={27} aria-hidden />
       </button>
       {open && (
         <div
           id="user-menu"
-          className="absolute right-0 top-full z-50 mt-2 w-64 max-w-[calc(100vw-1.5rem)] rounded-2xl border-2 border-ink/10 bg-surface p-2 shadow-card"
+          className="ui-card-compact absolute right-0 top-full z-50 mt-2 w-64 max-w-[calc(100vw-1.5rem)] p-2"
         >
           <p className="px-2 pt-1 font-display text-xs font-semibold uppercase tracking-wide text-muted">
             Cuenta
@@ -89,7 +89,7 @@ export function UserMenu({ email }: { email: string }) {
             <Link
               href="/settings"
               onClick={() => setOpen(false)}
-              className="flex min-h-11 w-full items-center gap-2 rounded-xl px-2.5 font-display text-sm font-semibold transition hover:bg-paper"
+            className="flex min-h-11 w-full items-center gap-2 rounded-xl px-2.5 font-display text-sm font-semibold transition hover:bg-paper focus-visible:bg-paper"
             >
               <GearSixIcon weight="bold" size={18} aria-hidden />
               Configuración
@@ -98,7 +98,7 @@ export function UserMenu({ email }: { email: string }) {
               type="button"
               onClick={handleSignOut}
               disabled={pending}
-              className="flex min-h-11 w-full items-center gap-2 rounded-xl px-2.5 font-display text-sm font-semibold transition hover:bg-paper disabled:cursor-wait disabled:opacity-60"
+              className="flex min-h-11 w-full items-center gap-2 rounded-xl px-2.5 font-display text-sm font-semibold transition hover:bg-paper focus-visible:bg-paper disabled:cursor-wait disabled:opacity-60"
             >
               <SignOutIcon weight="bold" size={18} aria-hidden />
               {pending ? "Saliendo..." : "Salir"}

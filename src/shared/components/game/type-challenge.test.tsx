@@ -44,6 +44,7 @@ describe("TypeChallenge", () => {
   test("accepts a small typo and pays the reward", async () => {
     const user = userEvent.setup()
     const { onSolved } = setup()
+    expect(screen.getByLabelText("Tu respuesta en inglés")).toHaveAttribute("lang", "en")
     await submit(user, "i want two banans")
     expect(onSolved).toHaveBeenCalledWith({
       reward: 10,

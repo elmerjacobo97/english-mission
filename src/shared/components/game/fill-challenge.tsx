@@ -84,7 +84,7 @@ export function FillChallenge({
         className="flex flex-col gap-3"
       >
         <p className="flex flex-wrap items-center gap-2 rounded-2xl border-2 border-ink/10 bg-paper px-4 py-3 font-display text-lg font-semibold">
-          <span>{before}</span>
+          <span lang="en">{before}</span>
           <label htmlFor="fill-answer" className="sr-only">
             Palabra que falta
           </label>
@@ -92,6 +92,7 @@ export function FillChallenge({
             id="fill-answer"
             ref={inputRef}
             type="text"
+            lang="en"
             value={run.solved ? beat.answer : value}
             onChange={(event) => {
               setValue(event.target.value)
@@ -102,9 +103,9 @@ export function FillChallenge({
             autoCapitalize="off"
             spellCheck={false}
             size={Math.max(beat.answer.length + 2, 8)}
-            className="rounded-xl border-2 border-teal/40 bg-surface px-3 py-1.5 text-center font-display text-lg font-semibold transition focus:border-teal focus:outline-none disabled:bg-ink/5"
+            className="ui-input ui-input-inline-challenge"
           />
-          <span>{after}</span>
+          <span lang="en">{after}</span>
         </p>
         {emptySubmit && (
           <p className="animate-slide-in text-sm font-semibold text-muted">

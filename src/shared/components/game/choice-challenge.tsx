@@ -77,10 +77,8 @@ export function ChoiceChallenge({
               type="button"
               onClick={() => handleChoose(index)}
               disabled={run.solved || isHidden}
-              className={`flex min-h-14 items-center rounded-2xl border-2 px-4 py-3.5 text-left font-display text-lg font-semibold transition ${
-                isCorrect
-                  ? "border-success/30 bg-success-soft text-success"
-                  : "border-ink/10 bg-surface hover:border-accent hover:bg-paper"
+              className={`ui-choice-option ${
+                isCorrect ? "ui-choice-option-correct" : "ui-choice-option-idle"
               } ${isHidden ? "invisible" : ""}`}
             >
               {option}

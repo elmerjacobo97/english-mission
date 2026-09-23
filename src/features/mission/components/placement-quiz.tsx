@@ -71,7 +71,7 @@ export function PlacementQuiz({
           type="button"
           onClick={onClose}
           aria-label="Cerrar diagnóstico"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-ink/10 bg-surface text-muted transition hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong"
+          className="ui-icon-button"
         >
           <XIcon size={18} weight="bold" aria-hidden />
         </button>
@@ -104,7 +104,7 @@ export function PlacementQuiz({
           <button
             type="button"
             onClick={() => onSelect(result.recommended)}
-            className="min-h-12 rounded-2xl bg-accent-strong px-5 font-display font-bold text-white shadow-pop transition hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong"
+            className="ui-button ui-button-primary-large font-bold"
           >
             {resultActionPrefix} {COURSE_BANDS[result.recommended].title}
           </button>
@@ -142,7 +142,7 @@ export function PlacementQuiz({
                 type="button"
                 onClick={() => speak(question.audioText ?? "")}
                 disabled={!speechAvailable}
-                className="flex min-h-11 items-center gap-2 rounded-2xl border-2 border-teal/20 bg-teal-soft px-4 font-display text-sm font-bold text-teal-strong disabled:opacity-60"
+                className="ui-button ui-button-quiet"
               >
                 <SpeakerHighIcon size={18} weight="fill" aria-hidden />
                 Escuchar frase
@@ -170,7 +170,7 @@ export function PlacementQuiz({
                     revealed && isCorrect
                       ? "border-success/30 bg-success-soft text-success"
                       : isSelected
-                        ? "border-error/30 bg-error/5 text-error"
+                        ? "border-error/30 bg-error-soft text-error"
                         : "border-ink/10 bg-surface hover:border-accent-deep/30"
                   }`}
                 >
@@ -188,7 +188,7 @@ export function PlacementQuiz({
               <button
                 type="button"
                 onClick={continueQuiz}
-                className="min-h-12 self-end rounded-2xl bg-accent-strong px-5 font-display font-bold text-white shadow-pop transition hover:-translate-y-0.5"
+                className="ui-button ui-button-primary-large self-end font-bold"
               >
                 {index === questionCount - 1 ? "Ver recomendación" : "Siguiente"}
               </button>

@@ -19,7 +19,7 @@ export function CourseBandSelector({
   return (
     <section
       aria-labelledby="course-band-title"
-      className="flex flex-col gap-3 rounded-3xl border-2 border-ink/10 bg-surface p-4 shadow-card sm:p-5"
+      className="ui-card flex flex-col gap-3 p-4 sm:p-5"
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
@@ -33,7 +33,7 @@ export function CourseBandSelector({
         <button
           type="button"
           onClick={onOpenPlacement}
-          className="min-h-11 shrink-0 rounded-2xl border-2 border-accent-deep/15 bg-accent px-4 font-display text-sm font-bold text-ink transition hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong"
+          className="ui-button ui-button-subtle shrink-0"
         >
           Hacer diagnóstico
         </button>

@@ -115,7 +115,7 @@ export function VideoLibrary({
       </header>
 
       {videos.length === 0 ? (
-        <section className="flex flex-col items-center gap-3 rounded-3xl border-2 border-dashed border-ink/15 bg-white/60 p-6 text-center">
+        <section className="ui-card-empty flex flex-col items-center gap-3 p-6 text-center">
           <VideoCameraIcon
             weight="duotone"
             size={36}
@@ -138,7 +138,7 @@ export function VideoLibrary({
             return (
               <li
                 key={video.videoId}
-                className={`rounded-3xl border-2 bg-surface p-3 shadow-card transition sm:p-4 ${
+                className={`ui-card-interactive p-3 shadow-card transition sm:p-4 ${
                   isSelected
                     ? "border-teal/40 shadow-pop"
                     : "border-ink/10"
@@ -177,7 +177,7 @@ export function VideoLibrary({
                     }}
                     disabled={isDeleting || isConfirming}
                     aria-label={`Eliminar ${video.title}`}
-                    className="flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-2xl border-2 border-ink/10 bg-paper text-muted transition hover:border-error/30 hover:text-error disabled:cursor-wait disabled:opacity-50"
+                    className="ui-icon-button ui-icon-button-danger"
                   >
                     <TrashIcon weight="bold" size={18} aria-hidden />
                   </button>
@@ -202,7 +202,7 @@ export function VideoLibrary({
                         type="button"
                         ref={cancelConfirmationRef}
                         onClick={cancelDelete}
-                        className="flex min-h-10 items-center gap-1 rounded-xl border-2 border-ink/10 bg-surface px-3 font-display text-sm font-semibold"
+                        className="ui-button ui-button-secondary px-3"
                       >
                         <XIcon size={16} aria-hidden />
                         Cancelar
@@ -211,7 +211,7 @@ export function VideoLibrary({
                         type="button"
                         onClick={() => void confirmDelete(video.videoId)}
                         disabled={isDeleting}
-                        className="flex min-h-10 items-center gap-1 rounded-xl bg-error px-3 font-display text-sm font-semibold text-white disabled:opacity-50"
+                        className="ui-button ui-button-danger px-3"
                       >
                         <TrashIcon size={16} aria-hidden />
                         {isDeleting ? "Eliminando..." : "Eliminar"}

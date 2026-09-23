@@ -24,7 +24,7 @@ export function ShopSession() {
       />
 
       {!run.hasWords ? (
-        <section className="flex flex-col items-center gap-4 rounded-3xl border-2 border-dashed border-ink/15 bg-white/60 p-6 text-center">
+        <section className="ui-card-empty flex flex-col items-center gap-4 p-6 text-center">
           <span className="text-4xl" aria-hidden>
             🏪
           </span>
@@ -33,7 +33,7 @@ export function ShopSession() {
           </p>
           <Link
             href="/"
-            className="flex min-h-12 items-center rounded-2xl bg-accent-strong px-5 font-display font-semibold text-white shadow-pop transition active:translate-y-0.5"
+            className="ui-button ui-button-primary-large"
           >
             Volver al mapa
           </Link>
@@ -50,7 +50,7 @@ export function ShopSession() {
           onContinue={() => undefined}
         />
       ) : run.phase === "result" ? (
-        <section className="flex flex-col items-center gap-4 rounded-3xl border-2 border-ink/10 bg-surface p-6 text-center shadow-card">
+        <section className="ui-card flex flex-col items-center gap-4 p-6 text-center">
           <span className="text-4xl" aria-hidden>
             🪙
           </span>
@@ -70,7 +70,7 @@ export function ShopSession() {
               <button
                 type="button"
                 onClick={run.start}
-                className="flex min-h-12 items-center justify-center rounded-2xl bg-accent-strong px-5 font-display font-semibold text-white shadow-pop transition active:translate-y-0.5"
+                className="ui-button ui-button-primary-large w-full"
               >
                 Recargar otra vez
               </button>
@@ -78,21 +78,21 @@ export function ShopSession() {
               <button
                 type="button"
                 disabled
-                className="flex min-h-12 items-center justify-center rounded-2xl bg-accent-strong px-5 font-display font-semibold text-white shadow-pop disabled:opacity-40"
+                className="ui-button ui-button-primary-large w-full"
               >
                 Vuelve mañana
               </button>
             )}
             <Link
               href="/"
-              className="flex min-h-12 items-center justify-center rounded-2xl border-2 border-ink/10 bg-surface px-5 font-display font-semibold text-muted shadow-card transition hover:text-ink"
+              className="ui-button ui-button-secondary w-full"
             >
               Volver al mapa
             </Link>
           </div>
         </section>
       ) : (
-        <section className="flex flex-col gap-4 rounded-3xl border-2 border-ink/10 bg-surface p-6 shadow-card">
+        <section className="ui-card flex flex-col gap-4 p-6">
           <p className="font-display text-lg font-bold">{`Tu saldo: ${run.coins} monedas`}</p>
           <p className="flex items-center gap-2 font-semibold text-muted">
             <CoinsIcon weight="fill" size={18} aria-hidden />
@@ -106,7 +106,7 @@ export function ShopSession() {
             type="button"
             onClick={run.start}
             disabled={!run.quotaLeft}
-            className="flex min-h-12 items-center justify-center rounded-2xl bg-accent-strong px-5 font-display font-semibold text-white shadow-pop transition active:translate-y-0.5 disabled:opacity-40"
+          className="ui-button ui-button-primary-large w-full"
           >
             {run.quotaLeft ? "Ganar monedas" : "Vuelve mañana"}
           </button>
@@ -114,7 +114,7 @@ export function ShopSession() {
       )}
 
       {run.phase !== "playing" && (
-        <section className="flex flex-col gap-4 rounded-3xl border-2 border-ink/10 bg-surface p-6 shadow-card">
+        <section className="ui-card flex flex-col gap-4 p-6">
           <div className="flex flex-col gap-1">
             <h2 className="font-display text-lg font-bold">Looks de Coco</h2>
             <p className="text-sm font-semibold text-muted">
@@ -157,7 +157,7 @@ export function ShopSession() {
                     onClick={() => selectLook(look.id)}
                     disabled={equipped || (!owned && !canAfford)}
                     aria-label={ariaLabel}
-                    className="flex min-h-10 w-full items-center justify-center rounded-xl bg-accent-strong px-3 font-display text-sm font-semibold text-white shadow-pop transition active:translate-y-0.5 disabled:opacity-40"
+                  className="ui-button ui-button-primary w-full px-3"
                   >
                     {label}
                   </button>

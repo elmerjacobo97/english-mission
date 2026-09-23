@@ -45,7 +45,7 @@ export function MissionComplete({
   }, [])
 
   return (
-    <section className="animate-rise relative flex flex-col items-center gap-5 rounded-3xl border-2 border-ink/10 bg-surface p-6 text-center shadow-card">
+    <section className="ui-card animate-rise relative flex flex-col items-center gap-5 p-6 text-center">
       <MissionStamp
         label="MISIÓN CUMPLIDA"
         className="absolute top-4 right-4"
@@ -150,14 +150,14 @@ export function MissionComplete({
         <button
           type="button"
           onClick={onRestart}
-          className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-accent-strong px-5 font-display font-semibold text-white shadow-pop transition active:translate-y-0.5"
+          className="ui-button ui-button-primary-large w-full"
         >
           <ArrowCounterClockwiseIcon weight="bold" size={18} aria-hidden />
           Jugar otra vez
         </button>
         <Link
           href="/"
-          className="flex min-h-12 items-center justify-center gap-2 rounded-2xl border-2 border-ink/10 bg-surface px-5 font-display font-semibold shadow-card transition hover:border-accent hover:bg-paper"
+          className="ui-button ui-button-secondary w-full hover:border-accent hover:bg-paper"
         >
           <MapTrifoldIcon weight="fill" size={18} aria-hidden />
           Volver al mapa

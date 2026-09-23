@@ -2,7 +2,7 @@
 
 import { ArrowCounterClockwiseIcon, ArrowRightIcon } from "@phosphor-icons/react"
 import Link from "next/link"
-import { useSyncExternalStore } from "react"
+import { useEffect, useRef, useSyncExternalStore } from "react"
 import { ChoiceChallenge } from "@/shared/components/game/choice-challenge"
 import { ListenChallenge } from "@/shared/components/game/listen-challenge"
 import { TypeChallenge } from "@/shared/components/game/type-challenge"
@@ -22,6 +22,15 @@ export function ReviewSession() {
     getSpeechSupportServerSnapshot,
   )
   const run = useReviewRun(speechAvailable)
+  const stepRef = useRef<HTMLDivElement>(null)
+  const previousIndex = useRef(run.index)
+
+  useEffect(() => {
+    if (previousIndex.current !== run.index) {
+      stepRef.current?.focus()
+      previousIndex.current = run.index
+    }
+  }, [run.index])
 
   if (run.total === 0) {
     return (
@@ -31,7 +40,7 @@ export function ReviewSession() {
           title="Repaso"
           description="Palabras que ya viste, justo cuando toca repasarlas."
         />
-        <section className="flex flex-col items-center gap-4 rounded-3xl border-2 border-dashed border-ink/15 bg-white/60 p-6 text-center">
+        <section className="ui-card-empty flex flex-col items-center gap-4 p-6 text-center">
           <span className="text-4xl" aria-hidden>
             🎉
           </span>
@@ -41,7 +50,7 @@ export function ReviewSession() {
           </p>
           <Link
             href="/notebook"
-            className="flex min-h-12 items-center rounded-2xl bg-accent-strong px-5 font-display font-semibold text-white shadow-pop transition active:translate-y-0.5"
+            className="ui-button ui-button-primary-large"
           >
             Ir al cuaderno
           </Link>
@@ -106,7 +115,14 @@ export function ReviewSession() {
 
       {beat ? (
         <>
-          <div key={run.index} className="animate-rise">
+          <div
+            key={run.index}
+            ref={stepRef}
+            role="group"
+            aria-label={`Palabra ${run.index + 1} de ${run.total}`}
+            tabIndex={-1}
+            className="animate-rise"
+          >
             {beat.kind === "choice" && (
               <ChoiceChallenge beat={beat} {...shared} />
             )}
@@ -129,7 +145,7 @@ export function ReviewSession() {
               <button
                 type="button"
                 onClick={run.goNext}
-                className="animate-pop flex min-h-11 items-center gap-1.5 justify-self-end rounded-2xl bg-accent-strong px-4 font-display text-sm font-semibold text-white shadow-pop transition active:translate-y-0.5"
+                className="ui-button ui-button-primary animate-pop justify-self-end"
               >
                 {run.index + 1 === run.total ? "Ver resumen" : "Continuar"}
                 <ArrowRightIcon weight="bold" size={16} aria-hidden />
@@ -138,7 +154,7 @@ export function ReviewSession() {
               <button
                 type="submit"
                 form="challenge-form"
-                className="flex min-h-11 items-center gap-1.5 justify-self-end rounded-2xl bg-accent-strong px-4 font-display text-sm font-semibold text-white shadow-pop transition active:translate-y-0.5"
+                className="ui-button ui-button-primary justify-self-end"
               >
                 Comprobar
               </button>

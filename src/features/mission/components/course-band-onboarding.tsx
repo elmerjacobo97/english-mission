@@ -68,7 +68,7 @@ export function CourseBandOnboarding() {
         English Mission
       </header>
 
-      <section className="flex flex-col gap-3 rounded-3xl border-2 border-ink/10 bg-surface p-5 shadow-card sm:p-6">
+      <section className="ui-card flex flex-col gap-3 p-5 sm:p-6">
         <p className="font-display text-xs font-bold uppercase tracking-widest text-accent-strong">
           Antes de empezar
         </p>
@@ -111,12 +111,12 @@ export function CourseBandOnboarding() {
       )}
 
       {saveError && (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border-2 border-error/20 bg-error/5 px-4 py-3 text-sm font-semibold text-error" role="alert">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border-2 border-error/20 bg-error-soft px-4 py-3 text-sm font-semibold text-error" role="alert">
           <span>No pudimos guardar tu ruta.</span>
           <button
             type="button"
             onClick={retrySelection}
-            className="min-h-10 rounded-xl bg-error px-3 font-display text-white"
+            className="ui-button ui-button-secondary px-3"
           >
             Reintentar
           </button>

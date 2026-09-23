@@ -16,7 +16,7 @@ export function ReviewSummary({
   onRestart,
 }: ReviewSummaryProps) {
   return (
-    <section className="flex flex-col gap-5 rounded-3xl border-2 border-ink/10 bg-surface p-6 shadow-card">
+    <section className="ui-card flex flex-col gap-5 p-6">
       <div className="flex items-start gap-3">
         <CharacterAvatar character="coco" size={44} className="shrink-0" />
         <p className="rounded-2xl bg-paper px-4 py-3 font-semibold">
@@ -57,14 +57,14 @@ export function ReviewSummary({
           <button
             type="button"
             onClick={onRestart}
-            className="flex min-h-12 items-center justify-center rounded-2xl bg-accent-strong px-5 font-display font-semibold text-white shadow-pop transition active:translate-y-0.5"
+            className="ui-button ui-button-primary-large w-full"
           >
             Repasar más
           </button>
         )}
         <Link
           href="/notebook"
-          className="flex min-h-12 items-center justify-center rounded-2xl border-2 border-ink/10 bg-surface px-5 font-display font-semibold text-muted shadow-card transition hover:text-ink"
+          className="ui-button ui-button-secondary w-full"
         >
           Volver al cuaderno
         </Link>

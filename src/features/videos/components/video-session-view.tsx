@@ -63,7 +63,7 @@ export function VideoSessionView({
   return (
     <section
       aria-labelledby="video-session-title"
-      className="flex flex-col gap-4 rounded-[2rem] border-2 border-ink/10 bg-surface p-3 shadow-card sm:p-5"
+      className="ui-card flex flex-col gap-4 p-3 sm:p-5"
     >
       <header className="flex items-start gap-3">
         <VideoCameraIcon
@@ -83,7 +83,7 @@ export function VideoSessionView({
         <button
           type="button"
           onClick={() => onClose(session.currentTimeMs)}
-          className="flex min-h-11 shrink-0 items-center gap-1.5 rounded-2xl border-2 border-ink/10 bg-paper px-3 font-display text-sm font-semibold text-muted transition hover:text-ink"
+          className="ui-button ui-button-secondary shrink-0 bg-paper px-3"
         >
           <ArrowLeftIcon weight="bold" size={16} aria-hidden />
           Biblioteca

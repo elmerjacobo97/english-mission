@@ -41,7 +41,7 @@ export function ChallengeFrame({
   const attempts = Array.from({ length: maxAttempts }, (_, i) => i)
 
   return (
-    <section className="flex flex-col gap-5 rounded-3xl border-2 border-ink/10 bg-surface p-6 shadow-card">
+    <section className="ui-card flex flex-col gap-5 p-6">
       <header className="flex flex-col gap-3">
         <div className="flex items-center gap-2.5">
           <CharacterAvatar character="coco" size={34} />
@@ -89,7 +89,7 @@ export function ChallengeFrame({
               type="button"
               onClick={onRequestHint}
               disabled={!canAffordHint}
-              className="flex min-h-11 items-center gap-2 self-start rounded-2xl border-2 border-accent/30 bg-paper px-4 font-display text-sm font-semibold text-accent-deep transition hover:bg-accent/10 disabled:opacity-40"
+              className="ui-button ui-button-subtle self-start"
             >
               <LightbulbIcon weight="fill" size={18} aria-hidden />
               {freeHints ? "Pista gratis" : `Pista · ${hintCost} monedas`}

@@ -86,11 +86,11 @@ export function DialogueChallenge({
               onClick={() => speak(beat.line)}
               aria-label="Reproducir la frase"
               disabled={!speechAvailable}
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-strong text-white shadow-pop transition active:translate-y-0.5 disabled:hidden"
+              className="ui-icon-button ui-icon-button-primary disabled:hidden"
             >
               <SpeakerHighIcon weight="fill" size={22} aria-hidden />
             </button>
-            <p className="font-display text-lg font-semibold text-teal-strong">
+            <p lang="en" className="font-display text-lg font-semibold text-teal-strong">
               «{beat.line}»
             </p>
           </div>
@@ -105,12 +105,11 @@ export function DialogueChallenge({
               <button
                 key={option}
                 type="button"
+                lang="en"
                 onClick={() => handleChoose(index)}
                 disabled={run.solved || isHidden}
-                className={`flex min-h-14 items-center rounded-2xl border-2 px-4 py-3.5 text-left font-display text-lg font-semibold transition ${
-                  isCorrect
-                    ? "border-success/30 bg-success-soft text-success"
-                    : "border-ink/10 bg-surface hover:border-accent hover:bg-paper"
+                className={`ui-choice-option ${
+                  isCorrect ? "ui-choice-option-correct" : "ui-choice-option-idle"
                 } ${isHidden ? "invisible" : ""}`}
               >
                 {option}

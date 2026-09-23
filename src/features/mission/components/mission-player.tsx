@@ -1,7 +1,7 @@
 "use client"
 
 import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react"
-import { useEffect, useState, useSyncExternalStore } from "react"
+import { useEffect, useRef, useState, useSyncExternalStore } from "react"
 import {
   getSpeechSupportServerSnapshot,
   getSpeechSupportSnapshot,
@@ -27,6 +27,8 @@ type MissionPlayerProps = {
 
 export function MissionPlayer({ mission }: MissionPlayerProps) {
   const run = useMissionRun(mission)
+  const beatRef = useRef<HTMLDivElement>(null)
+  const previousIndex = useRef(run.index)
   const [introducedCharacters, setIntroducedCharacters] = useState<Set<CharacterId>>(
     () => new Set(),
   )
@@ -37,6 +39,13 @@ export function MissionPlayer({ mission }: MissionPlayerProps) {
   )
 
   useEffect(() => stopSpeaking, [])
+
+  useEffect(() => {
+    if (previousIndex.current !== run.index) {
+      beatRef.current?.focus()
+      previousIndex.current = run.index
+    }
+  }, [run.index])
 
   function markCurrentCharacter() {
     const character = run.beat?.character
@@ -113,7 +122,14 @@ export function MissionPlayer({ mission }: MissionPlayerProps) {
         />
       ) : beat ? (
         <>
-          <div key={run.index} className="animate-rise flex flex-col gap-4">
+          <div
+            key={run.index}
+            ref={beatRef}
+            role="group"
+            aria-label={`Paso ${run.index + 1} de ${run.total}`}
+            tabIndex={-1}
+            className="animate-rise flex flex-col gap-4"
+          >
             {beat.character && !introducedCharacters.has(beat.character) && (
               <CharacterIntroduction character={beat.character} mood={beat.mood} />
             )}
@@ -153,7 +169,7 @@ export function MissionPlayer({ mission }: MissionPlayerProps) {
               type="button"
               onClick={goBack}
               disabled={run.index === 0}
-              className="flex min-h-11 items-center gap-1.5 justify-self-start rounded-2xl border-2 border-ink/10 bg-surface px-3.5 font-display text-sm font-semibold text-muted shadow-card transition hover:text-ink disabled:opacity-40"
+              className="ui-button ui-button-secondary justify-self-start px-3.5"
             >
               <ArrowLeftIcon weight="bold" size={16} aria-hidden />
               Anterior
@@ -165,7 +181,7 @@ export function MissionPlayer({ mission }: MissionPlayerProps) {
               <button
                 type="button"
                 onClick={goNext}
-                className="animate-pop flex min-h-11 items-center gap-1.5 justify-self-end rounded-2xl bg-accent-strong px-4 font-display text-sm font-semibold text-white shadow-pop transition active:translate-y-0.5"
+                className="ui-button ui-button-primary animate-pop justify-self-end"
               >
                 Continuar
                 <ArrowRightIcon weight="bold" size={16} aria-hidden />
@@ -174,7 +190,7 @@ export function MissionPlayer({ mission }: MissionPlayerProps) {
               <button
                 type="submit"
                 form="challenge-form"
-                className="flex min-h-11 items-center gap-1.5 justify-self-end rounded-2xl bg-accent-strong px-4 font-display text-sm font-semibold text-white shadow-pop transition active:translate-y-0.5"
+                className="ui-button ui-button-primary justify-self-end"
               >
                 Comprobar
               </button>

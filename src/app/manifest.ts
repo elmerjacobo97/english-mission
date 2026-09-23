@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Aprende inglés viviendo una historia por misiones.",
     start_url: "/",
     display: "standalone",
-    background_color: "#fef6e9",
+    background_color: "#fdf3e3",
     theme_color: "#f97316",
     icons: [
       {

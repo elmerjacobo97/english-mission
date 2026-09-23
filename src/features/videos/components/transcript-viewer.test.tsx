@@ -18,6 +18,7 @@ describe("TranscriptViewer", () => {
     expect(
       screen.getByRole("button", { name: "Saltar a 0:01: Second line" }),
     ).toHaveAttribute("aria-current", "true")
+    expect(screen.getByText("Second line")).toHaveAttribute("lang", "en")
   })
 
   test("seeks when selecting a transcript line", async () => {

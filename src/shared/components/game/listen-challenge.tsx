@@ -94,7 +94,7 @@ export function ListenChallenge({
               type="button"
               onClick={handlePlay}
               aria-label="Reproducir la frase"
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-strong text-white shadow-pop transition active:translate-y-0.5"
+              className="ui-icon-button ui-icon-button-primary"
             >
               <SpeakerHighIcon weight="fill" size={22} aria-hidden />
             </button>
@@ -123,12 +123,11 @@ export function ListenChallenge({
               <button
                 key={option}
                 type="button"
+                lang="en"
                 onClick={() => handleChoose(index)}
                 disabled={run.solved || isHidden || !optionsEnabled}
-                className={`flex min-h-14 items-center rounded-2xl border-2 px-4 py-3.5 text-left font-display text-lg font-semibold transition ${
-                  isCorrect
-                    ? "border-success/30 bg-success-soft text-success"
-                    : "border-ink/10 bg-surface hover:border-accent hover:bg-paper"
+                className={`ui-choice-option ${
+                  isCorrect ? "ui-choice-option-correct" : "ui-choice-option-idle"
                 } ${isHidden ? "invisible" : ""} ${
                   !optionsEnabled ? "opacity-50" : ""
                 }`}

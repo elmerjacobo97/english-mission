@@ -44,7 +44,7 @@ describe("StoryBeat", () => {
       <StoryBeat beat={youBeat} speechAvailable={false} englishVisible />,
     )
     expect(screen.getByText("Tú dices")).toBeInTheDocument()
-    expect(screen.getByText(`«${youBeat.en}»`)).toBeInTheDocument()
+    expect(screen.getByText(`«${youBeat.en}»`)).toHaveAttribute("lang", "en")
     expect(screen.queryByText(/dice$/)).not.toBeInTheDocument()
   })
 

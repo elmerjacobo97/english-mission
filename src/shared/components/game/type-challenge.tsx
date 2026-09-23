@@ -94,6 +94,7 @@ export function TypeChallenge({
           id="typed-answer"
           ref={inputRef}
           type="text"
+          lang="en"
           value={run.solved ? beat.accepted[0] : value}
           onChange={(event) => {
             setValue(event.target.value)
@@ -104,7 +105,7 @@ export function TypeChallenge({
           autoCapitalize="off"
           spellCheck={false}
           placeholder="Escribe en inglés..."
-          className="min-h-14 rounded-2xl border-2 border-ink/10 bg-surface px-4 py-3.5 font-display text-lg font-semibold transition focus:border-teal focus:outline-none disabled:bg-ink/5"
+          className="ui-input ui-input-challenge"
         />
         {emptySubmit && (
           <p className="animate-slide-in text-sm font-semibold text-muted">

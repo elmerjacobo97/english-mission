@@ -50,7 +50,7 @@ export function LoginForm({ callbackError }: LoginFormProps) {
   if (status === "sent") {
     return (
       <main className="flex min-h-dvh items-center justify-center p-4">
-        <section className="flex w-full max-w-md flex-col gap-5 rounded-3xl border-2 border-ink/10 bg-surface p-6 text-center shadow-card sm:p-8">
+        <section className="ui-card flex w-full max-w-md flex-col gap-5 p-6 text-center sm:p-8">
           <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-success-soft text-success">
             <CheckCircleIcon weight="fill" size={36} aria-hidden />
           </span>
@@ -63,7 +63,7 @@ export function LoginForm({ callbackError }: LoginFormProps) {
           <button
             type="button"
             onClick={() => setStatus("idle")}
-            className="min-h-11 rounded-2xl border-2 border-ink/10 bg-surface px-4 font-display font-semibold shadow-card transition hover:-translate-y-0.5"
+            className="ui-button ui-button-secondary"
           >
             Usar otro correo
           </button>
@@ -74,7 +74,7 @@ export function LoginForm({ callbackError }: LoginFormProps) {
 
   return (
     <main className="flex min-h-dvh items-center justify-center p-4">
-      <section className="flex w-full max-w-md flex-col gap-6 rounded-3xl border-2 border-ink/10 bg-surface p-6 shadow-card sm:p-8">
+      <section className="ui-card flex w-full max-w-md flex-col gap-6 p-6 sm:p-8">
         <div className="flex flex-col gap-4">
           <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent text-accent-deep shadow-pop">
             <EnvelopeSimpleIcon weight="fill" size={30} aria-hidden />
@@ -107,7 +107,7 @@ export function LoginForm({ callbackError }: LoginFormProps) {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="tu@correo.com"
-              className="min-h-12 rounded-2xl border-2 border-ink/15 bg-paper px-4 font-semibold outline-none transition placeholder:text-muted/70 focus:border-teal"
+              className="ui-input"
             />
           </div>
           {errorMessage && (
@@ -118,7 +118,7 @@ export function LoginForm({ callbackError }: LoginFormProps) {
           <button
             type="submit"
             disabled={status === "sending"}
-            className="min-h-12 rounded-2xl bg-accent-strong px-5 font-display font-semibold text-white shadow-pop transition hover:-translate-y-0.5 disabled:cursor-wait disabled:opacity-60"
+            className="ui-button ui-button-primary-large"
           >
             {status === "sending" ? "Enviando enlace..." : "Enviar enlace"}
           </button>

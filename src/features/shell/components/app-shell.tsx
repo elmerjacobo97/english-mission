@@ -78,7 +78,7 @@ export function AppShell({ children, account }: { children: ReactNode; account?:
             onClick={handleAudioToggle}
             aria-label={muted ? 'Activar audio' : 'Silenciar audio'}
             aria-pressed={muted}
-            className="flex min-h-11 min-w-11 items-center justify-center rounded-full border-2 border-ink/10 bg-surface text-muted shadow-card transition hover:text-ink"
+            className="ui-icon-button"
           >
             {muted ? (
               <SpeakerSlashIcon weight="fill" size={19} aria-hidden />

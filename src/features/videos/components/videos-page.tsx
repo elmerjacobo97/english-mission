@@ -115,12 +115,12 @@ export function VideosPage({ initialVideos, initialError = null }: VideosPagePro
                 autoComplete="off"
                 spellCheck={false}
                 aria-describedby="youtube-url-help"
-                className="min-h-12 min-w-0 flex-1 rounded-2xl border-2 border-white/15 bg-white/10 px-4 font-semibold text-white placeholder:text-paper/45 focus:border-accent focus:outline-none"
+                className="ui-input ui-input-inverse flex-1"
               />
               <button
                 type="submit"
                 disabled={busy}
-                className="flex min-h-12 items-center justify-center rounded-2xl bg-accent px-5 font-display font-bold text-ink shadow-[0_4px_0_#9a3412] transition hover:-translate-y-0.5 active:translate-y-0.5 disabled:cursor-wait disabled:opacity-60"
+                className="ui-button ui-button-primary-large font-bold"
               >
                 {library.processing ? "Procesando..." : "Procesar video"}
               </button>
@@ -145,7 +145,7 @@ export function VideosPage({ initialVideos, initialError = null }: VideosPagePro
             type="button"
             onClick={() => void handleReload()}
             disabled={library.loading}
-            className="flex min-h-10 items-center gap-1.5 rounded-xl bg-error px-3 font-display text-sm font-bold text-white disabled:opacity-50"
+            className="ui-button ui-button-secondary px-3"
           >
             <ArrowClockwiseIcon weight="bold" size={16} aria-hidden />
             {library.loading ? "Cargando..." : "Reintentar"}

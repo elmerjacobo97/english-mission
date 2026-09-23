@@ -24,7 +24,7 @@ export function SyncBanner() {
       <button
         type="button"
         onClick={() => void progressSync.retry()}
-        className="shrink-0 rounded-xl border-2 border-error/30 bg-surface px-3 py-2 font-display font-semibold text-error transition hover:bg-error/10"
+        className="ui-button ui-button-secondary shrink-0 border-error/30 px-3 text-error hover:bg-error/10"
       >
         Reintentar
       </button>

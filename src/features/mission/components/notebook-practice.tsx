@@ -48,7 +48,7 @@ export function NotebookPractice({ word, pool, onExit }: NotebookPracticeProps) 
         <button
           type="button"
           onClick={onExit}
-          className="flex min-h-11 items-center gap-1.5 rounded-2xl border-2 border-ink/10 bg-surface px-3.5 font-display text-sm font-semibold text-muted shadow-card transition hover:text-ink"
+          className="ui-button ui-button-secondary px-3.5"
         >
           <ArrowLeftIcon weight="bold" size={16} aria-hidden />
           Volver
@@ -62,7 +62,7 @@ export function NotebookPractice({ word, pool, onExit }: NotebookPracticeProps) 
         <button
           type="button"
           onClick={() => speak(speakText)}
-          className="flex min-h-12 items-center justify-center gap-2 rounded-2xl border-2 border-teal/30 bg-paper px-5 font-display font-semibold text-teal-strong shadow-card transition hover:-translate-y-0.5"
+          className="ui-button ui-button-quiet w-full px-5"
         >
           <SpeakerHighIcon weight="fill" size={20} aria-hidden />
           Escuchar
@@ -83,7 +83,7 @@ export function NotebookPractice({ word, pool, onExit }: NotebookPracticeProps) 
           <button
             type="button"
             onClick={onExit}
-            className="animate-pop flex min-h-11 items-center gap-1.5 justify-self-end rounded-2xl bg-accent-strong px-4 font-display text-sm font-semibold text-white shadow-pop transition active:translate-y-0.5"
+            className="ui-button ui-button-primary animate-pop justify-self-end"
           >
             Continuar
             <ArrowRightIcon weight="bold" size={16} aria-hidden />
@@ -92,7 +92,7 @@ export function NotebookPractice({ word, pool, onExit }: NotebookPracticeProps) 
           <button
             type="submit"
             form="challenge-form"
-            className="flex min-h-11 items-center gap-1.5 justify-self-end rounded-2xl bg-accent-strong px-4 font-display text-sm font-semibold text-white shadow-pop transition active:translate-y-0.5"
+            className="ui-button ui-button-primary justify-self-end"
           >
             Comprobar
           </button>

@@ -136,6 +136,7 @@ export function OrderChallenge({
             <button
               key={`${token}-${index}`}
               type="button"
+              lang="en"
               onClick={() => handleRemove(index)}
               disabled={run.solved}
               className="rounded-xl bg-accent-strong px-3 py-2 font-display font-semibold text-white shadow-pop"
@@ -150,6 +151,7 @@ export function OrderChallenge({
             <button
               key={`${token}-${index}`}
               type="button"
+              lang="en"
               onClick={() => handlePlace(token)}
               disabled={run.solved}
               className="min-h-11 rounded-xl border-2 border-ink/10 bg-surface px-3 py-2 font-display font-semibold transition hover:border-accent hover:bg-paper disabled:opacity-40"

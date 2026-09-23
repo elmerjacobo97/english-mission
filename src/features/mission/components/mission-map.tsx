@@ -102,7 +102,7 @@ export function MissionMap() {
         </span>
         <Link
           href={`/mission/${entry.slug}`}
-          className={`flex min-w-0 flex-1 flex-col gap-3 rounded-3xl border-2 bg-surface p-4 transition hover:-translate-y-0.5 ${
+          className={`ui-card-interactive flex min-w-0 flex-1 flex-col gap-3 p-4 shadow-card transition hover:-translate-y-0.5 ${
             isNext ? "border-accent shadow-pop" : "border-ink/10 shadow-card"
           }`}
         >
@@ -128,7 +128,7 @@ export function MissionMap() {
             </span>
           </span>
           <span className="flex flex-wrap items-center gap-2">
-            <span className="flex shrink-0 items-center gap-1.5 rounded-2xl bg-accent-strong px-4 py-2 font-display text-sm font-semibold text-white shadow-pop">
+            <span className="ui-button ui-button-primary shrink-0">
               {completed ? (
                 <ArrowCounterClockwiseIcon weight="bold" size={18} aria-hidden />
               ) : (
@@ -175,7 +175,7 @@ export function MissionMap() {
               onClick={() => setConfirmingReset(true)}
               aria-label="Reiniciar progreso"
               title="Reiniciar progreso"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-ink/10 bg-surface text-muted shadow-card transition hover:text-error"
+              className="ui-icon-button ui-icon-button-danger"
             >
               <ArrowCounterClockwiseIcon weight="bold" size={18} aria-hidden />
             </button>
@@ -199,7 +199,7 @@ export function MissionMap() {
             type="button"
             onClick={clearPendingMilestone}
             aria-label="Cerrar aviso"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-ink/10 bg-surface text-ink shadow-card transition hover:-translate-y-0.5"
+              className="ui-icon-button"
           >
             <XIcon weight="bold" size={16} aria-hidden />
           </button>
@@ -267,7 +267,7 @@ export function MissionMap() {
                 type="button"
                 autoFocus
                 onClick={() => setConfirmingReset(false)}
-                className="min-h-11 rounded-2xl border-2 border-ink/10 bg-surface px-4 font-display font-semibold shadow-card"
+                className="ui-button ui-button-secondary"
               >
                 Cancelar
               </button>
@@ -277,7 +277,7 @@ export function MissionMap() {
                   reset()
                   setConfirmingReset(false)
                 }}
-                className="min-h-11 rounded-2xl bg-error px-4 font-display font-semibold text-white"
+                className="ui-button ui-button-danger"
               >
                 Sí, borrar todo
               </button>

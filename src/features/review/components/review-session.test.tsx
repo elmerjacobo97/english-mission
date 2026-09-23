@@ -49,6 +49,9 @@ describe("ReviewSession", () => {
 
     await user.click(screen.getByRole("button", { name: "Continuar" }))
     expect(screen.getByText("2 de 2")).toBeInTheDocument()
+    expect(
+      screen.getByRole("group", { name: "Palabra 2 de 2" }),
+    ).toHaveFocus()
 
     await user.click(screen.getByRole("button", { name: "goodbye" }))
     expect(getProgressSnapshot().reviews.goodbye).toMatchObject({ box: 2 })

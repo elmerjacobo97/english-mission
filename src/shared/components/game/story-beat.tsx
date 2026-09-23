@@ -30,7 +30,7 @@ export function StoryBeat({
   const speaker = speakerId ? CHARACTERS[speakerId] : null
 
   return (
-    <section className="flex flex-col gap-5 rounded-3xl border-2 border-ink/10 bg-surface p-6 shadow-card">
+    <section className="ui-card flex flex-col gap-5 p-6">
       <p className="text-lg font-semibold leading-relaxed">{beat.es}</p>
 
       {beat.en && (
@@ -48,7 +48,7 @@ export function StoryBeat({
                   type="button"
                   onClick={() => speak(beat.en ?? "")}
                   aria-label="Reproducir en inglés"
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-strong text-white shadow-pop transition active:translate-y-0.5"
+                  className="ui-icon-button ui-icon-button-primary"
                 >
                   <SpeakerHighIcon weight="fill" size={22} aria-hidden />
                 </button>
@@ -68,6 +68,7 @@ export function StoryBeat({
                 </span>
                 {showText ? (
                   <p
+                    lang="en"
                     className={`font-display text-lg font-semibold ${
                       isYou ? "text-ink" : "text-teal-strong"
                     }`}
@@ -84,7 +85,7 @@ export function StoryBeat({
                   <button
                     type="button"
                     onClick={() => setRevealed(true)}
-                    className="flex min-h-11 items-center gap-2 self-start rounded-2xl border-2 border-teal/30 bg-surface px-4 font-display text-sm font-semibold text-teal-strong"
+                    className="ui-button ui-button-quiet self-start"
                   >
                     <EyeIcon weight="bold" size={18} aria-hidden />
                     Ver texto

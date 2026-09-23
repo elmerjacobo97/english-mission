@@ -101,6 +101,18 @@ describe("MissionPlayer", () => {
     expect(screen.getByText("Paso 1 de 9")).toBeInTheDocument()
   })
 
+  test("moves focus to the new beat after changing steps", async () => {
+    const user = userEvent.setup()
+    render(<MissionPlayer mission={mission} />)
+
+    await screen.findByText(
+      "Llegas a la ciudad en autobús. Es tu primer día: llevas una maleta y un papel con una dirección.",
+    )
+    await next(user)
+
+    expect(screen.getByRole("group", { name: "Paso 2 de 9" })).toHaveFocus()
+  })
+
   test("introduces a character once, keeps it seen when going back, and skips beats without one", async () => {
     const user = userEvent.setup()
     const before = getProgressSnapshot()

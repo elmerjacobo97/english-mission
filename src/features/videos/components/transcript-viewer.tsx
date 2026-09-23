@@ -16,7 +16,7 @@ export function TranscriptViewer({
   return (
     <section aria-label="Transcript en inglés" className="flex flex-col gap-2">
       <h2 className="font-display text-lg font-bold">Transcript</h2>
-      <ol className="flex max-h-[32rem] flex-col gap-1 overflow-y-auto rounded-3xl border-2 border-ink/10 bg-surface p-2 shadow-card">
+      <ol className="ui-card flex max-h-[32rem] flex-col gap-1 overflow-y-auto p-2">
         {segments.map((segment, index) => {
           const active = activeSegmentIndex === index
           return (
@@ -35,7 +35,7 @@ export function TranscriptViewer({
                 <span className="mt-0.5 w-10 shrink-0 font-display text-xs font-bold text-muted">
                   {formatVideoTime(segment.startMs)}
                 </span>
-                <span className="font-semibold">{segment.text}</span>
+                <span lang="en" className="font-semibold">{segment.text}</span>
               </button>
             </li>
           )
