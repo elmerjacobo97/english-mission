@@ -13,6 +13,10 @@ const busMission = findMission("bus") ?? (() => {
   throw new Error("la misión bus no existe en el catálogo")
 })()
 
+const landlordMission = findMission("landlord") ?? (() => {
+  throw new Error("la misión landlord no existe en el catálogo")
+})()
+
 async function next(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole("button", { name: "Continuar" }))
 }
@@ -39,6 +43,18 @@ async function playPerfect(user: ReturnType<typeof userEvent.setup>) {
 
 describe("MissionPlayer", () => {
   afterEach(() => vi.unstubAllGlobals())
+
+  test("shows mission title, description, and link back to the map", () => {
+    render(<MissionPlayer mission={landlordMission} />)
+
+    expect(
+      screen.getByRole("heading", { name: "Llamar al dueño" }),
+    ).toBeInTheDocument()
+    expect(screen.getByText("El alquiler y una fuga")).toBeInTheDocument()
+    expect(
+      screen.getByRole("link", { name: "Volver al mapa" }),
+    ).toHaveAttribute("href", "/")
+  })
 
   test("awards three stars and the full payout for a flawless run", async () => {
     const user = userEvent.setup()

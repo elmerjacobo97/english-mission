@@ -1,7 +1,14 @@
 "use client"
 
-import { ArrowLeftIcon, ArrowRightIcon, ChatCircleDotsIcon } from "@phosphor-icons/react"
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  BookOpenTextIcon,
+  ChatCircleDotsIcon,
+} from "@phosphor-icons/react"
+import Link from "next/link"
 import { useEffect, useRef, useState, useSyncExternalStore } from "react"
+import { PageHeader } from "@/shared/components/page-header"
 import {
   getSpeechSupportServerSnapshot,
   getSpeechSupportSnapshot,
@@ -97,6 +104,18 @@ export function MissionPlayer({ mission }: MissionPlayerProps) {
 
   return (
     <main className="flex w-full flex-1 flex-col gap-4 py-5">
+      <PageHeader
+        icon={BookOpenTextIcon}
+        title={mission.title}
+        description={mission.subtitle}
+        aside={
+          <Link href="/" className="ui-button ui-button-secondary shrink-0 px-3">
+            <ArrowLeftIcon weight="bold" size={16} aria-hidden />
+            Volver al mapa
+          </Link>
+        }
+      />
+
       <div className="flex items-center gap-3">
         <div
           role="progressbar"
