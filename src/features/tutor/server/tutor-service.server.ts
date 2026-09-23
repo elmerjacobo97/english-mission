@@ -3,6 +3,7 @@ import "server-only"
 import { findMission } from "@/shared/lib/curriculum/mission-catalog"
 import { generateStructured } from "@/shared/lib/ai/gateway.server"
 import type { AiResult } from "@/shared/lib/ai/types"
+import type { Beat } from "@/shared/lib/game/types/beat"
 import type { CourseBand, Mission } from "@/shared/lib/game/types/mission"
 import { readProgress } from "@/shared/lib/progress/progress-repository.server"
 import type { TutorMessage, TutorReply, TutorRequest } from "../types"
@@ -15,6 +16,7 @@ const MAX_HISTORY_MESSAGES = 20
 export type TutorServiceErrorCode =
   | "unknown-mission"
   | "course-band-required"
+  | "invalid-beat-index"
 
 export class TutorServiceError extends Error {
   constructor(public readonly code: TutorServiceErrorCode) {
@@ -45,6 +47,9 @@ export function parseTutorRequest(value: unknown): TutorRequest | null {
     !nonEmptyString(value.message) ||
     value.message.length > MAX_MESSAGE_LENGTH ||
     !nonEmptyString(value.missionSlug) ||
+    typeof value.beatIndex !== "number" ||
+    !Number.isInteger(value.beatIndex) ||
+    value.beatIndex < 0 ||
     !Array.isArray(value.history) ||
     value.history.length > MAX_HISTORY_MESSAGES ||
     !value.history.every(isTutorMessage)
@@ -52,10 +57,14 @@ export function parseTutorRequest(value: unknown): TutorRequest | null {
     return null
   }
 
+  const mission = findMission(value.missionSlug)
+  if (mission && value.beatIndex >= mission.beats.length) return null
+
   return {
     message: value.message,
     history: value.history,
     missionSlug: value.missionSlug,
+    beatIndex: value.beatIndex,
   }
 }
 
@@ -137,10 +146,30 @@ const tutorSchema = {
   },
 }
 
-function tutorInstructions(band: CourseBand, mission: Mission): string {
+function activeBeatContent(beat: Beat): string {
+  switch (beat.kind) {
+    case "story":
+      return [beat.es, beat.en].filter(Boolean).join(" ")
+    case "choice":
+      return `${beat.prompt} Opciones: ${beat.options.join(", ")}`
+    case "order":
+      return `${beat.prompt} Palabras disponibles: ${beat.tokens.join(" ")}`
+    case "type":
+      return `${beat.prompt} Pista: ${beat.hint}`
+    case "fill":
+      return `${beat.prompt} ${beat.sentence}`
+    case "listen":
+      return `${beat.prompt} ${beat.phrase} Opciones: ${beat.options.join(", ")}`
+    case "dialogue":
+      return `${beat.prompt} ${beat.line} Opciones: ${beat.options.join(", ")}`
+  }
+}
+
+function tutorInstructions(band: CourseBand, mission: Mission, beatIndex: number): string {
   const vocabulary = mission.vocab
     .map(([english, spanish]) => `${english} (${spanish})`)
     .join(", ")
+  const beat = mission.beats[beatIndex]
 
   return [
     "Eres Coco, tutora de inglés para estudiantes hispanohablantes.",
@@ -150,6 +179,7 @@ function tutorInstructions(band: CourseBand, mission: Mission): string {
     "Agrega una curiosidad relacionada solo cuando aporte valor; de lo contrario usa null.",
     `Adapta la explicación al nivel CEFR ${mission.cefrLevel} y a la ruta ${band}.`,
     `Misión actual: ${mission.title}. Vocabulario relacionado: ${vocabulary}.`,
+    `Paso activo ${beatIndex + 1} de ${mission.beats.length}: ${activeBeatContent(beat)}.`,
   ].join(" ")
 }
 
@@ -161,6 +191,9 @@ export async function askTutor(
   if (!mission) {
     throw new TutorServiceError("unknown-mission")
   }
+  if (!Number.isInteger(request.beatIndex) || !mission.beats[request.beatIndex]) {
+    throw new TutorServiceError("invalid-beat-index")
+  }
 
   const progress = await readProgress(userId)
   if (!progress.courseBand) {
@@ -169,7 +202,7 @@ export async function askTutor(
 
   return generateStructured({
     messages: [
-      { role: "system", content: tutorInstructions(progress.courseBand, mission) },
+      { role: "system", content: tutorInstructions(progress.courseBand, mission, request.beatIndex) },
       ...request.history,
       { role: "user", content: request.message },
     ],

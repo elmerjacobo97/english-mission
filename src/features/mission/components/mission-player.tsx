@@ -31,9 +31,10 @@ import { TutorPanel } from "./tutor-panel"
 
 type MissionPlayerProps = {
   mission: Mission
+  userId: string
 }
 
-export function MissionPlayer({ mission }: MissionPlayerProps) {
+export function MissionPlayer({ mission, userId }: MissionPlayerProps) {
   const run = useMissionRun(mission)
   const beatRef = useRef<HTMLDivElement>(null)
   const previousIndex = useRef(run.index)
@@ -161,6 +162,8 @@ export function MissionPlayer({ mission }: MissionPlayerProps) {
           {tutorOpen && (
             <TutorPanel
               missionSlug={mission.slug}
+              beatIndex={run.index}
+              userId={userId}
               onClose={() => setTutorOpen(false)}
             />
           )}

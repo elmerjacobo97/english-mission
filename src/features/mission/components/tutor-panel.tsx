@@ -1,6 +1,11 @@
 "use client"
 
-import { ArrowCounterClockwiseIcon, PaperPlaneTiltIcon, XIcon } from "@phosphor-icons/react"
+import {
+  ArrowCounterClockwiseIcon,
+  PaperPlaneTiltIcon,
+  TrashIcon,
+  XIcon,
+} from "@phosphor-icons/react"
 import { useEffect, useRef, useState, type FormEvent, type MouseEvent } from "react"
 import ReactMarkdown from "react-markdown"
 import { CharacterAvatar } from "@/shared/components/game/character-avatar"
@@ -8,6 +13,8 @@ import type { TutorMessage, TutorReply, TutorRequest } from "@/features/tutor/ty
 
 type TutorPanelProps = {
   missionSlug: string
+  beatIndex: number
+  userId: string
   onClose: () => void
 }
 
@@ -15,8 +22,54 @@ type TutorConversationMessage =
   | { role: "user"; content: string }
   | { role: "assistant"; content: string; reply: TutorReply }
 
-type TutorAttempt = Pick<TutorRequest, "message" | "history"> & {
-  missionSlug: string
+type TutorAttempt = Pick<TutorRequest, "message" | "history" | "missionSlug" | "beatIndex">
+
+const conversationPrefix = "english-mission:coco-tutor:v1:"
+
+function isTutorConversationMessage(value: unknown): value is TutorConversationMessage {
+  if (!value || typeof value !== "object") return false
+  const message = value as Record<string, unknown>
+  if (
+    (message.role !== "user" && message.role !== "assistant") ||
+    typeof message.content !== "string"
+  ) {
+    return false
+  }
+  if (message.role === "user") return true
+
+  const reply = message.reply as TutorReply | undefined
+  return Boolean(
+    reply &&
+      typeof reply.explanation === "string" &&
+      (reply.correction === null ||
+        (reply.correction &&
+          typeof reply.correction.original === "string" &&
+          typeof reply.correction.corrected === "string" &&
+          typeof reply.correction.reason === "string")) &&
+      reply.example &&
+      typeof reply.example.english === "string" &&
+      typeof reply.example.spanish === "string" &&
+      (reply.curiosity === null || typeof reply.curiosity === "string"),
+  )
+}
+
+function readConversation(key: string): TutorConversationMessage[] {
+  try {
+    const stored = window.localStorage.getItem(key)
+    if (!stored) return []
+    const parsed: unknown = JSON.parse(stored)
+    if (
+      !parsed ||
+      typeof parsed !== "object" ||
+      !Array.isArray((parsed as { messages?: unknown }).messages) ||
+      !(parsed as { messages: unknown[] }).messages.every(isTutorConversationMessage)
+    ) {
+      return []
+    }
+    return (parsed as { messages: TutorConversationMessage[] }).messages
+  } catch {
+    return []
+  }
 }
 
 function replyHistory(reply: TutorReply): string {
@@ -82,9 +135,12 @@ function TutorAnswer({ reply }: { reply: TutorReply }) {
   )
 }
 
-export function TutorPanel({ missionSlug, onClose }: TutorPanelProps) {
+export function TutorPanel({ missionSlug, beatIndex, userId, onClose }: TutorPanelProps) {
   const dialogRef = useRef<HTMLDialogElement>(null)
+  const skipNextPersist = useRef(false)
   const [messages, setMessages] = useState<TutorConversationMessage[]>([])
+  const storageKey = `${conversationPrefix}${userId}:${missionSlug}`
+  const [loadedKey, setLoadedKey] = useState<string | null>(null)
   const [draft, setDraft] = useState("")
   const [sending, setSending] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -94,6 +150,43 @@ export function TutorPanel({ missionSlug, onClose }: TutorPanelProps) {
   useEffect(() => {
     dialogRef.current?.showModal()
   }, [])
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      setMessages(readConversation(storageKey))
+      setLoadedKey(storageKey)
+    }, 0)
+    return () => window.clearTimeout(timeout)
+  }, [storageKey])
+
+  useEffect(() => {
+    if (loadedKey !== storageKey) return
+    if (skipNextPersist.current) {
+      skipNextPersist.current = false
+      return
+    }
+    try {
+      window.localStorage.setItem(storageKey, JSON.stringify({ messages }))
+    } catch {
+      // Keep the conversation available in memory when storage is unavailable.
+    }
+  }, [loadedKey, messages, storageKey])
+
+  function clearHistory() {
+    const accountPrefix = `${conversationPrefix}${userId}:`
+    try {
+      const keys = Array.from({ length: window.localStorage.length }, (_, index) =>
+        window.localStorage.key(index),
+      )
+      for (const key of keys) {
+        if (key?.startsWith(accountPrefix)) window.localStorage.removeItem(key)
+      }
+    } catch {
+      // Keep the panel usable in memory when storage is unavailable.
+    }
+    skipNextPersist.current = true
+    setMessages([])
+  }
 
   async function sendQuestion(attempt: TutorAttempt) {
     setSending(true)
@@ -141,7 +234,7 @@ export function TutorPanel({ missionSlug, onClose }: TutorPanelProps) {
       role,
       content,
     }))
-    const attempt = { message, history, missionSlug }
+    const attempt = { message, history, missionSlug, beatIndex }
     setMessages((current) => [...current, { role: "user", content: message }])
     setDraft("")
     await sendQuestion(attempt)
@@ -182,6 +275,14 @@ export function TutorPanel({ missionSlug, onClose }: TutorPanelProps) {
               Dudas de inglés y correcciones a tu ritmo
             </p>
           </div>
+          <button
+            type="button"
+            onClick={clearHistory}
+            aria-label="Limpiar historial"
+            className="ui-icon-button ui-icon-button-danger shrink-0"
+          >
+            <TrashIcon size={18} weight="bold" aria-hidden />
+          </button>
           <button
             type="button"
             onClick={() => dialogRef.current?.close()}

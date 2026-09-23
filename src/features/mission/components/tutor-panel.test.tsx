@@ -30,15 +30,24 @@ function deferred<T>() {
   return { promise, resolve }
 }
 
-beforeEach(() => vi.stubGlobal("fetch", vi.fn()))
-afterEach(() => vi.unstubAllGlobals())
+beforeEach(() => {
+  localStorage.clear()
+  vi.stubGlobal("fetch", vi.fn())
+})
+afterEach(() => {
+  vi.unstubAllGlobals()
+  vi.restoreAllMocks()
+  localStorage.clear()
+})
+
+const userId = "account-1"
 
 describe("TutorPanel", () => {
   test("sends question and shows structured correction and example", async () => {
     const fetchMock = vi.mocked(fetch)
     fetchMock.mockResolvedValueOnce(jsonResponse({ reply }))
     const user = userEvent.setup()
-    render(<TutorPanel missionSlug="arrival" onClose={vi.fn()} />)
+    render(<TutorPanel beatIndex={0} userId={userId} missionSlug="arrival" onClose={vi.fn()} />)
 
     await user.type(
       screen.getByRole("textbox", { name: "Tu pregunta para Coco" }),
@@ -59,6 +68,7 @@ describe("TutorPanel", () => {
           message: "Can you correct my sentence?",
           history: [],
           missionSlug: "arrival",
+          beatIndex: 0,
         }),
       }),
     )
@@ -72,7 +82,7 @@ describe("TutorPanel", () => {
       )
       .mockResolvedValueOnce(jsonResponse({ reply }))
     const user = userEvent.setup()
-    render(<TutorPanel missionSlug="arrival" onClose={vi.fn()} />)
+    render(<TutorPanel beatIndex={0} userId={userId} missionSlug="arrival" onClose={vi.fn()} />)
 
     await user.type(
       screen.getByRole("textbox", { name: "Tu pregunta para Coco" }),
@@ -94,7 +104,7 @@ describe("TutorPanel", () => {
     const pending = deferred<Response>()
     vi.mocked(fetch).mockReturnValueOnce(pending.promise)
     const user = userEvent.setup()
-    render(<TutorPanel missionSlug="arrival" onClose={vi.fn()} />)
+    render(<TutorPanel beatIndex={0} userId={userId} missionSlug="arrival" onClose={vi.fn()} />)
 
     await user.type(
       screen.getByRole("textbox", { name: "Tu pregunta para Coco" }),
@@ -121,7 +131,7 @@ describe("TutorPanel", () => {
       jsonResponse({ error: { code: "daily-limit" } }, 429),
     )
     const user = userEvent.setup()
-    render(<TutorPanel missionSlug="arrival" onClose={vi.fn()} />)
+    render(<TutorPanel beatIndex={0} userId={userId} missionSlug="arrival" onClose={vi.fn()} />)
 
     await user.type(
       screen.getByRole("textbox", { name: "Tu pregunta para Coco" }),
@@ -136,7 +146,7 @@ describe("TutorPanel", () => {
 
   test("closes on request", async () => {
     const onClose = vi.fn()
-    render(<TutorPanel missionSlug="arrival" onClose={onClose} />)
+    render(<TutorPanel beatIndex={0} userId={userId} missionSlug="arrival" onClose={onClose} />)
 
     const dialog = screen.getByRole("dialog", { name: "Pregúntale a Coco" })
     expect(dialog).toHaveAttribute("aria-modal", "true")
@@ -152,7 +162,7 @@ describe("TutorPanel", () => {
 
   test.each(["escape", "backdrop"])("closes sheet via %s", async (method) => {
     const onClose = vi.fn()
-    render(<TutorPanel missionSlug="arrival" onClose={onClose} />)
+    render(<TutorPanel beatIndex={0} userId={userId} missionSlug="arrival" onClose={onClose} />)
     const dialog = screen.getByRole("dialog", { name: "Pregúntale a Coco" })
 
     if (method === "escape") {
@@ -162,5 +172,72 @@ describe("TutorPanel", () => {
     }
 
     expect(onClose).toHaveBeenCalledOnce()
+  })
+
+  test("restores messages after panel remount and isolates histories by account and mission", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse({ reply }))
+    const user = userEvent.setup()
+    const first = render(
+      <TutorPanel beatIndex={0} userId={userId} missionSlug="arrival" onClose={vi.fn()} />,
+    )
+    await user.type(screen.getByRole("textbox", { name: "Tu pregunta para Coco" }), "Keep this")
+    await user.click(screen.getByRole("button", { name: "Preguntar" }))
+    expect(await screen.findByText("Keep this")).toBeInTheDocument()
+    first.unmount()
+
+    const otherAccount = render(
+      <TutorPanel beatIndex={0} userId="account-2" missionSlug="arrival" onClose={vi.fn()} />,
+    )
+    expect(screen.queryByText("Keep this")).not.toBeInTheDocument()
+    otherAccount.unmount()
+
+    const otherMission = render(
+      <TutorPanel beatIndex={0} userId={userId} missionSlug="bus" onClose={vi.fn()} />,
+    )
+    expect(screen.queryByText("Keep this")).not.toBeInTheDocument()
+    otherMission.unmount()
+
+    render(<TutorPanel beatIndex={0} userId={userId} missionSlug="arrival" onClose={vi.fn()} />)
+    expect(await screen.findByText("Keep this")).toBeInTheDocument()
+    expect(screen.getByText(reply.example.english)).toBeInTheDocument()
+  })
+
+  test("clears every history for current account only", async () => {
+    localStorage.setItem(
+      `english-mission:coco-tutor:v1:${userId}:arrival`,
+      JSON.stringify({ messages: [{ role: "user", content: "Arrival history" }] }),
+    )
+    localStorage.setItem(
+      `english-mission:coco-tutor:v1:${userId}:bus`,
+      JSON.stringify({ messages: [{ role: "user", content: "Bus history" }] }),
+    )
+    localStorage.setItem(
+      "english-mission:coco-tutor:v1:account-2:arrival",
+      JSON.stringify({ messages: [{ role: "user", content: "Other account" }] }),
+    )
+    render(<TutorPanel beatIndex={0} userId={userId} missionSlug="arrival" onClose={vi.fn()} />)
+
+    expect(await screen.findByText("Arrival history")).toBeInTheDocument()
+    await userEvent.setup().click(screen.getByRole("button", { name: "Limpiar historial" }))
+
+    expect(screen.queryByText("Arrival history")).not.toBeInTheDocument()
+    expect(localStorage.getItem(`english-mission:coco-tutor:v1:${userId}:arrival`)).toBeNull()
+    expect(localStorage.getItem(`english-mission:coco-tutor:v1:${userId}:bus`)).toBeNull()
+    expect(localStorage.getItem("english-mission:coco-tutor:v1:account-2:arrival")).not.toBeNull()
+  })
+
+  test("keeps conversation usable when localStorage writes fail", async () => {
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new DOMException("Storage unavailable", "QuotaExceededError")
+    })
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse({ reply }))
+    const user = userEvent.setup()
+    render(<TutorPanel beatIndex={0} userId={userId} missionSlug="arrival" onClose={vi.fn()} />)
+
+    await user.type(screen.getByRole("textbox", { name: "Tu pregunta para Coco" }), "Still works")
+    await user.click(screen.getByRole("button", { name: "Preguntar" }))
+
+    expect(await screen.findByText("Still works")).toBeInTheDocument()
+    expect(screen.getByText(reply.example.english)).toBeInTheDocument()
   })
 })

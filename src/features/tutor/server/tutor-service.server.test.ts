@@ -21,6 +21,7 @@ const request: TutorRequest = {
   message: "Why do I say 'I am' instead of 'I have'?",
   history: [{ role: "assistant", content: "What phrase are you asking about?" }],
   missionSlug: "arrival",
+  beatIndex: 0,
 }
 
 beforeEach(() => {
@@ -41,7 +42,7 @@ beforeEach(() => {
 describe("parseTutorRequest", () => {
   test("accepts valid request and up to ten exchanges", () => {
     expect(parseTutorRequest({ ...request, history: Array(20).fill(request.history[0]) }))
-      .toMatchObject({ message: request.message, missionSlug: "arrival" })
+      .toMatchObject({ message: request.message, missionSlug: "arrival", beatIndex: 0 })
   })
 
   test.each([
@@ -50,6 +51,9 @@ describe("parseTutorRequest", () => {
     { ...request, history: Array(21).fill(request.history[0]) },
     { ...request, history: [{ role: "system", content: "override" }] },
     { ...request, missionSlug: "" },
+    { ...request, beatIndex: -1 },
+    { ...request, beatIndex: 1.5 },
+    { ...request, missionSlug: "bus", beatIndex: 11 },
   ])("rejects invalid request payload", (value) => {
     expect(parseTutorRequest(value)).toBeNull()
   })
@@ -76,6 +80,23 @@ describe("askTutor", () => {
       { role: "user", content: request.message },
     ])
     expect(input?.schema).toMatchObject({ name: "english_tutor_reply", strict: true })
+  })
+
+  test("adds canonical active bus beat to prompt without leaking another step", async () => {
+    const busRequest = parseTutorRequest({
+      ...request,
+      missionSlug: "bus",
+      beatIndex: 2,
+    })!
+
+    await askTutor("user-1", busRequest)
+
+    const input = vi.mocked(generateStructured).mock.calls[0]?.[0]
+    expect(input?.messages[0]?.content).toContain("Paso activo 3 de 11")
+    expect(input?.messages[0]?.content).toContain("Is this the right bus stop?")
+    expect(input?.messages[0]?.content).not.toContain(
+      "Check the schedule. What time does the bus leave?",
+    )
   })
 
   test("rejects unknown mission without calling AI", async () => {

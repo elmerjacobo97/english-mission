@@ -20,11 +20,11 @@ export async function generateMetadata(
 }
 
 export default async function MissionPage(props: PageProps<"/mission/[slug]">) {
-  await requireCourseBand()
+  const { user } = await requireCourseBand()
   const { slug } = await props.params
   const mission = findMission(slug)
   if (!mission) {
     notFound()
   }
-  return <MissionPlayer mission={mission} />
+  return <MissionPlayer mission={mission} userId={user.id} />
 }

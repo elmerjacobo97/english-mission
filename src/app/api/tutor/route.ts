@@ -54,9 +54,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ reply: result.value })
   } catch (error) {
     if (error instanceof TutorServiceError) {
-      return error.code === "unknown-mission"
-        ? errorResponse(400, error.code, "No encontramos esa misión.")
-        : errorResponse(409, error.code, "Selecciona tu ruta CEFR antes de usar el tutor.")
+      if (error.code === "unknown-mission") {
+        return errorResponse(400, error.code, "No encontramos esa misión.")
+      }
+      if (error.code === "invalid-beat-index") {
+        return errorResponse(400, error.code, "El paso activo no es válido.")
+      }
+      return errorResponse(409, error.code, "Selecciona tu ruta CEFR antes de usar el tutor.")
     }
 
     return errorResponse(500, "internal-error", "No pudimos completar la solicitud. Intenta de nuevo.")

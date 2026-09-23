@@ -22,6 +22,7 @@ const parsedRequest = {
   message: "Why do I say 'I am'?",
   history: [],
   missionSlug: "arrival",
+  beatIndex: 0,
 }
 const reply = {
   explanation: "Usamos be para describir estados.",

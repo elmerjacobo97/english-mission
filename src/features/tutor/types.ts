@@ -7,6 +7,7 @@ export type TutorRequest = {
   message: string
   history: TutorMessage[]
   missionSlug: string
+  beatIndex: number
 }
 
 export type TutorReply = {
