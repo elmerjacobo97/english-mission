@@ -4,6 +4,7 @@ import type { Icon } from '@phosphor-icons/react';
 import {
   ArrowCounterClockwiseIcon,
   BookOpenTextIcon,
+  ChatCircleDotsIcon,
   CoinsIcon,
   FireIcon,
   MapTrifoldIcon,
@@ -38,6 +39,7 @@ const NAV_ITEMS: ShellNavItem[] = [
   { href: '/review', label: 'Repaso', icon: ArrowCounterClockwiseIcon },
   { href: '/shop', label: 'Tienda', icon: StorefrontIcon },
   { href: '/videos', label: 'Videos', icon: VideoCameraIcon },
+  { href: '/rehearsals', label: 'Ensayar', icon: ChatCircleDotsIcon },
 ];
 
 function isActive(pathname: string, href: string) {

@@ -2,18 +2,18 @@ import "server-only"
 
 import { createSupabaseServerClient } from "@/shared/lib/supabase/server"
 
-const DAILY_TUTOR_LIMIT = 50
+export const DAILY_AI_LIMIT = 50
 
 type QueryResult<T> = { data: T; error: { message: string } | null }
 
 type UsageRow = { usage_day: string; successful_responses: number }
 
-export type TutorUsage = {
+export type AiQuota = {
   used: number
   remaining: number
 }
 
-export async function getTutorUsage(userId: string): Promise<TutorUsage> {
+export async function getAiQuota(userId: string): Promise<AiQuota> {
   const supabase = await createSupabaseServerClient()
   const result = (await supabase
     .from("ai_usage")
@@ -26,14 +26,13 @@ export async function getTutorUsage(userId: string): Promise<TutorUsage> {
   }
 
   const today = new Date().toISOString().slice(0, 10)
-  const used = result.data?.usage_day === today
-    ? result.data.successful_responses
-    : 0
+  const used =
+    result.data?.usage_day === today ? result.data.successful_responses : 0
 
-  return { used, remaining: DAILY_TUTOR_LIMIT - used }
+  return { used, remaining: DAILY_AI_LIMIT - used }
 }
 
-export async function recordTutorResponse(): Promise<boolean> {
+export async function recordAiGeneration(): Promise<boolean> {
   const supabase = await createSupabaseServerClient()
   const result = (await supabase.rpc("record_ai_response")) as QueryResult<unknown>
 

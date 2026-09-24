@@ -5,8 +5,8 @@ vi.mock("server-only", () => ({}))
 const auth = vi.hoisted(() => ({ getCurrentUser: vi.fn() }))
 const tutor = vi.hoisted(() => ({ askTutor: vi.fn(), parseTutorRequest: vi.fn() }))
 const usage = vi.hoisted(() => ({
-  getTutorUsage: vi.fn(),
-  recordTutorResponse: vi.fn(),
+  getAiQuota: vi.fn(),
+  recordAiGeneration: vi.fn(),
 }))
 
 vi.mock("@/shared/lib/supabase/server", () => auth)
@@ -14,7 +14,7 @@ vi.mock("@/features/tutor/server/tutor-service.server", async (importOriginal) =
   ...(await importOriginal<typeof import("@/features/tutor/server/tutor-service.server")>()),
   ...tutor,
 }))
-vi.mock("@/features/tutor/server/tutor-usage.server", () => usage)
+vi.mock("@/shared/lib/ai/ai-usage.server", () => usage)
 
 import { POST } from "./route"
 
@@ -44,8 +44,8 @@ beforeEach(() => {
   auth.getCurrentUser.mockResolvedValue({ id: "user-1" })
   tutor.parseTutorRequest.mockReturnValue(parsedRequest)
   tutor.askTutor.mockResolvedValue({ ok: true, value: reply, model: "test/model" })
-  usage.getTutorUsage.mockResolvedValue({ used: 4, remaining: 46 })
-  usage.recordTutorResponse.mockResolvedValue(true)
+  usage.getAiQuota.mockResolvedValue({ used: 4, remaining: 46 })
+  usage.recordAiGeneration.mockResolvedValue(true)
 })
 
 describe("POST /api/tutor", () => {
@@ -55,7 +55,7 @@ describe("POST /api/tutor", () => {
     const response = await POST(post(parsedRequest))
 
     expect(response.status).toBe(401)
-    expect(usage.getTutorUsage).not.toHaveBeenCalled()
+    expect(usage.getAiQuota).not.toHaveBeenCalled()
   })
 
   test("rejects invalid request before reading quota", async () => {
@@ -64,17 +64,17 @@ describe("POST /api/tutor", () => {
     const response = await POST(post({ ...parsedRequest, message: "" }))
 
     expect(response.status).toBe(400)
-    expect(usage.getTutorUsage).not.toHaveBeenCalled()
+    expect(usage.getAiQuota).not.toHaveBeenCalled()
   })
 
   test("rejects exhausted quota without calling AI", async () => {
-    usage.getTutorUsage.mockResolvedValue({ used: 50, remaining: 0 })
+    usage.getAiQuota.mockResolvedValue({ used: 50, remaining: 0 })
 
     const response = await POST(post(parsedRequest))
 
     expect(response.status).toBe(429)
     expect(tutor.askTutor).not.toHaveBeenCalled()
-    expect(usage.recordTutorResponse).not.toHaveBeenCalled()
+    expect(usage.recordAiGeneration).not.toHaveBeenCalled()
   })
 
   test("returns reply and records usage only after successful AI response", async () => {
@@ -82,7 +82,7 @@ describe("POST /api/tutor", () => {
 
     expect(response.status).toBe(200)
     await expect(response.json()).resolves.toEqual({ reply })
-    expect(usage.recordTutorResponse).toHaveBeenCalledOnce()
+    expect(usage.recordAiGeneration).toHaveBeenCalledOnce()
   })
 
   test("does not consume quota when AI fails and supports retry", async () => {
@@ -95,14 +95,14 @@ describe("POST /api/tutor", () => {
     const response = await POST(post(parsedRequest))
 
     expect(response.status).toBe(503)
-    expect(usage.recordTutorResponse).not.toHaveBeenCalled()
+    expect(usage.recordAiGeneration).not.toHaveBeenCalled()
     await expect(response.json()).resolves.toMatchObject({
       error: { code: "ai-unavailable" },
     })
   })
 
   test("does not return generated reply when concurrent requests use final slot", async () => {
-    usage.recordTutorResponse.mockResolvedValue(false)
+    usage.recordAiGeneration.mockResolvedValue(false)
 
     const response = await POST(post(parsedRequest))
 
@@ -113,7 +113,7 @@ describe("POST /api/tutor", () => {
   })
 
   test("hides quota database errors", async () => {
-    usage.getTutorUsage.mockRejectedValue(new Error("database secret"))
+    usage.getAiQuota.mockRejectedValue(new Error("database secret"))
 
     const response = await POST(post(parsedRequest))
 

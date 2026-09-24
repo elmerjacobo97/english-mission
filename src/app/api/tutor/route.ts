@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 
 import { askTutor, parseTutorRequest, TutorServiceError } from "@/features/tutor/server/tutor-service.server"
-import { getTutorUsage, recordTutorResponse } from "@/features/tutor/server/tutor-usage.server"
+import { getAiQuota, recordAiGeneration } from "@/shared/lib/ai/ai-usage.server"
 import { getCurrentUser } from "@/shared/lib/supabase/server"
 
 function errorResponse(status: number, code: string, message: string) {
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const usage = await getTutorUsage(user.id)
+    const usage = await getAiQuota(user.id)
     if (usage.remaining <= 0) {
       return errorResponse(429, "daily-limit", "Alcanzaste el límite diario del tutor.")
     }
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
       )
     }
 
-    if (!(await recordTutorResponse())) {
+    if (!(await recordAiGeneration())) {
       return errorResponse(429, "daily-limit", "Alcanzaste el límite diario del tutor.")
     }
 

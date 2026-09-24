@@ -148,25 +148,63 @@ describe("generateStructured", () => {
   })
 
   test.each([
-    [429, "rate-limited", true],
-    [400, "provider-error", false],
-    [503, "provider-error", true],
-  ] as const)("maps HTTP %s to %s", async (status, code, retryable) => {
+    [429, "rate-limited", true, 3],
+    [400, "provider-error", false, 1],
+    [503, "provider-error", true, 3],
+  ] as const)(
+    "maps HTTP %s to %s with %s retries",
+    async (status, code, retryable, calls) => {
+      enableAi()
+      fetchMock.mockResolvedValue(
+        jsonResponse({ error: { message: "provider secret" } }, status),
+      )
+
+      const result = await generateStructured(structuredInput())
+
+      expect(result).toEqual({ ok: false, code, retryable })
+      expect(fetchMock).toHaveBeenCalledTimes(calls)
+      expect(JSON.stringify(result)).not.toContain("provider secret")
+      expect(JSON.stringify(result)).not.toContain("secret-test-key")
+    },
+  )
+
+  test("maps an embedded provider error in a 200 response to retryable provider-error", async () => {
     enableAi()
-    fetchMock.mockResolvedValueOnce(
-      jsonResponse({ error: { message: "provider secret" } }, status),
+    fetchMock.mockResolvedValue(
+      jsonResponse({
+        id: "gen-1",
+        error: { message: "upstream overloaded secret", code: 503 },
+      }),
     )
 
     const result = await generateStructured(structuredInput())
 
-    expect(result).toEqual({ ok: false, code, retryable })
-    expect(JSON.stringify(result)).not.toContain("provider secret")
+    expect(result).toEqual({ ok: false, code: "provider-error", retryable: true })
+    expect(fetchMock).toHaveBeenCalledTimes(3)
+    expect(JSON.stringify(result)).not.toContain("overloaded")
     expect(JSON.stringify(result)).not.toContain("secret-test-key")
+  })
+
+  test("recovers with the automatic retry when the second attempt succeeds", async () => {
+    enableAi()
+    fetchMock
+      .mockResolvedValueOnce(
+        jsonResponse({ id: "gen-1", error: { message: "overloaded", code: 503 } }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({ choices: [{ message: { content: '{"answer":"ok"}' } }] }),
+      )
+
+    await expect(generateStructured(structuredInput())).resolves.toMatchObject({
+      ok: true,
+      value: { answer: "ok" },
+    })
+    expect(fetchMock).toHaveBeenCalledTimes(2)
   })
 
   test("maps network errors without exposing provider details", async () => {
     enableAi()
-    fetchMock.mockRejectedValueOnce(new Error("provider secret"))
+    fetchMock.mockRejectedValue(new Error("provider secret"))
 
     const result = await generateStructured(structuredInput())
 
@@ -175,6 +213,7 @@ describe("generateStructured", () => {
       code: "provider-error",
       retryable: true,
     })
+    expect(fetchMock).toHaveBeenCalledTimes(3)
     expect(JSON.stringify(result)).not.toContain("provider secret")
     expect(JSON.stringify(result)).not.toContain("secret-test-key")
   })

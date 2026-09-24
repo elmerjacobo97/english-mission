@@ -1,6 +1,6 @@
 import "server-only"
 
-import { getAiConfig } from "./config.server"
+import { getAiConfig, type AiConfig } from "./config.server"
 import type {
   AiErrorCode,
   AiJsonSchema,
@@ -10,6 +10,7 @@ import type {
 } from "./types"
 
 const REQUEST_TIMEOUT_MS = 15_000
+const FAST_RETRY_WINDOW_MS = 10_000
 
 type ProviderResponse = Record<string, unknown>
 
@@ -89,20 +90,22 @@ function statusError<T>(status: number): AiResult<T> {
   return errorResult("provider-error", status >= 500)
 }
 
-export async function generateStructured<T>(
+// Some gateways (OpenRouter) answer HTTP 200 with a top-level `error` object
+// when the upstream model is overloaded or rate limited.
+function embeddedProviderError<T>(payload: unknown): AiResult<T> | null {
+  if (!isRecord(payload) || !isRecord(payload.error)) {
+    return null
+  }
+
+  const code = payload.error.code ?? payload.error.status
+  return errorResult(code === 429 ? "rate-limited" : "provider-error", true)
+}
+
+async function requestStructured<T>(
   input: GenerateStructuredInput<T>,
+  config: Extract<AiConfig, { enabled: true }>,
+  model: string,
 ): Promise<AiResult<T>> {
-  const config = getAiConfig()
-
-  if (!config.enabled) {
-    return errorResult("disabled", false)
-  }
-
-  if (!validUrl(config.baseUrl) || !config.model) {
-    return errorResult("invalid-config", false)
-  }
-
-  const model = input.model?.trim() || config.model
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
 
@@ -136,6 +139,11 @@ export async function generateStructured<T>(
     payload = await response.json()
   } catch {
     return errorResult("invalid-response", false)
+  }
+
+  const providerError = embeddedProviderError<T>(payload)
+  if (providerError) {
+    return providerError
   }
 
   const content = responseContent(payload)
@@ -172,4 +180,48 @@ export async function generateStructured<T>(
     model,
     ...(usage ? { usage } : {}),
   }
+}
+
+async function timedRequest<T>(
+  input: GenerateStructuredInput<T>,
+  config: Extract<AiConfig, { enabled: true }>,
+  model: string,
+): Promise<{ result: AiResult<T>; ms: number }> {
+  const started = Date.now()
+  return { result: await requestStructured(input, config, model), ms: Date.now() - started }
+}
+
+export async function generateStructured<T>(
+  input: GenerateStructuredInput<T>,
+): Promise<AiResult<T>> {
+  const config = getAiConfig()
+
+  if (!config.enabled) {
+    return errorResult("disabled", false)
+  }
+
+  if (!validUrl(config.baseUrl) || !config.model) {
+    return errorResult("invalid-config", false)
+  }
+
+  const model = input.model?.trim() || config.model
+
+  // Free-tier upstreams fast-fail with 503s while overloaded and usually
+  // recover within seconds, so retry retryable errors up to two extra times.
+  // A slow attempt means the route itself is dying; surface it instead of
+  // stacking 15s timeouts.
+  // ponytail: 2 fast retries, no backoff; add backoff + jitter if load demands.
+  let last = await timedRequest(input, config, model)
+  for (
+    let retry = 0;
+    !last.result.ok &&
+    last.result.retryable &&
+    last.ms < FAST_RETRY_WINDOW_MS &&
+    retry < 2;
+    retry += 1
+  ) {
+    last = await timedRequest(input, config, model)
+  }
+
+  return last.result
 }

@@ -6,7 +6,7 @@ vi.mock("@/shared/lib/supabase/server", () => ({
 }))
 
 import { createSupabaseServerClient } from "@/shared/lib/supabase/server"
-import { getTutorUsage, recordTutorResponse } from "./tutor-usage.server"
+import { getAiQuota, recordAiGeneration } from "./ai-usage.server"
 
 function query(result: unknown) {
   const builder = {
@@ -21,14 +21,14 @@ function query(result: unknown) {
 
 beforeEach(() => vi.clearAllMocks())
 
-describe("tutor usage", () => {
+describe("ai usage", () => {
   test("returns full quota when no row exists", async () => {
     const usageQuery = query({ data: null, error: null })
     vi.mocked(createSupabaseServerClient).mockResolvedValue({
       from: vi.fn().mockReturnValue(usageQuery),
     } as never)
 
-    await expect(getTutorUsage("user-1")).resolves.toEqual({
+    await expect(getAiQuota("user-1")).resolves.toEqual({
       used: 0,
       remaining: 50,
     })
@@ -47,7 +47,7 @@ describe("tutor usage", () => {
       from: vi.fn().mockReturnValue(usageQuery),
     } as never)
 
-    await expect(getTutorUsage("user-1")).resolves.toEqual({
+    await expect(getAiQuota("user-1")).resolves.toEqual({
       used: 0,
       remaining: 50,
     })
@@ -65,7 +65,7 @@ describe("tutor usage", () => {
       from: vi.fn().mockReturnValue(usageQuery),
     } as never)
 
-    await expect(getTutorUsage("user-1")).resolves.toEqual({
+    await expect(getAiQuota("user-1")).resolves.toEqual({
       used: 12,
       remaining: 38,
     })
@@ -75,7 +75,7 @@ describe("tutor usage", () => {
     const rpc = vi.fn().mockResolvedValue({ data: false, error: null })
     vi.mocked(createSupabaseServerClient).mockResolvedValue({ rpc } as never)
 
-    await expect(recordTutorResponse()).resolves.toBe(false)
+    await expect(recordAiGeneration()).resolves.toBe(false)
     expect(rpc).toHaveBeenCalledWith("record_ai_response")
   })
 
