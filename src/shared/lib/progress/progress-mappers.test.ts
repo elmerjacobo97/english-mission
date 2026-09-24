@@ -36,7 +36,7 @@ const completeRows = {
 describe("toProgress", () => {
   test("reconstructs complete progress from database rows", () => {
     expect(toProgress(completeRows)).toEqual({
-      version: 7,
+      version: 8,
       courseBand: "intermediate",
       coins: 42,
       missions: {
@@ -50,6 +50,8 @@ describe("toProgress", () => {
         best: 8,
         lastDay: "2026-09-18",
         pendingMilestone: 7,
+        freezes: 0,
+        pendingFreezesUsed: 0,
       },
       shop: { day: "2026-09-18", count: 2 },
       looks: { owned: ["ocean", "party"], equipped: "party" },
@@ -67,6 +69,19 @@ describe("toProgress", () => {
         reviews: null,
       }),
     ).toEqual(emptyProgress)
+  })
+
+  test("reads missing freeze columns as zero and keeps stored counts", () => {
+    expect(toProgress(completeRows).streak).toMatchObject({
+      freezes: 0,
+      pendingFreezesUsed: 0,
+    })
+    expect(
+      toProgress({
+        ...completeRows,
+        streak: { ...completeRows.streak, freezes: 2, pending_freezes_used: 1 },
+      }).streak,
+    ).toMatchObject({ freezes: 2, pendingFreezesUsed: 1 })
   })
 
   test("keeps legacy core rows without a course band and rejects unknown bands", () => {
@@ -129,7 +144,13 @@ describe("payload mappers", () => {
       best: streak.best,
       lastDay: streak.last_day,
       pendingMilestone: 7,
-    })).toEqual(streak)
+      freezes: 2,
+      pendingFreezesUsed: 1,
+    })).toEqual({
+      ...streak,
+      freezes: 2,
+      pending_freezes_used: 1,
+    })
     expect(shopPayload({ day: shop.day, count: shop.count })).toEqual(shop)
     expect(looksPayload({ owned: ["ocean", "party"], equipped: "party" })).toEqual(looks)
     expect(

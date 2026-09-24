@@ -3,6 +3,8 @@ import { DAY_MS } from "@/shared/lib/review/schedule"
 import * as progressSync from "./progress-sync"
 import {
   addCoins,
+  buyStreakFreeze,
+  clearPendingFreezes,
   clearPendingMilestone,
   emptyProgress,
   getMissionProgress,
@@ -155,6 +157,69 @@ describe("recordReviewResult", () => {
   })
 })
 
+describe("buyStreakFreeze", () => {
+  test("spends 20 coins and stores one freeze without changing the streak day", () => {
+    startWithProgress({
+      ...emptyProgress,
+      coins: 20,
+      streak: {
+        ...emptyProgress.streak,
+        current: 4,
+        best: 6,
+        lastDay: "2026-09-10",
+      },
+    })
+
+    expect(buyStreakFreeze()).toBe(true)
+    expect(getProgressSnapshot().coins).toBe(0)
+    expect(getProgressSnapshot().streak).toEqual({
+      ...emptyProgress.streak,
+      current: 4,
+      best: 6,
+      lastDay: "2026-09-10",
+      freezes: 1,
+    })
+    expect(queuedTables()).toEqual(["streak_state", "progress_core"])
+    expect(mockedEnqueue.mock.calls[0][0]).toMatchObject({
+      action: "upsert",
+      table: "streak_state",
+      payload: {
+        user_id: "user-1",
+        current: 4,
+        last_day: "2026-09-10",
+        freezes: 1,
+      },
+    })
+    expect(mockedEnqueue.mock.calls[1][0]).toMatchObject({
+      action: "upsert",
+      table: "progress_core",
+      payload: { user_id: "user-1", coins: 0 },
+    })
+  })
+
+  test("stops at two stored freezes", () => {
+    startWithProgress({
+      ...emptyProgress,
+      coins: 40,
+      streak: { ...emptyProgress.streak, freezes: 2 },
+    })
+    const before = getProgressSnapshot()
+
+    expect(buyStreakFreeze()).toBe(false)
+    expect(getProgressSnapshot()).toBe(before)
+    expect(mockedEnqueue).not.toHaveBeenCalled()
+  })
+
+  test("does not mutate when the balance is short", () => {
+    startWithProgress({ ...emptyProgress, coins: 19 })
+    const before = getProgressSnapshot()
+
+    expect(buyStreakFreeze()).toBe(false)
+    expect(getProgressSnapshot()).toBe(before)
+    expect(mockedEnqueue).not.toHaveBeenCalled()
+  })
+})
+
 describe("selectLook", () => {
   test("buys ocean with core and looks payloads", () => {
     startWithProgress()
@@ -240,6 +305,8 @@ describe("registerDailyActivity", () => {
       best: 1,
       lastDay: "2026-09-10",
       pendingMilestone: null,
+      freezes: 0,
+      pendingFreezesUsed: 0,
     })
     expect(queuedTables()).toEqual(["streak_state", "progress_core"])
   })
@@ -270,11 +337,47 @@ describe("registerDailyActivity", () => {
     clearPendingMilestone()
     expect(getProgressSnapshot().streak.pendingMilestone).toBeNull()
   })
+
+  test("clears a freeze notice without changing the streak count", () => {
+    startWithProgress({
+      ...emptyProgress,
+      streak: {
+        ...emptyProgress.streak,
+        current: 5,
+        best: 5,
+        lastDay: "2026-09-09",
+        freezes: 1,
+        pendingFreezesUsed: 1,
+      },
+    })
+
+    clearPendingFreezes()
+
+    expect(getProgressSnapshot().streak).toMatchObject({
+      current: 5,
+      lastDay: "2026-09-09",
+      freezes: 1,
+      pendingFreezesUsed: 0,
+    })
+    expect(queuedTables()).toEqual(["streak_state"])
+    expect(mockedEnqueue.mock.calls[0][0]).toMatchObject({
+      payload: { pending_freezes_used: 0, current: 5, freezes: 1 },
+    })
+
+    mockedEnqueue.mockClear()
+    const before = getProgressSnapshot()
+    clearPendingFreezes()
+    expect(getProgressSnapshot()).toBe(before)
+    expect(mockedEnqueue).not.toHaveBeenCalled()
+  })
 })
 
 describe("resetProgress", () => {
   test("clears game data, keeps the chosen route and saves a zeroed core row", () => {
-    startWithProgress()
+    startWithProgress({
+      ...emptyProgress,
+      streak: { ...emptyProgress.streak, current: 4, best: 4, freezes: 2 },
+    })
     setCourseBand("advanced")
     addCoins(25)
     mockedEnqueue.mockClear()

@@ -96,7 +96,8 @@ export function AppShell({ children, account }: { children: ReactNode; account?:
             <CoinsIcon weight="duotone" size={18} className="text-accent-strong" aria-hidden />
             {progress.coins}
           </span>
-          <span
+          <Link
+            href="/progress"
             key={`streak-${streak.current}`}
             className="animate-pop flex min-h-11 shrink-0 items-center gap-1 rounded-full border-2 border-ink/10 bg-surface px-2 font-display text-sm font-semibold shadow-card sm:gap-1.5 sm:px-3"
             aria-label={`Racha de ${streak.current} días. Récord: ${streak.best} días`}
@@ -109,7 +110,7 @@ export function AppShell({ children, account }: { children: ReactNode; account?:
               aria-hidden
             />
             {streak.current}
-          </span>
+          </Link>
           {account}
         </div>
       </header>

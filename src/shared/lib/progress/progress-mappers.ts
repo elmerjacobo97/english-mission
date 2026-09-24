@@ -24,6 +24,8 @@ export type StreakRow = {
   best: number
   last_day: string | null
   pending_milestone: number | null
+  freezes?: number
+  pending_freezes_used?: number
 }
 
 export type ShopRow = {
@@ -66,7 +68,7 @@ export type ProgressRows = {
 export const CORE_ROW_DEFAULTS: CoreRow = { coins: 0, course_band: null }
 
 export const emptyProgress: Progress = {
-  version: 7,
+  version: 8,
   courseBand: null,
   coins: 0,
   missions: {},
@@ -76,6 +78,8 @@ export const emptyProgress: Progress = {
     best: 0,
     lastDay: null,
     pendingMilestone: null,
+    freezes: 0,
+    pendingFreezesUsed: 0,
   },
   shop: { day: null, count: 0 },
   looks: { owned: [], equipped: "classic" },
@@ -93,6 +97,16 @@ function isNonNegativeInteger(value: unknown): value is number {
 
 function isDateKey(value: unknown): value is string {
   return typeof value === "string" && DATE_PATTERN.test(value)
+}
+
+function isOptionalFreezeCount(value: unknown): boolean {
+  return (
+    value === undefined ||
+    (typeof value === "number" &&
+      Number.isInteger(value) &&
+      value >= 0 &&
+      value <= 2)
+  )
 }
 
 function isCourseBand(value: unknown): value is CourseBand {
@@ -135,7 +149,9 @@ export function isStreakRow(value: unknown): value is StreakRow {
     (row.pending_milestone === null ||
       row.pending_milestone === 3 ||
       row.pending_milestone === 7 ||
-      row.pending_milestone === 30)
+      row.pending_milestone === 30) &&
+    isOptionalFreezeCount(row.freezes) &&
+    isOptionalFreezeCount(row.pending_freezes_used)
   )
 }
 
@@ -207,6 +223,8 @@ export function toProgress(rows: ProgressRows): Progress {
         best: rows.streak.best,
         lastDay: rows.streak.last_day,
         pendingMilestone: rows.streak.pending_milestone as StreakState["pendingMilestone"],
+        freezes: rows.streak.freezes ?? 0,
+        pendingFreezesUsed: rows.streak.pending_freezes_used ?? 0,
       }
     : emptyProgress.streak
   const shop = isShopRow(rows.shop)
@@ -239,7 +257,7 @@ export function toProgress(rows: ProgressRows): Progress {
   }
 
   return {
-    version: 7,
+    version: 8,
     courseBand: isCourseBand(core.course_band) ? core.course_band : null,
     coins: core.coins,
     missions,
@@ -267,6 +285,8 @@ export function streakPayload(streak: StreakState): StreakRow {
     best: streak.best,
     last_day: streak.lastDay,
     pending_milestone: streak.pendingMilestone,
+    freezes: streak.freezes,
+    pending_freezes_used: streak.pendingFreezesUsed,
   }
 }
 

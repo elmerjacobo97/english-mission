@@ -8,12 +8,19 @@ const NOW = 1_700_000_000_000
 
 function progress(overrides: Partial<Progress> = {}): Progress {
   return {
-    version: 7,
+    version: 8,
     courseBand: null,
     coins: 0,
     missions: {},
     reviews: {},
-    streak: { current: 0, best: 0, lastDay: null, pendingMilestone: null },
+    streak: {
+      current: 0,
+      best: 0,
+      lastDay: null,
+      pendingMilestone: null,
+      freezes: 0,
+      pendingFreezesUsed: 0,
+    },
     shop: { day: null, count: 0 },
     looks: { owned: [], equipped: "classic" },
     ...overrides,

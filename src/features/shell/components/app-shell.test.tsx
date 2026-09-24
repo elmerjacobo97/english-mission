@@ -78,7 +78,10 @@ describe("AppShell", () => {
     render(<AppShell>contenido</AppShell>)
 
     expect(screen.getByLabelText("Monedas: 40")).toBeInTheDocument()
-    expect(screen.getByLabelText(/Récord: 0 días/)).toBeInTheDocument()
+    const streak = screen.getByRole("link", { name: /Racha de 0 días/ })
+    expect(streak).toHaveAttribute("href", "/progress")
+    expect(streak).toHaveTextContent("0")
+    expect(streak).not.toHaveTextContent(/protector/i)
   })
 
   test("shows audio enabled by default and toggles its accessible state", async () => {

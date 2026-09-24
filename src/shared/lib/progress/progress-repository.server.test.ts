@@ -88,7 +88,7 @@ describe("readProgress", () => {
     mockClient(tables)
 
     await expect(readProgress("user-2")).resolves.toMatchObject({
-      version: 7,
+      version: 8,
       courseBand: null,
       coins: 0,
       missions: {},

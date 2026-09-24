@@ -3,7 +3,7 @@ import * as progressSync from "./progress-sync"
 import type { ProgressTable, SyncOperation } from "./progress-sync"
 import { canBuy, isOwned, LOOK_PRICES, nextLooks } from "./looks"
 import { canRecharge, nextShop } from "./shop"
-import { localDayKey, nextStreak } from "./streak"
+import { localDayKey, nextStreak, STREAK_FREEZE_MAX, STREAK_FREEZE_PRICE } from "./streak"
 import type { CourseBand } from "../game/types/mission"
 import {
   corePayload,
@@ -102,6 +102,26 @@ export function spendCoins(amount: number): boolean {
   mutation(
     { ...progress, coins: progress.coins - amount },
     [upsert("progress_core", corePayload(progress.coins - amount, progress.courseBand))],
+  )
+  return true
+}
+
+export function buyStreakFreeze(): boolean {
+  const progress = getProgressSnapshot()
+  if (
+    progress.coins < STREAK_FREEZE_PRICE ||
+    progress.streak.freezes >= STREAK_FREEZE_MAX
+  ) {
+    return false
+  }
+  const coins = progress.coins - STREAK_FREEZE_PRICE
+  const streak = { ...progress.streak, freezes: progress.streak.freezes + 1 }
+  mutation(
+    { ...progress, coins, streak },
+    [
+      upsert("streak_state", streakPayload(streak)),
+      upsert("progress_core", corePayload(coins, progress.courseBand)),
+    ],
   )
   return true
 }
@@ -221,6 +241,18 @@ export function clearPendingMilestone(): void {
     return
   }
   const streak = { ...progress.streak, pendingMilestone: null }
+  mutation(
+    { ...progress, streak },
+    [upsert("streak_state", streakPayload(streak))],
+  )
+}
+
+export function clearPendingFreezes(): void {
+  const progress = getProgressSnapshot()
+  if (progress.streak.pendingFreezesUsed === 0) {
+    return
+  }
+  const streak = { ...progress.streak, pendingFreezesUsed: 0 }
   mutation(
     { ...progress, streak },
     [upsert("streak_state", streakPayload(streak))],

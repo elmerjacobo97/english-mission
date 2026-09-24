@@ -32,7 +32,7 @@ Narrative English-learning game. Spanish is UI and narration; English is learnin
 - Dependency direction: `src/app` composes `src/features/*`; features use `src/shared/*`; shared code imports no features and features do not import each other.
 - `(app)` routes use `AppShell`. Use global Next route types (`PageProps<'/mission/[slug]'>`, `LayoutProps<'/'>`) and shared `PageHeader` for new pages.
 - Mark server-only modules with `import "server-only"`; client components must not import server gateways, repositories, or config. AI gateway: `src/shared/lib/ai/gateway.server.ts`; shared daily AI quota used by tutor and rehearsals: `src/shared/lib/ai/ai-usage.server.ts`; video provider/repository: `src/features/videos/server/`.
-- Progress is version 7 and Supabase-backed, not `localStorage`. Root layout reads it server-side; `ProgressProvider` hydrates the store. Mutations are optimistic and sync absolute payloads through a FIFO queue with retry and `online` recovery.
+- Progress is version 8 and Supabase-backed, not `localStorage`. Root layout reads it server-side; `ProgressProvider` hydrates the store. Mutations are optimistic and sync absolute payloads through a FIFO queue with retry and `online` recovery.
 - CEFR bands (Basic A1–A2, Intermediate B1–B2, Advanced C1) differ from numeric challenge levels. Placement recommends; learner chooses. `courseBand` may be null until selection. Band changes preserve missions; reset preserves selected band.
 
 ## Content And Specs

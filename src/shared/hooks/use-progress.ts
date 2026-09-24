@@ -3,6 +3,8 @@
 import { useSyncExternalStore } from "react"
 import {
   addCoins,
+  buyStreakFreeze,
+  clearPendingFreezes,
   clearPendingMilestone,
   getProgressServerSnapshot,
   getProgressSnapshot,
@@ -23,9 +25,11 @@ export function useProgress() {
   return {
     progress,
     addCoins,
+    buyStreakFreeze,
     spendCoins,
     selectLook,
     setCourseBand,
+    clearPendingFreezes,
     clearPendingMilestone,
     reset: resetProgress,
   }

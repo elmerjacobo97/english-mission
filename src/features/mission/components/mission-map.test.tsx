@@ -7,6 +7,7 @@ import {
   getProgressSnapshot,
   initProgress,
   recordMissionResult,
+  registerDailyActivity,
 } from "@/shared/lib/progress/progress-store"
 import type { StreakState } from "@/shared/lib/progress/types"
 import { MissionMap } from "./mission-map"
@@ -100,6 +101,77 @@ describe("MissionMap", () => {
     render(<MissionMap />)
 
     expect(screen.queryByText(/¡Racha de/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Usamos/)).not.toBeInTheDocument()
+  })
+
+  test("shows the freeze notice after a covered day and hides it once closed", async () => {
+    const user = userEvent.setup()
+    initProgress(
+      {
+        ...emptyProgress,
+        courseBand: "basic",
+        streak: {
+          ...emptyProgress.streak,
+          current: 4,
+          best: 4,
+          lastDay: "2026-09-07",
+          freezes: 1,
+        },
+      },
+      "",
+    )
+    registerDailyActivity(new Date(2026, 8, 9, 12).getTime())
+
+    const { unmount } = render(<MissionMap />)
+
+    expect(
+      screen.getByText("Usamos un protector. Tu racha sigue."),
+    ).toBeInTheDocument()
+    expect(getProgressSnapshot().streak.current).toBe(5)
+    expect(getProgressSnapshot().streak.freezes).toBe(0)
+
+    await user.click(
+      screen.getByRole("button", { name: "Cerrar aviso de protector" }),
+    )
+
+    expect(
+      screen.queryByText("Usamos un protector. Tu racha sigue."),
+    ).not.toBeInTheDocument()
+    expect(getProgressSnapshot().streak.pendingFreezesUsed).toBe(0)
+
+    unmount()
+    render(<MissionMap />)
+    expect(
+      screen.queryByText("Usamos un protector. Tu racha sigue."),
+    ).not.toBeInTheDocument()
+  })
+
+  test("shows a two-freeze notice beside a milestone and closes only the freeze", async () => {
+    const user = userEvent.setup()
+    seedStreak({
+      current: 3,
+      best: 3,
+      lastDay: "2026-09-10",
+      pendingMilestone: 3,
+      pendingFreezesUsed: 2,
+    })
+    render(<MissionMap />)
+
+    expect(
+      screen.getByText("Usamos 2 protectores. Tu racha sigue."),
+    ).toBeInTheDocument()
+    expect(screen.getByText(/¡Racha de 3 días!/)).toBeInTheDocument()
+
+    await user.click(
+      screen.getByRole("button", { name: "Cerrar aviso de protector" }),
+    )
+
+    expect(
+      screen.queryByText("Usamos 2 protectores. Tu racha sigue."),
+    ).not.toBeInTheDocument()
+    expect(screen.getByText(/¡Racha de 3 días!/)).toBeInTheDocument()
+    expect(getProgressSnapshot().streak.pendingFreezesUsed).toBe(0)
+    expect(getProgressSnapshot().streak.pendingMilestone).toBe(3)
   })
 
   test("hides the reset button without progress", () => {

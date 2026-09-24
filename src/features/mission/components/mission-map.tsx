@@ -21,11 +21,17 @@ import type { MissionPlanEntry } from "@/shared/lib/game/types/mission"
 import { MissionStamp } from "./mission-stamp"
 
 export function MissionMap() {
-  const { progress, clearPendingMilestone, reset } = useProgress()
+  const { progress, clearPendingFreezes, clearPendingMilestone, reset } = useProgress()
   const [confirmingReset, setConfirmingReset] = useState(false)
 
   const { streak } = progress
-  const { pendingMilestone } = streak
+  const { pendingMilestone, pendingFreezesUsed } = streak
+  const freezeNotice =
+    pendingFreezesUsed === 1
+      ? "Usamos un protector. Tu racha sigue."
+      : pendingFreezesUsed === 2
+        ? "Usamos 2 protectores. Tu racha sigue."
+        : null
 
   const selectedBand = progress.courseBand
   const continueSlug = selectedBand ? nextMissionSlug(progress, selectedBand) : null
@@ -200,6 +206,26 @@ export function MissionMap() {
             onClick={clearPendingMilestone}
             aria-label="Cerrar aviso"
               className="ui-icon-button"
+          >
+            <XIcon weight="bold" size={16} aria-hidden />
+          </button>
+        </div>
+      )}
+
+      {freezeNotice !== null && (
+        <div className="animate-slide-in flex items-center gap-3 rounded-3xl border-2 border-accent-deep/20 bg-accent px-5 py-4 shadow-card">
+          <FireIcon
+            weight="fill"
+            size={22}
+            className="shrink-0 text-error"
+            aria-hidden
+          />
+          <p className="flex-1 font-display font-semibold text-ink">{freezeNotice}</p>
+          <button
+            type="button"
+            onClick={clearPendingFreezes}
+            aria-label="Cerrar aviso de protector"
+            className="ui-icon-button"
           >
             <XIcon weight="bold" size={16} aria-hidden />
           </button>

@@ -6,6 +6,7 @@ import { CharacterAvatar } from "@/shared/components/game/character-avatar"
 import { ChoiceChallenge } from "@/shared/components/game/choice-challenge"
 import { PageHeader } from "@/shared/components/page-header"
 import { MAX_DAILY_RECHARGES } from "@/shared/lib/progress/shop"
+import { STREAK_FREEZE_MAX, STREAK_FREEZE_PRICE } from "@/shared/lib/progress/streak"
 import { useProgress } from "@/shared/hooks/use-progress"
 import { COCO_LOOKS } from "@/shared/lib/game/content/coco-looks"
 import { useShopRun } from "../hooks/use-shop-run"
@@ -13,7 +14,10 @@ import { SHOP_PROFILE } from "../utils/shop-exercise"
 
 export function ShopSession() {
   const run = useShopRun()
-  const { progress, selectLook } = useProgress()
+  const { progress, selectLook, buyStreakFreeze } = useProgress()
+  const canBuyFreeze =
+    progress.coins >= STREAK_FREEZE_PRICE &&
+    progress.streak.freezes < STREAK_FREEZE_MAX
 
   return (
     <main className="flex flex-1 flex-col gap-6">
@@ -109,6 +113,29 @@ export function ShopSession() {
           className="ui-button ui-button-primary-large w-full"
           >
             {run.quotaLeft ? "Ganar monedas" : "Vuelve mañana"}
+          </button>
+        </section>
+      )}
+
+      {run.phase !== "playing" && (
+        <section className="ui-card flex flex-col gap-4 p-6">
+          <div className="flex flex-col gap-1">
+            <h2 className="font-display text-lg font-bold">Protector de racha</h2>
+            <p className="text-sm font-semibold text-muted">
+              Cubre un día que te saltes al volver a jugar. Puedes guardar hasta{" "}
+              {STREAK_FREEZE_MAX}.
+            </p>
+          </div>
+          <p className="font-semibold">
+            {`${progress.streak.freezes} de ${STREAK_FREEZE_MAX} guardados · ${STREAK_FREEZE_PRICE} monedas`}
+          </p>
+          <button
+            type="button"
+            onClick={() => buyStreakFreeze()}
+            disabled={!canBuyFreeze}
+            className="ui-button ui-button-primary w-full"
+          >
+            Proteger racha
           </button>
         </section>
       )}

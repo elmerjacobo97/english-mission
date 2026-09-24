@@ -6,6 +6,9 @@ export const STREAK_MILESTONES: Record<StreakMilestone, number> = {
   30: 50,
 }
 
+export const STREAK_FREEZE_PRICE = 20
+export const STREAK_FREEZE_MAX = 2
+
 function milestoneFor(day: number): StreakMilestone | null {
   return day === 3 || day === 7 || day === 30 ? day : null
 }
@@ -22,6 +25,16 @@ export function previousDayKey(day: string): string {
   return localDayKey(new Date(year, month - 1, dayOfMonth - 1))
 }
 
+function skippedDays(lastDay: string, day: string): number {
+  let skipped = 0
+  let cursor = previousDayKey(day)
+  while (cursor !== lastDay && skipped <= STREAK_FREEZE_MAX) {
+    skipped += 1
+    cursor = previousDayKey(cursor)
+  }
+  return skipped
+}
+
 export function nextStreak(
   state: StreakState,
   day: string,
@@ -29,7 +42,23 @@ export function nextStreak(
   if (state.lastDay === day) {
     return { streak: state, payout: 0 }
   }
-  const current = state.lastDay === previousDayKey(day) ? state.current + 1 : 1
+
+  let current = 1
+  let freezes = state.freezes
+  let pendingFreezesUsed = 0
+
+  if (state.current > 0 && state.lastDay !== null) {
+    const skipped = skippedDays(state.lastDay, day)
+    if (skipped === 0) {
+      current = state.current + 1
+      pendingFreezesUsed = state.pendingFreezesUsed
+    } else if (freezes >= skipped) {
+      current = state.current + 1
+      freezes -= skipped
+      pendingFreezesUsed = skipped
+    }
+  }
+
   const milestone = milestoneFor(current)
   return {
     streak: {
@@ -37,6 +66,8 @@ export function nextStreak(
       best: Math.max(state.best, current),
       lastDay: day,
       pendingMilestone: milestone ?? state.pendingMilestone,
+      freezes,
+      pendingFreezesUsed,
     },
     payout: milestone ? STREAK_MILESTONES[milestone] : 0,
   }

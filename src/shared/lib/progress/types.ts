@@ -23,6 +23,8 @@ export type StreakState = {
   best: number
   lastDay: string | null
   pendingMilestone: StreakMilestone | null
+  freezes: number
+  pendingFreezesUsed: number
 }
 
 export type ShopState = {
@@ -38,7 +40,7 @@ export type LooksState = {
 }
 
 export type Progress = {
-  version: 7
+  version: 8
   courseBand: CourseBand | null
   coins: number
   missions: Record<string, MissionProgress>

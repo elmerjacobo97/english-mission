@@ -3,7 +3,9 @@ import userEvent from "@testing-library/user-event"
 import { afterEach, describe, expect, test, vi } from "vitest"
 import {
   addCoins,
+  emptyProgress,
   getProgressSnapshot,
+  initProgress,
   recordMissionResult,
 } from "@/shared/lib/progress/progress-store"
 import { localDayKey } from "@/shared/lib/progress/streak"
@@ -42,6 +44,37 @@ describe("ShopSession", () => {
     expect(
       screen.getByRole("button", { name: "Comprar Océano · 25" }),
     ).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Proteger racha" })).toBeDisabled()
+  })
+
+  test("buys a freeze with coins and no completed missions", async () => {
+    const user = userEvent.setup()
+    addCoins(20)
+    render(<ShopSession />)
+
+    await user.click(screen.getByRole("button", { name: "Proteger racha" }))
+
+    expect(getProgressSnapshot().coins).toBe(0)
+    expect(getProgressSnapshot().streak.freezes).toBe(1)
+    expect(getProgressSnapshot().streak.current).toBe(0)
+    expect(getProgressSnapshot().streak.lastDay).toBeNull()
+    expect(getProgressSnapshot().missions).toEqual({})
+    expect(screen.getByRole("button", { name: "Proteger racha" })).toBeDisabled()
+  })
+
+  test("disables the freeze button when two are already stored", () => {
+    initProgress(
+      {
+        ...emptyProgress,
+        coins: 40,
+        streak: { ...emptyProgress.streak, freezes: 2 },
+      },
+      "",
+    )
+    render(<ShopSession />)
+
+    expect(screen.getByRole("button", { name: "Proteger racha" })).toBeDisabled()
+    expect(screen.getByText("2 de 2 guardados · 20 monedas")).toBeInTheDocument()
   })
 
   test("shows the balance and today's quota with a completed mission", () => {
@@ -143,6 +176,8 @@ describe("ShopSession", () => {
       best: 0,
       lastDay: null,
       pendingMilestone: null,
+      freezes: 0,
+      pendingFreezesUsed: 0,
     })
   })
 
@@ -232,6 +267,8 @@ describe("ShopSession", () => {
       best: 0,
       lastDay: null,
       pendingMilestone: null,
+      freezes: 0,
+      pendingFreezesUsed: 0,
     })
     expect(getProgressSnapshot().shop).toEqual({ day: null, count: 0 })
     expect(screen.getByText("Recargas hoy: 0/3")).toBeInTheDocument()
