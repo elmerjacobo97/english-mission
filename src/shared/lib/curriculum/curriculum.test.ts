@@ -20,10 +20,10 @@ import type { Mission } from "@/shared/lib/game/types/mission"
 const MIN_RECYCLED_WORDS = 3
 
 describe("mission plan", () => {
-  test("has twelve sequential missions with unique slugs", () => {
-    expect(missionPlan).toHaveLength(12)
+  test("has sixteen sequential missions with unique slugs", () => {
+    expect(missionPlan).toHaveLength(16)
     expect(missionPlan.map((entry) => entry.order)).toEqual(
-      Array.from({ length: 12 }, (_, i) => i + 1),
+      Array.from({ length: 16 }, (_, i) => i + 1),
     )
     const slugs = missionPlan.map((entry) => entry.slug)
     expect(new Set(slugs).size).toBe(slugs.length)
@@ -205,7 +205,7 @@ describe("cast and notes", () => {
     expect(missionPlan.filter((entry) => entry.written).map((entry) => entry.slug)).toContain("arrival")
     expect(missionPlan.some((entry) => entry.band === "intermediate" && entry.written)).toBe(true)
     expect(missionPlan.some((entry) => entry.band === "advanced" && entry.written)).toBe(true)
-    expect(missionPlan.filter((entry) => !entry.written).map((entry) => entry.order)).toEqual([11, 12])
+    expect(missionPlan.filter((entry) => !entry.written).map((entry) => entry.order)).toEqual([])
   })
 
   test("uses only cast characters and at least two per written mission", () => {

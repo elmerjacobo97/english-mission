@@ -1,0 +1,95 @@
+[
+  {
+    "kind": "story",
+    "es": "Coco te dice que el equipo quiere salir después del trabajo.",
+    "en": "After work, the team can join us.",
+    "speaker": "coco",
+    "vocab": [["join", "unirse"]],
+    "character": "coco",
+    "note": {
+      "title": "The team can join us",
+      "body": "Join significa unirse. After work, the team can join us invita al grupo sin presión."
+    }
+  },
+  {
+    "kind": "story",
+    "es": "Tere te pregunta si puedes unirte esta noche.",
+    "en": "Can you join us tonight?",
+    "speaker": "tere",
+    "vocab": [["tonight", "esta noche"]],
+    "character": "tere",
+    "mood": "happy"
+  },
+  {
+    "kind": "story",
+    "es": "Tere te invita a un restaurante.",
+    "en": "I invite you to a restaurant.",
+    "speaker": "tere",
+    "vocab": [["invite", "invitar"], ["restaurant", "restaurante"]],
+    "character": "tere"
+  },
+  {
+    "kind": "choice",
+    "prompt": "Tere espera tu respuesta. Elige una frase clara.",
+    "options": [
+      "Maybe I can join tonight.",
+      "I restaurant the busy forever.",
+      "Tonight was yesterday at home."
+    ],
+    "correct": 0,
+    "character": "tere"
+  },
+  {
+    "kind": "story",
+    "es": "Cami ofrece más tarde si estás ocupado.",
+    "en": "Maybe later, if you are busy.",
+    "speaker": "cami",
+    "vocab": [["maybe", "tal vez"], ["later", "más tarde"], ["busy", "ocupado"]],
+    "character": "cami",
+    "note": {
+      "title": "Maybe later",
+      "body": "Maybe expresa una duda. Later mueve el plan a otro momento, sin decir un no seco."
+    }
+  },
+  {
+    "kind": "order",
+    "prompt": "Ordena la frase para decir que estás ocupado.",
+    "tokens": ["tonight", "busy", "am", "I"],
+    "solution": ["I", "am", "busy", "tonight"],
+    "character": "coco"
+  },
+  {
+    "kind": "type",
+    "prompt": "Di: «Tal vez más tarde».",
+    "accepted": ["Maybe later"],
+    "hint": "M____ l____",
+    "character": "cami"
+  },
+  {
+    "kind": "fill",
+    "prompt": "Completa la frase con el lugar.",
+    "sentence": "We can meet at the ___.",
+    "answer": "restaurant",
+    "character": "tere"
+  },
+  {
+    "kind": "listen",
+    "prompt": "Escucha y elige el plan.",
+    "phrase": "Maybe we can join the team later.",
+    "options": [
+      "Tal vez se unen al equipo más tarde.",
+      "Cancelan el trabajo.",
+      "Van al restaurante ahora mismo."
+    ],
+    "correct": 0,
+    "character": "cami"
+  },
+  {
+    "kind": "story",
+    "es": "Coco te desea un buen rato con el equipo.",
+    "en": "Have a good time with the team.",
+    "speaker": "coco",
+    "character": "coco",
+    "mood": "happy"
+  }
+]

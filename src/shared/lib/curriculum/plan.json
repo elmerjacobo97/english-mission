@@ -306,6 +306,148 @@
   },
   {
     "order": 10,
+    "slug": "meeting",
+    "title": "La reunión",
+    "subtitle": "Acordar hora y tema",
+    "emoji": "📅",
+    "chapter": 3,
+    "band": "intermediate",
+    "cefrLevel": "B1",
+    "level": 4,
+    "cast": [
+      {
+        "character": "coco",
+        "function": "tutor",
+        "objective": "Ayudarte a acordar la hora y el tema de una reunión."
+      },
+      {
+        "character": "sofia",
+        "function": "primary",
+        "objective": "Proponer la reunión y confirmar horario, sala y tema."
+      }
+    ],
+    "written": true,
+    "vocab": [
+      ["meeting", "reunión"],
+      ["schedule", "horario"],
+      ["topic", "tema"],
+      ["agree", "estar de acuerdo"],
+      ["time", "hora"],
+      ["room", "sala"],
+      ["notes", "notas"]
+    ]
+  },
+  {
+    "order": 11,
+    "slug": "complaint",
+    "title": "La queja",
+    "subtitle": "Pedir un cambio con calma",
+    "emoji": "🗣️",
+    "chapter": 3,
+    "band": "intermediate",
+    "cefrLevel": "B1",
+    "level": 4,
+    "cast": [
+      {
+        "character": "coco",
+        "function": "tutor",
+        "objective": "Ayudarte a pedir un cambio con calma."
+      },
+      {
+        "character": "sofia",
+        "function": "primary",
+        "objective": "Escuchar el problema y buscar una solución."
+      }
+    ],
+    "written": true,
+    "vocab": [
+      ["problem", "problema"],
+      ["delay", "retraso"],
+      ["polite", "educado"],
+      ["request", "pedido"],
+      ["change", "cambio"],
+      ["sorry", "lo siento"],
+      ["solution", "solución"]
+    ]
+  },
+  {
+    "order": 12,
+    "slug": "after-work",
+    "title": "El plan",
+    "subtitle": "Salir con el equipo",
+    "emoji": "🌆",
+    "chapter": 3,
+    "band": "intermediate",
+    "cefrLevel": "B2",
+    "level": 4,
+    "cast": [
+      {
+        "character": "coco",
+        "function": "tutor",
+        "objective": "Ayudarte a aceptar o posponer un plan con el equipo."
+      },
+      {
+        "character": "tere",
+        "function": "primary",
+        "objective": "Invitarte a salir con el equipo esta noche."
+      },
+      {
+        "character": "cami",
+        "function": "support",
+        "objective": "Ofrecer otra hora si esta noche estás ocupado."
+      }
+    ],
+    "written": true,
+    "vocab": [
+      ["join", "unirse"],
+      ["tonight", "esta noche"],
+      ["restaurant", "restaurante"],
+      ["maybe", "tal vez"],
+      ["busy", "ocupado"],
+      ["invite", "invitar"],
+      ["later", "más tarde"]
+    ]
+  },
+  {
+    "order": 13,
+    "slug": "opinion",
+    "title": "La opinión",
+    "subtitle": "Decir lo que piensas",
+    "emoji": "💬",
+    "chapter": 3,
+    "band": "intermediate",
+    "cefrLevel": "B2",
+    "level": 4,
+    "cast": [
+      {
+        "character": "coco",
+        "function": "tutor",
+        "objective": "Ayudarte a decir lo que piensas con una razón."
+      },
+      {
+        "character": "sofia",
+        "function": "primary",
+        "objective": "Pedir tu opinión y escuchar tu razón."
+      },
+      {
+        "character": "tere",
+        "function": "support",
+        "objective": "Ofrecer otra idea cuando no estás de acuerdo."
+      }
+    ],
+    "written": true,
+    "vocab": [
+      ["opinion", "opinión"],
+      ["think", "pensar"],
+      ["disagree", "discrepar"],
+      ["reason", "razón"],
+      ["example", "ejemplo"],
+      ["prefer", "preferir"],
+      ["suggest", "sugerir"]
+    ]
+  },
+  {
+    "order": 14,
     "slug": "first-day",
     "title": "El primer día",
     "subtitle": "Compañeros, reuniones y café",
@@ -348,7 +490,7 @@
     ]
   },
   {
-    "order": 11,
+    "order": 15,
     "slug": "friends",
     "title": "Hacer amigos",
     "subtitle": "Planes para el fin de semana",
@@ -374,7 +516,7 @@
         "objective": "Sumar una conversación amistosa al plan del grupo."
       }
     ],
-    "written": false,
+    "written": true,
     "vocab": [
       ["invite", "invitar"],
       ["friend", "amigo"],
@@ -386,7 +528,7 @@
     ]
   },
   {
-    "order": 12,
+    "order": 16,
     "slug": "new-home",
     "title": "La casa nueva",
     "subtitle": "Mudanza y vecinos",
@@ -412,7 +554,7 @@
         "objective": "Darte la bienvenida y conectarte con tus nuevos vecinos."
       }
     ],
-    "written": false,
+    "written": true,
     "vocab": [
       ["move", "mudarse"],
       ["furniture", "muebles"],

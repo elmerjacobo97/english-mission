@@ -15,7 +15,13 @@ import mission06Data from "./missions/mission-06-laundry.json"
 import mission07Data from "./missions/mission-07-clothes.json"
 import mission08Data from "./missions/mission-08-landlord.json"
 import mission09Data from "./missions/mission-09-interview.json"
-import mission10Data from "./missions/mission-10-first-day.json"
+import mission10Data from "./missions/mission-10-meeting.json"
+import mission11Data from "./missions/mission-11-complaint.json"
+import mission12Data from "./missions/mission-12-after-work.json"
+import mission13Data from "./missions/mission-13-opinion.json"
+import mission14Data from "./missions/mission-14-first-day.json"
+import mission15Data from "./missions/mission-15-friends.json"
+import mission16Data from "./missions/mission-16-new-home.json"
 import { missionPlan } from "./plan"
 
 export const CHAPTER_TITLES: Record<Chapter, string> = {
@@ -34,7 +40,13 @@ const beatsBySlug: Record<string, Beat[]> = {
   clothes: mission07Data as unknown as Beat[],
   landlord: mission08Data as unknown as Beat[],
   interview: mission09Data as unknown as Beat[],
-  "first-day": mission10Data as unknown as Beat[],
+  meeting: mission10Data as unknown as Beat[],
+  complaint: mission11Data as unknown as Beat[],
+  "after-work": mission12Data as unknown as Beat[],
+  opinion: mission13Data as unknown as Beat[],
+  "first-day": mission14Data as unknown as Beat[],
+  friends: mission15Data as unknown as Beat[],
+  "new-home": mission16Data as unknown as Beat[],
 }
 
 export const missions: Mission[] = missionPlan

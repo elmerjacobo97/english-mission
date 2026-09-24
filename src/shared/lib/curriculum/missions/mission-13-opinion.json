@@ -1,0 +1,102 @@
+[
+  {
+    "kind": "story",
+    "es": "Coco te pide tu opinión sobre la reunión.",
+    "en": "What is your opinion about the meeting?",
+    "speaker": "coco",
+    "vocab": [["opinion", "opinión"]],
+    "character": "coco",
+    "note": {
+      "title": "Your opinion",
+      "body": "Opinion nombra lo que piensas. What is your opinion pide una idea, no solo un dato."
+    }
+  },
+  {
+    "kind": "story",
+    "es": "Sofía dice lo que piensa del horario.",
+    "en": "I think the schedule works.",
+    "speaker": "sofia",
+    "vocab": [["think", "pensar"]],
+    "character": "sofia"
+  },
+  {
+    "kind": "story",
+    "es": "Tere no está de acuerdo y da una razón.",
+    "en": "I disagree, and I have a reason.",
+    "speaker": "tere",
+    "vocab": [["disagree", "discrepar"], ["reason", "razón"]],
+    "character": "tere",
+    "note": {
+      "title": "I disagree",
+      "body": "Disagree expresa que no estás de acuerdo. Una reason explica el motivo con calma."
+    }
+  },
+  {
+    "kind": "choice",
+    "prompt": "Sofía pregunta qué prefieres. Elige la frase clara.",
+    "options": [
+      "I prefer a shorter meeting.",
+      "I opinion the reason forever.",
+      "Think was yesterday at home."
+    ],
+    "correct": 0,
+    "character": "sofia"
+  },
+  {
+    "kind": "story",
+    "es": "Tere pide un ejemplo claro.",
+    "en": "I prefer a clear example.",
+    "speaker": "tere",
+    "vocab": [["prefer", "preferir"], ["example", "ejemplo"]],
+    "character": "tere"
+  },
+  {
+    "kind": "story",
+    "es": "Sofía propone otra hora para el equipo.",
+    "en": "I suggest a new time for the team.",
+    "speaker": "sofia",
+    "vocab": [["suggest", "sugerir"]],
+    "character": "sofia"
+  },
+  {
+    "kind": "order",
+    "prompt": "Ordena la frase para proponer otra hora.",
+    "tokens": ["time", "new", "suggest", "a", "I"],
+    "solution": ["I", "suggest", "a", "new", "time"],
+    "character": "coco"
+  },
+  {
+    "kind": "type",
+    "prompt": "Di: «No estoy de acuerdo con esa razón».",
+    "accepted": ["I disagree with that reason"],
+    "hint": "I d________ with that r_____",
+    "character": "tere"
+  },
+  {
+    "kind": "fill",
+    "prompt": "Completa la frase con la palabra para un caso concreto.",
+    "sentence": "I prefer a clear ___.",
+    "answer": "example",
+    "character": "tere"
+  },
+  {
+    "kind": "listen",
+    "prompt": "Escucha y elige la idea de Sofía.",
+    "phrase": "I suggest a new time for the team.",
+    "options": [
+      "Propone otra hora para el equipo.",
+      "Cancela la reunión.",
+      "No tiene opinión."
+    ],
+    "correct": 0,
+    "character": "sofia"
+  },
+  {
+    "kind": "story",
+    "es": "Coco te dice que tu opinión ayuda al equipo.",
+    "en": "Your opinion helps the team.",
+    "speaker": "coco",
+    "character": "coco",
+    "mood": "happy"
+  }
+]

@@ -7,6 +7,10 @@ describe("course routes", () => {
     expect(courseEntries("basic")).toHaveLength(8)
     expect(courseEntries("intermediate").map((entry) => entry.slug)).toEqual([
       "interview",
+      "meeting",
+      "complaint",
+      "after-work",
+      "opinion",
     ])
     expect(courseEntries("advanced").map((entry) => entry.slug)).toEqual([
       "first-day",

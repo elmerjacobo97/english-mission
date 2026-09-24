@@ -30,7 +30,7 @@
   {
     "kind": "story",
     "es": "Sofía explica que la fecha límite está cerca, así que el equipo ajustará la carga de trabajo.",
-    "en": "The deadline is tight, but the first priority is to adjust the workload.",
+    "en": "The deadline is tight, but the first priority is to adjust the workload and fix the delay.",
     "speaker": "sofia",
     "vocab": [["deadline", "fecha límite"], ["workload", "carga de trabajo"], ["priority", "prioridad"]],
     "character": "sofia",
@@ -64,7 +64,7 @@
   {
     "kind": "story",
     "es": "El equipo te da comentarios específicos sobre el primer borrador.",
-    "en": "The feedback helped me make the summary more concise.",
+    "en": "The feedback helped me make the summary more concise, and I share that opinion.",
     "speaker": "you",
     "vocab": [["feedback", "comentarios"], ["concise", "conciso"]],
     "character": "coco"
@@ -87,7 +87,7 @@
   {
     "kind": "story",
     "es": "Antes de cerrar el día, confirmas la prioridad y acuerdas la próxima acción.",
-    "en": "Although we had little time, we scheduled a short break and agreed on a clear priority.",
+    "en": "Although we had little time, we scheduled a short break because the day was busy, and we agreed on a clear priority.",
     "speaker": "you",
     "vocab": [["time", "tiempo"], ["break", "descanso"], ["priority", "prioridad"]],
     "character": "tere"

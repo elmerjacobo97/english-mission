@@ -1,0 +1,99 @@
+[
+  {
+    "kind": "story",
+    "es": "Coco te anima a invitar a un amigo este fin de semana, después de la reunión.",
+    "en": "After the meeting, invite a friend this weekend.",
+    "speaker": "coco",
+    "vocab": [["invite", "invitar"], ["friend", "amigo"], ["weekend", "fin de semana"]],
+    "character": "coco",
+    "note": {
+      "title": "Invite a friend",
+      "body": "Invite significa invitar. Invite a friend this weekend propone un plan concreto, no solo un saludo."
+    }
+  },
+  {
+    "kind": "story",
+    "es": "Tere propone ir juntos a una película.",
+    "en": "We can go together to a movie.",
+    "speaker": "tere",
+    "vocab": [["together", "juntos"], ["movie", "película"]],
+    "character": "tere",
+    "mood": "happy",
+    "note": {
+      "title": "Go together",
+      "body": "Together significa juntos. We can go together marca que el plan es compartido."
+    }
+  },
+  {
+    "kind": "story",
+    "es": "Cami suma baile y una bebida, tal vez más tarde.",
+    "en": "Maybe later we can dance and have a drink.",
+    "speaker": "cami",
+    "vocab": [["dance", "bailar"], ["drink", "bebida"]],
+    "character": "cami"
+  },
+  {
+    "kind": "choice",
+    "prompt": "Tere espera tu respuesta. Elige el plan claro.",
+    "options": [
+      "Let's go together this weekend.",
+      "I dance the friend forever.",
+      "Weekend was yesterday at home."
+    ],
+    "correct": 0,
+    "character": "tere"
+  },
+  {
+    "kind": "dialogue",
+    "prompt": "Cami te invita a salir. Responde con un plan.",
+    "line": "Can you join us tonight?",
+    "options": [
+      "Maybe later. I want to see a movie with a friend.",
+      "I don't know what a weekend is.",
+      "The drink is the computer."
+    ],
+    "correct": 0,
+    "character": "cami"
+  },
+  {
+    "kind": "order",
+    "prompt": "Ordena la frase para proponer el baile.",
+    "tokens": ["together", "dance", "can", "We"],
+    "solution": ["We", "can", "dance", "together"],
+    "character": "tere"
+  },
+  {
+    "kind": "type",
+    "prompt": "Di: «Invita a un amigo».",
+    "accepted": ["Invite a friend"],
+    "hint": "I_____ a f_____",
+    "character": "coco"
+  },
+  {
+    "kind": "fill",
+    "prompt": "Completa la frase con el plan de Tere.",
+    "sentence": "Let's see a ___.",
+    "answer": "movie",
+    "character": "tere"
+  },
+  {
+    "kind": "listen",
+    "prompt": "Escucha y elige el plan del grupo.",
+    "phrase": "We can go together to a movie this weekend.",
+    "options": [
+      "Van juntos a una película este fin de semana.",
+      "Cancelan el fin de semana.",
+      "Nadie quiere bailar."
+    ],
+    "correct": 0,
+    "character": "cami"
+  },
+  {
+    "kind": "story",
+    "es": "Coco te desea un buen rato con el equipo.",
+    "en": "Have a good time together with the team.",
+    "speaker": "coco",
+    "character": "coco",
+    "mood": "happy"
+  }
+]

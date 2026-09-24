@@ -1,0 +1,103 @@
+[
+  {
+    "kind": "story",
+    "es": "Coco te ayuda a explicar un problema con la reunión.",
+    "en": "There is a problem with the meeting.",
+    "speaker": "you",
+    "vocab": [["problem", "problema"]],
+    "character": "coco",
+    "note": {
+      "title": "There is a problem",
+      "body": "Problem nombra el problema. There is a problem presenta la situación sin culpar a nadie."
+    }
+  },
+  {
+    "kind": "story",
+    "es": "Sofía reconoce el retraso y se disculpa.",
+    "en": "Sorry about the delay.",
+    "speaker": "sofia",
+    "vocab": [["sorry", "lo siento"], ["delay", "retraso"]],
+    "character": "sofia"
+  },
+  {
+    "kind": "choice",
+    "prompt": "Quieres responder con calma. Elige la frase educada.",
+    "options": [
+      "I understand the delay.",
+      "You are the delay forever.",
+      "The problem eats the room."
+    ],
+    "correct": 0,
+    "character": "sofia"
+  },
+  {
+    "kind": "story",
+    "es": "Haces el pedido con calma.",
+    "en": "I have a polite request.",
+    "speaker": "you",
+    "vocab": [["polite", "educado"], ["request", "pedido"]],
+    "character": "coco",
+    "note": {
+      "title": "A polite request",
+      "body": "Polite significa educado. A polite request es un pedido calmado, no una orden."
+    }
+  },
+  {
+    "kind": "order",
+    "prompt": "Ordena la frase para pedir otra hora.",
+    "tokens": ["time", "the", "change", "we", "Can"],
+    "solution": ["Can", "we", "change", "the", "time"],
+    "character": "coco"
+  },
+  {
+    "kind": "story",
+    "es": "Pides un cambio en el horario.",
+    "en": "Can we change the schedule?",
+    "speaker": "you",
+    "vocab": [["change", "cambio"]],
+    "character": "sofia"
+  },
+  {
+    "kind": "type",
+    "prompt": "Di: «Lo siento por el retraso».",
+    "accepted": ["Sorry about the delay"],
+    "hint": "S____ about the d____",
+    "character": "sofia"
+  },
+  {
+    "kind": "fill",
+    "prompt": "Completa la frase con la salida del problema.",
+    "sentence": "The ___ is a new time.",
+    "answer": "solution",
+    "character": "coco"
+  },
+  {
+    "kind": "story",
+    "es": "Sofía propone una solución: otra hora.",
+    "en": "The solution is a new time.",
+    "speaker": "sofia",
+    "vocab": [["solution", "solución"]],
+    "character": "sofia",
+    "mood": "happy"
+  },
+  {
+    "kind": "listen",
+    "prompt": "Escucha y elige qué acuerdan.",
+    "phrase": "The solution is to change the meeting time.",
+    "options": [
+      "Cambian la hora de la reunión.",
+      "Cancelan el equipo.",
+      "Ignoran el retraso."
+    ],
+    "correct": 0,
+    "character": "sofia"
+  },
+  {
+    "kind": "story",
+    "es": "Coco te pide avisar al equipo.",
+    "en": "Tell the team about the solution.",
+    "speaker": "coco",
+    "character": "coco",
+    "mood": "happy"
+  }
+]

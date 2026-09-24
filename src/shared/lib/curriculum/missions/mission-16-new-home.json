@@ -1,0 +1,107 @@
+[
+  {
+    "kind": "story",
+    "es": "Coco te ayuda a hablar de la mudanza a tu nuevo hogar después del fin de semana.",
+    "en": "After the weekend, we move into the new home.",
+    "speaker": "coco",
+    "vocab": [["move", "mudarse"], ["home", "hogar"]],
+    "character": "coco",
+    "note": {
+      "title": "We move into the new home",
+      "body": "Move significa mudarse. We move into the new home habla de entrar a vivir, no solo de un viaje."
+    }
+  },
+  {
+    "kind": "story",
+    "es": "Sergio confirma que los muebles y las llaves del departamento están listos.",
+    "en": "The furniture and the keys for the apartment are ready.",
+    "speaker": "sergio",
+    "vocab": [["furniture", "muebles"], ["keys", "llaves"]],
+    "character": "sergio",
+    "note": {
+      "title": "The keys are ready",
+      "body": "Keys nombra las llaves. The keys are ready confirma que ya puedes entrar al departamento."
+    }
+  },
+  {
+    "kind": "story",
+    "es": "Marta te presenta a un vecino que tiene un jardín.",
+    "en": "Your neighbour has a small garden.",
+    "speaker": "marta",
+    "vocab": [["neighbour", "vecino"], ["garden", "jardín"]],
+    "character": "marta",
+    "mood": "happy"
+  },
+  {
+    "kind": "story",
+    "es": "Coco sugiere invitar a un amigo más adelante.",
+    "en": "In the future, invite a friend to your home.",
+    "speaker": "coco",
+    "vocab": [["future", "futuro"]],
+    "character": "coco"
+  },
+  {
+    "kind": "choice",
+    "prompt": "Sergio pregunta por las llaves. Elige la respuesta clara.",
+    "options": [
+      "The keys are on the table.",
+      "I furniture the garden forever.",
+      "Home was yesterday at work."
+    ],
+    "correct": 0,
+    "character": "sergio"
+  },
+  {
+    "kind": "dialogue",
+    "prompt": "Sergio ofrece ayuda con los muebles. Responde.",
+    "line": "Can I help with the furniture?",
+    "options": [
+      "Yes. The keys are in the new home.",
+      "I don't know what a home is.",
+      "The garden is the computer."
+    ],
+    "correct": 0,
+    "character": "sergio"
+  },
+  {
+    "kind": "order",
+    "prompt": "Ordena la frase sobre el vecino.",
+    "tokens": ["garden", "a", "has", "neighbour", "The"],
+    "solution": ["The", "neighbour", "has", "a", "garden"],
+    "character": "marta"
+  },
+  {
+    "kind": "type",
+    "prompt": "Di: «Nos mudamos este fin de semana».",
+    "accepted": ["We move this weekend"],
+    "hint": "We m___ this w______",
+    "character": "coco"
+  },
+  {
+    "kind": "fill",
+    "prompt": "Completa la frase con el espacio verde del vecino.",
+    "sentence": "Your neighbour has a small ___.",
+    "answer": "garden",
+    "character": "marta"
+  },
+  {
+    "kind": "listen",
+    "prompt": "Escucha y elige qué tiene el vecino.",
+    "phrase": "Your neighbour has a small garden.",
+    "options": [
+      "El vecino tiene un jardín.",
+      "Cancelan la mudanza.",
+      "No hay llaves."
+    ],
+    "correct": 0,
+    "character": "marta"
+  },
+  {
+    "kind": "story",
+    "es": "Coco te desea un buen comienzo en el nuevo hogar.",
+    "en": "Have a good time in your new home.",
+    "speaker": "coco",
+    "character": "coco",
+    "mood": "happy"
+  }
+]

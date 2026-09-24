@@ -1,0 +1,104 @@
+[
+  {
+    "kind": "story",
+    "es": "Coco te avisa que mañana hay una reunión con el equipo.",
+    "en": "The team meeting is tomorrow.",
+    "speaker": "you",
+    "vocab": [["meeting", "reunión"]],
+    "character": "coco",
+    "note": {
+      "title": "The team meeting",
+      "body": "Meeting nombra la reunión. The team meeting es la reunión del equipo."
+    }
+  },
+  {
+    "kind": "story",
+    "es": "Sofía abre su calendario y te pide revisar el horario.",
+    "en": "Can we check the schedule?",
+    "speaker": "sofia",
+    "vocab": [["schedule", "horario"]],
+    "character": "sofia",
+    "mood": "happy"
+  },
+  {
+    "kind": "choice",
+    "prompt": "Sofía pregunta a qué hora es la reunión. Elige la respuesta clara.",
+    "options": [
+      "The meeting is at ten.",
+      "The meeting was yesterday forever.",
+      "I schedule the bus home."
+    ],
+    "correct": 0,
+    "character": "sofia"
+  },
+  {
+    "kind": "story",
+    "es": "Sofía dice que el tema es el proyecto nuevo.",
+    "en": "The topic is the new project.",
+    "speaker": "sofia",
+    "vocab": [["topic", "tema"]],
+    "character": "sofia"
+  },
+  {
+    "kind": "order",
+    "prompt": "Ordena la frase para confirmar la hora.",
+    "tokens": ["time", "the", "We", "on", "agree"],
+    "solution": ["We", "agree", "on", "the", "time"],
+    "character": "coco"
+  },
+  {
+    "kind": "story",
+    "es": "Confirmas que estás de acuerdo con esa hora.",
+    "en": "I agree with that time.",
+    "speaker": "you",
+    "vocab": [["agree", "estar de acuerdo"], ["time", "hora"]],
+    "character": "coco",
+    "note": {
+      "title": "I agree with that time",
+      "body": "Agree significa estar de acuerdo. With conecta tu idea con la hora."
+    }
+  },
+  {
+    "kind": "type",
+    "prompt": "Di: «Estoy de acuerdo con la hora».",
+    "accepted": ["I agree with the time"],
+    "hint": "I a____ with the t____",
+    "character": "coco"
+  },
+  {
+    "kind": "story",
+    "es": "Sofía te indica la sala.",
+    "en": "The room is on the second floor.",
+    "speaker": "sofia",
+    "vocab": [["room", "sala"]],
+    "character": "sofia"
+  },
+  {
+    "kind": "fill",
+    "prompt": "Completa la frase con el lugar de la reunión.",
+    "sentence": "The meeting is in the ___.",
+    "answer": "room",
+    "character": "sofia"
+  },
+  {
+    "kind": "listen",
+    "prompt": "Escucha y elige qué debes llevar.",
+    "phrase": "Please bring your notes to the room.",
+    "options": [
+      "Lleva tus notas a la sala.",
+      "Cancela la reunión.",
+      "Llega sin horario."
+    ],
+    "correct": 0,
+    "character": "sofia"
+  },
+  {
+    "kind": "story",
+    "es": "Coco te sugiere anotar lo importante para el equipo.",
+    "en": "I will write notes for the team.",
+    "speaker": "you",
+    "vocab": [["notes", "notas"]],
+    "character": "coco",
+    "mood": "happy"
+  }
+]
